@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "295038915158",
+    "project_id": "youth-truffle",
+    "storage_bucket": "youth-truffle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295038915158:android:0f78a90b8721647520e1f7",
+        "android_client_info": {
+          "package_name": "com.truffle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZq36G0AMz4dh_hlVS7X9xY2aXGCZLmVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
