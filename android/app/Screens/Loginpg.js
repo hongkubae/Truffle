@@ -31,7 +31,7 @@ function Loginpg({ navigation }) {
           onChangeText={onChangeText}
           value={text}
           placeholder="비밀번호"
-          keyboardType="email"
+          keyboardType="defualt"
         />
         <TouchableOpacity
           style={styles.save}

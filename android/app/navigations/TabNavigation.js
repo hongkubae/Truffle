@@ -3,10 +3,9 @@ import "react-native-gesture-handler";
 import MainStackNavigation from "./MainStackNavigation";
 import SettingStackNavigation from "./SettingStackNavigation";
 import { NavigationContainer } from '@react-navigation/native';
-import CalendarView from "../Screens/CalendarView";
-import RecipeView from "../Screens/RecipeView";
 import { StyleSheet, Dimensions } from 'react-native'; 
 import CalStackNavigator from "./CalStackNavigation";
+import RecipeTabNavigator from "./RecipeTabNavigation";
 
 import OnHomeIcon from "../assets/icons/onHomeIcon";
 import OnCalIcon from "../assets/icons/onCalIcon";
@@ -73,7 +72,7 @@ const TabNavigator = ()=>{
 
     <Tab.Screen
     name="RecipeView"
-    component={RecipeView}
+    component={RecipeTabNavigator}
     options={({ route }) => ({
       tabBarLabel: '', 
       tabBarIcon: ({ focused, size }) => {
