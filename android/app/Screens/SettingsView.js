@@ -66,6 +66,14 @@ const SettingsView = ({navigation}) => {
             </View>
           </TouchableOpacity>
         </View>
+
+        <View style={Styles.SettingSelect}>
+          <TouchableOpacity onPress={()=> navigation.navigate('CreditView')}>
+            <View style={Styles.SelectContainer}>
+              <Text style={Styles.SelectText}>크레딧</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         
         <Modal
         animationType="slide"
