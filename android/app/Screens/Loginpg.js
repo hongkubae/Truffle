@@ -78,14 +78,11 @@ function Loginpg({ navigation }) {
   
     input: {
       fontSize: 15,
-      borderWidth: 0.5,
-      height: 28,
+      height: 40,
       width: 232,
       marginBottom: 30,
       color: '#878787',
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderRightWidth:0,
+      borderBottomWidth:0.5
     },
     save: {
       flexDirection: 'row', 

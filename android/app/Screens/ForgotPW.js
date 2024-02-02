@@ -120,18 +120,17 @@ function ForgotPW({navigation}) {
     };
   
   
-    return(
-  
+  return(
       <View style={styles.container}>
-  
+        <View style={{flexDirection:'row',gap:60}}>
         <TouchableOpacity
-          style={styles.back}
+        style={{marginLeft:30}}
           onPress={() => navigation.goBack()}>
           <Text style={styles.backBTN}> ⟨ </Text>
         </TouchableOpacity>
-  
         <Text style={styles.topTitle}>비밀번호 재설정</Text>
-        
+      </View>
+
         <TextInput
           style={styles.inputP}
           onChangeText={onChangeText}
@@ -151,26 +150,25 @@ function ForgotPW({navigation}) {
           disabled={isResendButtonDisabled} >
           <Text style={styles.saveTxt}>인증번호 재발송</Text>
         </TouchableOpacity>
+      <View style={{flexDirection:'row'}}>
         <TextInput
           style={styles.inputRe}   
-      placeholder="인증번호"
+          placeholder="인증번호"
           keyboardType="numeric"
         />
-      
-  
-  {/* 타이머 */}
-  <Text style={{ color: 'purple', position: 'absolute', top: 275, paddingLeft: 30}}>{formatTime(remainingTime)}</Text>
-  
+        {/* 타이머 */}
+        <Text style={{ color: 'purple', position: 'absolute', top: 90, paddingLeft: 80}}>{formatTime(remainingTime)}</Text>
+      </View>
   
         <TouchableOpacity
           style={[styles.smallButton, {backgroundColor: isStopButtonDisabled ? '#CCCCCC' : '#FEA655'} ]}
           onPress={handleStopTimer} 
-                  disabled={isStopButtonDisabled} 
-                  
+          disabled={isStopButtonDisabled}   
           >
           <Text style={styles.buttonText}>확인</Text>
         </TouchableOpacity>
-  <TouchableOpacity style={{top: 98}}>
+
+    <TouchableOpacity style={{top: 98}}>
       <Eye/>
      </TouchableOpacity>   
         <TextInput
@@ -184,7 +182,7 @@ function ForgotPW({navigation}) {
             onChangeText={handlePasswordChange}
         />
         <Text style={styles.passwordContent}>{passwordContent1}</Text>
-        <TouchableOpacity style={{top: 98}}>
+      <TouchableOpacity style={{top: 98}}>
       {/*<Image src={imageSrc} onClick={handleClick}/>*/}
       <Eye/>
      </TouchableOpacity>   
@@ -211,18 +209,15 @@ function ForgotPW({navigation}) {
   const styles = StyleSheet.create({
     inputP: {
       fontSize: 15,
-      borderWidth: 0.5,
-      height: 28,
+      borderBottomWidth: 0.5,
+      height: 40,
       width: 232,
       top: 80,
-      marginBottom: 40,
+      marginBottom: 20,
       color: '#878787',
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderRightWidth:0,
     },
     buttonP: {
-      top: 93,
+      top: 100,
       backgroundColor: '#FEA655',
       paddingVertical: 10,
       paddingHorizontal: 48,
@@ -242,16 +237,13 @@ function ForgotPW({navigation}) {
     },
     inputRe: {
       fontSize: 15,
-      borderWidth: 0.5,
-      height: 28,
+      borderBottomWidth: 0.5,
+      height: 40,
       width: 160,
       top: 82,
       right: 35,
       marginBottom: 10,
       color: '#878787',
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderRightWidth:0,
     },
     smallButton: {
       left: 85,
@@ -271,14 +263,11 @@ function ForgotPW({navigation}) {
       alignItems: 'center',
       backgroundColor: '#F8F9FA', // 배경색상 추가
     },
-    title: {
-      fontSize: 40,
-      top: 47,
-      marginBottom: 211,
-      fontFamily: 'NanumGothic',
-      color: '#000', // 글자색상 추가
+    topTitle: {
+      fontSize: 24,
+      top: 12,
+      marginLeft:-100
     },
-  
     input: {
       fontSize: 15,
       borderWidth: 0.5,
@@ -324,6 +313,11 @@ function ForgotPW({navigation}) {
       fontSize: 15,
       fontWeight: 'bold',
       fontFamily: 'NanumGothic',
+    },
+    backBTN: {
+      fontSize: 25,
+      marginLeft:-140,
+      marginTop:11,
     },
   })
   

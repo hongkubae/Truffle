@@ -57,23 +57,23 @@ function SignupPg({navigation}) {
 
   return(
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.back}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.backBTN}> ⟨ </Text>
-      </TouchableOpacity>
-
-      <Text style={styles.topTitle}>회원가입</Text>
-      
+      <View style={{flexDirection:'row',}}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}>
+          <Text style={styles.backBTN}> ⟨ </Text>
+        </TouchableOpacity>
+        <Text style={styles.topTitle}>회원가입</Text>
+      </View>
+    <View style={{alignItems:'center', marginTop:200}}>
       <TextInput
-        style={styles.inputS}
+        style={styles.input}
         onChangeText={onChangeText}
         value={text}
         placeholder="이메일"
         keyboardType="email"
       />
       <TextInput
-        style={styles.inputS}
+        style={styles.input}
         setPassword={setPassword}
         value={password}
         placeholder="비밀번호"
@@ -83,19 +83,16 @@ function SignupPg({navigation}) {
           onChangeText={handlePasswordChange}
       />
       <TextInput
-        style={styles.inputS}
+        style={styles.input}
         placeholder="비밀번호 확인"
         keyboardType="email"
         secureTextEntry={true}
           value={password2}
           onChangeText={handlePassword2Change}
       />
-      <Text style={{    top: 26,
-    fontSize: 12,
-    color: '#ff0000',}}>{passwordContent1}</Text>
-      <Text style={{top: 80,
-    fontSize: 12,
-    color: '#ff0000',}}>{passwordContent}</Text>
+    </View>
+      <Text style={{top: 26,fontSize: 12, color: '#ff0000',}}>{passwordContent1}</Text>
+      <Text style={{top: 80,fontSize: 12,color: '#ff0000',}}>{passwordContent}</Text>
 
       <TouchableOpacity
         style={styles.buttonS}
@@ -116,28 +113,14 @@ const styles = StyleSheet.create({
     top: 12,
   },
   log: {
-    top: 193,
-
-  },
-  inputS: {
-    fontSize: 15,
-    borderWidth: 0.5,
-    height: 28,
-    width: 232,
-    top: 130,
-    marginBottom: 40,
-    color: '#878787',
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth:0,
+    top: 50,
   },
   buttonS: {
-    top: 183,
     backgroundColor: '#FEA655',
     paddingVertical: 10,
     paddingHorizontal: 48,
     borderRadius: 25,
-    marginBottom: 20,
+    marginTop:10,
   },
   
 container: {
@@ -155,14 +138,11 @@ title: {
 
 input: {
   fontSize: 15,
-  borderWidth: 0.5,
-  height: 28,
+  borderBottomWidth: 0.5,
+  height: 40,
   width: 232,
   marginBottom: 30,
   color: '#878787',
-  borderTopWidth: 0,
-  borderLeftWidth: 0,
-  borderRightWidth:0,
 },
 save: {
   flexDirection: 'row', 
@@ -179,25 +159,16 @@ signUp: {
   right: 100,
   paddingHorizontal: 100,
 },
-reset: {
-  top: 90,
-  left: 100,
-  paddingHorizontal: 100,
-},
-
-button: {
-  top: 85,
-  backgroundColor: '#FEA655',
-  paddingVertical: 10,
-  paddingHorizontal: 48,
-  borderRadius: 25,
-  marginBottom: 20,
-},
 buttonText: {
   color: '#fff',
   fontSize: 15,
   fontWeight: 'bold',
   fontFamily: 'NanumGothic',
+},
+backBTN: {
+  fontSize: 25,
+  marginLeft:-140,
+  marginTop:11,
 },
 })
 
