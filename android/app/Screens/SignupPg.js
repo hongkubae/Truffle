@@ -87,8 +87,8 @@ function SignupPg({navigation}) {
         placeholder="비밀번호 확인"
         keyboardType="email"
         secureTextEntry={true}
-          value={password2}
-          onChangeText={handlePassword2Change}
+        value={password2}
+        onChangeText={handlePassword2Change}
       />
     </View>
       <Text style={{top: 26,fontSize: 12, color: '#ff0000',}}>{passwordContent1}</Text>
