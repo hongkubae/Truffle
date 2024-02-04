@@ -8,10 +8,11 @@ import {
   TextInput,
   StyleSheet, 
 } from 'react-native';
+import { authService } from "../BackFunc/firebaseConfig";
 
 function SignupPg({navigation}) {
   const { useState } = React;
-
+  const [email, setEmail] = useState('');
   const [text, onChangeText] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
@@ -48,15 +49,25 @@ function SignupPg({navigation}) {
     return value1 === value2;
   };
 
-  const handleFormSubmit = () => {
-    if (!isPassword(password, password2)) {
-      alert('모든 항목을 제대로 입력해주십시오');
+  const handleFormSubmit = async () => {
+    try {
+      if (!isPassword(password, password2) || !pwCondition(password)) {
+        alert('모든 항목을 제대로 입력해주십시오');
+        return;
+      }
+      await authService.createUserWithEmailAndPassword(email, password);
+      alert('회원가입이 완료되었습니다.');
+      navigation.navigate('SuccessLogin');
+    } catch (error) {
+      console.error('회원가입 오류:', error);
+      alert('회원가입 중 오류가 발생했습니다.');
     }
   };
 
 
   return(
     <View style={styles.container}>
+      {/*main header */}
       <View style={{flexDirection:'row',}}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}>
@@ -64,28 +75,29 @@ function SignupPg({navigation}) {
         </TouchableOpacity>
         <Text style={styles.topTitle}>회원가입</Text>
       </View>
+
     <View style={{alignItems:'center', marginTop:200}}>
+      {/*email 입력*/}
       <TextInput
         style={styles.input}
-        onChangeText={onChangeText}
+        onChangeText={(value) => setEmail(value)}
         value={text}
         placeholder="이메일"
-        keyboardType="email"
+        keyboardType="email-address"
       />
+      {/*PW 입력*/}
       <TextInput
         style={styles.input}
         setPassword={setPassword}
         value={password}
         placeholder="비밀번호"
-        keyboardType="email"
-        secureTextEntry={true}
-          value={password}
-          onChangeText={handlePasswordChange}
+        secureTextEntry
+        onChangeText={handlePasswordChange}
       />
+      {/*PW 확인 입력 */}
       <TextInput
         style={styles.input}
         placeholder="비밀번호 확인"
-        keyboardType="email"
         secureTextEntry={true}
         value={password2}
         onChangeText={handlePassword2Change}
@@ -96,9 +108,10 @@ function SignupPg({navigation}) {
 
       <TouchableOpacity
         style={styles.buttonS}
-        onPress={() => navigation.navigate('SignupPg')}>
+        onPress={handleFormSubmit}>
         <Text style={styles.buttonText}>회원가입</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.log}
         onPress={() => navigation.navigate('Loginpg')}>

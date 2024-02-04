@@ -76,7 +76,7 @@ function ForgotPW({navigation}) {
       };
   
     {/*조건문 useState */}
-  
+    const [email, setEmail] = useState('');
     const [text, onChangeText] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
@@ -113,18 +113,28 @@ function ForgotPW({navigation}) {
       return value1 === value2;
     };
   
-    const handleFormSubmit = () => {
-      if (!isPassword(password, password2)) {
-        alert('모든 항목을 제대로 입력해주십시오');
+    const handleFormSubmit = async () => {
+      try {
+        if (!isPassword(password, password2) || !pwCondition(password)) {
+          alert('모든 항목을 제대로 입력해주십시오');
+          return;
+        }
+        const user = await authService.confirmPasswordReset(email, verificationCode);
+        await user.updatePassword(password);
+  
+        alert('비밀번호가 성공적으로 변경되었습니다.');
+        navigation.navigate('SuccessPW');
+      } catch (error) {
+        console.error('비밀번호 변경 오류:', error);
+        alert('비밀번호 변경 중 오류가 발생했습니다.');
       }
     };
-  
-  
+
   return(
       <View style={styles.container}>
         <View style={{flexDirection:'row',gap:60}}>
         <TouchableOpacity
-        style={{marginLeft:30}}
+          style={{marginLeft:30}}
           onPress={() => navigation.goBack()}>
           <Text style={styles.backBTN}> ⟨ </Text>
         </TouchableOpacity>
@@ -133,17 +143,19 @@ function ForgotPW({navigation}) {
 
         <TextInput
           style={styles.inputP}
-          onChangeText={onChangeText}
+          onChangeText={(value) => setEmail(value)}
           value={text}
           placeholder="이메일"
-          keyboardType="email"
+          keyboardType="email-address"
         />
+
         <TouchableOpacity
           style={[styles.midButton, {backgroundColor: isStartButtonDisabled ? '#CCCCCC' : '#FEA655'} ]}
           onPress={handleStartTimer} 
                   disabled={isStartButtonDisabled}> 
           <Text style={styles.buttonText}>인증번호 발송</Text>
         </TouchableOpacity>
+        
         <TouchableOpacity
           style={styles.resend}
           onPress={handleResetTimer}
@@ -178,8 +190,8 @@ function ForgotPW({navigation}) {
           placeholder="비밀번호"
           keyboardType="email"
           secureTextEntry={true}
-            value={password}
-            onChangeText={handlePasswordChange}
+          value={password}
+          onChangeText={handlePasswordChange}
         />
         <Text style={styles.passwordContent}>{passwordContent1}</Text>
       <TouchableOpacity style={{top: 98}}>
@@ -198,7 +210,7 @@ function ForgotPW({navigation}) {
   
         <TouchableOpacity
           style={styles.buttonP}
-          onPress={() => navigation.navigate('Login')}>
+          onPress={handleFormSubmit}>
           <Text style={styles.buttonText} type="submit">비밀번호 변경</Text>
         </TouchableOpacity>
        

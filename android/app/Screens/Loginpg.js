@@ -10,8 +10,26 @@ import {
 } from 'react-native';
 import Eye from "../assets/icons/Eye";
 import TruffleLogo from "../assets/logo/TruffleLogo";
+import useAuth from '../BackFunc/AuthFunc';
 
-function Loginpg({ navigation }) {
+function Loginpg({ navigation, setIsLoggedIn }) {
+  //---email, pw, login여부 변수 지정---\\
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { isLoggedIn, handleLogin } = useAuth();
+
+  //-------로그인 시도-------\\
+  const handleLoginPress = () => {
+    handleLogin(email, password, setIsLoggedIn);
+  };
+
+  //--isLoggedIng==true -> navigate to BudgetPg--\\
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigation.navigate('Budgetpg');
+    }
+  }, [isLoggedIn]);
+
   const [text, onChangeText] = React.useState('');
     return (
       <View style={styles.container}>
@@ -31,34 +49,39 @@ function Loginpg({ navigation }) {
           onChangeText={onChangeText}
           value={text}
           placeholder="비밀번호"
-          keyboardType="defualt"
+          secureTextEntry
         />
         <TouchableOpacity
           style={styles.save}
           onPress={() => navigation.navigate('Visible')}></TouchableOpacity>
   
           {/* 비밀번호나 이메일 안맞았을떄-- 버튼누르고 체크후 띄울수 있게 어떻게하지 */}
-  <Text style={{bottom: 20, fontSize: 12,
-      color: '#ff0000', }}>일치하는 이메일 혹은 비밀번호가 없습니다</Text>
+        <Text style={{bottom: 20, fontSize: 12,
+          color: '#ff0000', }}>일치하는 이메일 혹은 비밀번호가 없습니다</Text>
+        
         <TouchableOpacity
           style={styles.save}> 
           <Text style={styles.saveTxt}>로그인 정보 저장</Text>
         </TouchableOpacity>
+        
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Budgetpg')}>
+          onPress={handleLoginPress}>
           <Text style={styles.buttonText}>로그인</Text>
         </TouchableOpacity>
+        
         <TouchableOpacity
           style={styles.signUp}
           onPress={() => navigation.navigate('SignupPg')}>
           <Text style={styles.saveTxt}>회원가입</Text>
         </TouchableOpacity>
+        
         <TouchableOpacity
           style={styles.reset}
           onPress={() => navigation.navigate('ForgotPW')}>
           <Text style={styles.saveTxt}>비밀번호 재설정</Text>
         </TouchableOpacity>
+      
       </View>
     );
   }
