@@ -7,7 +7,7 @@ import AlarmList from '../components/AlarmList';
 import InformationIcon from "../assets/icons/InformationIcon.svg";
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import AlarmInfoAlert from "../components/AlarmInfoAlert";
-
+import firebaseAdmin from '../app/firebaseAdmin';
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
 const AlarmView = () => {
@@ -18,26 +18,31 @@ const AlarmView = () => {
   const [alarms, setAlarms] = useState([]);
   const [infoVisible, setinfoVisible] = useState(false);
 
+  //--알람 설정 토글 보이기||안보이기--\\
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
+  //--인포 토글 보이기||안보이기--\\
   const infoToggleModal = () => {
     setinfoVisible(!infoVisible);
   };
 
+  //--반복 날짜 설정--\\
   const handleDayPress = (index: number) => {
     const updatedSelectedDays = [...selectedDays];
     updatedSelectedDays[index] = !updatedSelectedDays[index];
     setSelectedDays(updatedSelectedDays);
   };
 
+  //--알람 시간 설정--\\
   const getTimeFromDate = (date: Date) => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
   };
 
+  //--반복 날짜 보이기--\\
   const getSelectedDaysText = () => {
     const selectedDaysText = daysOfWeek
       .filter((day, index) => selectedDays[index])
@@ -46,6 +51,7 @@ const AlarmView = () => {
     return selectedDaysText !== '' ? selectedDaysText : '날짜 반복이 없습니다';
   };
 
+  //--알람 추가 로직--\\
   const handleAddAlarm = () => {
     const time = getTimeFromDate(date);
     const daysText = getSelectedDaysText();

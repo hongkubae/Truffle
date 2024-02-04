@@ -7,7 +7,6 @@ const AlarmItem = ({ alarm }) => {
 
   const toggleAlarm = () => {
     setAlarmOn(!isAlarmOn);
-    // TODO: 알람을 켜거나 끄는 로직 추가
   };
 
   return (

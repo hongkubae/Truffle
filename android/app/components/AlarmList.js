@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button,ScrollView, Dimensions } from 'react-native';
-import AlarmItem from './AlarmItem'; // 경로에 맞게 수정
+import AlarmItem from './AlarmItem';
 
 const AlarmList = ({ alarms }) => {
   const sortedAlarms = alarms.slice().sort((a, b) => {
