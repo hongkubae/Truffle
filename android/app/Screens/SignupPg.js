@@ -8,7 +8,7 @@ import {
   TextInput,
   StyleSheet, 
 } from 'react-native';
-import { authService } from "../BackFunc/firebaseConfig";
+import { authService } from "../app/firebaseConfig";
 
 function SignupPg({navigation}) {
   const { useState } = React;
