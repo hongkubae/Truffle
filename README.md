@@ -1,4 +1,5 @@
-# Truffle
+# Truffle ![image](https://github.com/Youth-Project/Truffle/assets/97874131/0789ea77-1144-4f72-bcb2-9a9445698125)
+
 
 >**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
