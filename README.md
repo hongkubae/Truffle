@@ -5,11 +5,17 @@
 
 ## Programming languages
 <div>
+   programming languages
+   <br/>
 <img src="https://img.shields.io/badge/JS-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
 <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=white">
+</div>
+<div>
+   tools
+   <br/>
 <img src="https://img.shields.io/badge/VScode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white">
 <img src="https://img.shields.io/badge/RN-61DAFB?style=for-the-badge&logo=React&logoColor=white">
-   
+<img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=white">
 </div>
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYouth-Project%2FTruffle%2Fblob%2Fmain%2FREADME.md&count_bg=%234A18B2&title_bg=%23555555&icon=deno.svg&icon_color=%23E7E7E7&title=%EB%82%B4%EA%BA%BC+%EB%B3%B4%EB%9F%AC+%EC%98%A8%EC%82%AC%EB%9E%8C%E3%85%8B%E3%85%8B&edge_flat=false)](https://hits.seeyoufarm.com)
