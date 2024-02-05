@@ -43,6 +43,17 @@ npm run ios
 yarn ios
 ```
 
+| Week | 세미나 | 과제 |커리큘럼 내용 |
+| ------ | -- | -- |----------- |
+| 1주차 | ☑️ | ☑️ | 오 내가 짱이야 |
+| 2주차 | ☑️ | ☑️ | 나 쥰내 멋져 |
+| 3주차 | ☑️ | ☑️ | 오 |
+| 4주차 | ☑️ | ☑️ | Cocoapods & Networking + 솝커톤 전 보충 세미나 |
+| 5주차 |  |  |디자인 합동 세미나 |
+| 6주차 |  |  |서버 합동 세미나 + 솝커톤  |
+| 7주차 |  |  |클론 코딩을 통한 실전 UI 구성, Animation, 통신 보충  |
+| 8주차 |  |  |e기획 경선 + 앱잼 전 보충 세미나 + 앱스토어 배포 가이드  |
+
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
