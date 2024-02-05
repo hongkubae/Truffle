@@ -10,26 +10,26 @@ import {
 } from 'react-native';
 import Eye from "../assets/icons/Eye";
 import TruffleLogo from "../assets/logo/TruffleLogo";
-import useAuth from '../BackFunc/AuthFunc';
+//import useAuth from '../BackFunc/AuthFunc';
 
 function Loginpg({ navigation, setIsLoggedIn }) {
   //---email, pw, login여부 변수 지정---\\
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { isLoggedIn, handleLogin } = useAuth();
+  //const { isLoggedIn, handleLogin } = useAuth();
 
   //-------로그인 시도-------\\
   const handleLoginPress = () => {
     handleLogin(email, password, setIsLoggedIn);
   };
-
+/*
   //--isLoggedIng==true -> navigate to BudgetPg--\\
   useEffect(() => {
     if (isLoggedIn) {
       navigation.navigate('Budgetpg');
     }
   }, [isLoggedIn]);
-
+*/
   const [text, onChangeText] = React.useState('');
     return (
       <View style={styles.container}>
