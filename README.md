@@ -5,7 +5,7 @@
 
 ## Programming languages
 <div>
-   ✨programming languages✨
+   ✨Platforms & languages✨
    <br/>
    <br/>
 <img src="https://img.shields.io/badge/JS-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
