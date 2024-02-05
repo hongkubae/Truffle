@@ -5,7 +5,9 @@
 ## Programming languages
 <img src="https://img.shields.io/badge/JS-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
 <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=white">
-<img src="https://img.shields.io/badge/VScode-FFCA28?style=for-the-badge&logo=VisualStudioCode&logoColor=white">
+<img src="https://img.shields.io/badge/VScode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white">
+<img src="https://img.shields.io/badge/RN-61DAFB?style=for-the-badge&logo=React&logoColor=white">
+
 ```bash
 # using npm
 npm start
