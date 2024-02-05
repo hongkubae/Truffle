@@ -7,7 +7,7 @@ import AlarmList from '../components/AlarmList';
 import InformationIcon from "../assets/icons/InformationIcon.svg";
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import AlarmInfoAlert from "../components/AlarmInfoAlert";
-import firebaseAdmin from '../app/firebaseAdmin';
+//import firebaseAdmin from '../app/firebaseAdmin';
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
 const AlarmView = () => {

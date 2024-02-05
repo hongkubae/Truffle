@@ -1,7 +1,7 @@
 // AuthFunc.js
 
 import { useState, useEffect } from 'react';
-import { authService } from './firebaseConfig';
+import { authService } from '../firebaseConfig';
 
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
