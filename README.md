@@ -3,7 +3,7 @@
 >**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ## Programming languages
-<img src="https://img.shields.io/badge/JS-3776AB?style=for-the-badge&logo=Javascript&logoColor=white">
+<img src="https://img.shields.io/badge/JS-#F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
 ```bash
 # using npm
 npm start
