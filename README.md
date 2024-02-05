@@ -35,7 +35,8 @@
 | 7주차 |  |  | 개 멋있는데 나  |
 | 8주차 |  |  | 낄낄 |
 
-![image](https://github.com/Youth-Project/Truffle/assets/97874131/c2b7139b-091f-4eb2-a530-5c29746aa951)
+![4164335_1582361978747](https://github.com/Youth-Project/Truffle/assets/97874131/b9ba6d09-c2fd-4be2-86ab-de5b2374dbe3)
+
 ```bash
 # using npm
 npm start
