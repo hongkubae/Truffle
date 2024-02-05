@@ -1,4 +1,3 @@
-![header](https://capsule-render.vercel.app/api?type=rect&color=auto&height=15&section=header&text=Youth%20Project&fontSize=12)
 # Truffle ![image](https://github.com/Youth-Project/Truffle/assets/97874131/0789ea77-1144-4f72-bcb2-9a9445698125)
 
 
