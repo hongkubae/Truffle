@@ -1,7 +1,7 @@
 import React, { useState, useEffect, } from 'react';
 import { View, Text, TouchableOpacity , StyleSheet, TextInput, FlatList} from 'react-native';
 import WeeklyCal from "../components/WeeklyCal";
-import SwiperComp from "../components/SwiperComp";
+import Receipt from "../components/Receipt";
 
 const WeeklyCalView = ({ route, navigation }) => {
   const {selectedDate, handleDayClick}=route.params;
@@ -14,7 +14,7 @@ const WeeklyCalView = ({ route, navigation }) => {
         <Text>월간 보기</Text>
      </TouchableOpacity>
      
-     <SwiperComp selectedDate={selectedDate}/>
+     <Receipt selectedDate={selectedDate}/>
 
     </View>
 
