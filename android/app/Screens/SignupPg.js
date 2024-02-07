@@ -8,19 +8,58 @@ import {
   TextInput,
   StyleSheet, 
 } from 'react-native';
-import { authService } from "../app/firebaseConfig";
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { db, authService } from '../../firebaseConfig';
 
 function SignupPg({navigation}) {
-  const { useState } = React;
-  const [email, setEmail] = useState('');
-  const [text, onChangeText] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const [passwordContent, setPasswordContent] = useState('');
   const [passwordContent1, setPasswordContent1] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailContent, setEmailContent] = useState('');
+{/* catch 오류문구 */}
+const [validation, setValidation] = useState("");
 
+{/* try-catch로 수정했는데 맞는지 불확실: 이미 존재하는 이메일인지 체크해야함-- 아님 login()이랑 합쳐야할듯? */}
+  const handleUserInfoChange = async (event) => {
+    event.preventDefault();
+    try {
+      await authService.createUserWithEmailAndPassword(email, password);
+      const userData = {
+        email:email,
+        password:password
+      };
+      const usersCollection = collection(db, 'users');
+      await addDoc(usersCollection, userData);
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        setValidation('이미 존재하는 이메일입니다.');
+      } else {
+        console.error('Signup error:', error);
+        setValidation('회원가입 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+const validateEmail = email => {
+  {/* 이메일 조건설정 */}
+    const regex = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+    return regex.test(email);
+}
+  const handleEmailChange = (val) => {
+    setEmail(val);
+
+    if (val && !validateEmail(val)) {
+      setEmailContent('허용되지 않는 이메일 형식입니다.');
+    } 
+    else {
+      setEmailContent('');
+    }
+  };
+
+{/* 비밀번호 조건설정 */}
   const reg = /^(?=.*[a-zA-Z])(?=.*[\W_])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-
   const pwCondition = (password) => {
     return reg.test(password);
   };
@@ -45,81 +84,66 @@ function SignupPg({navigation}) {
     }
   };
 
-  const isPassword = (value1, value2) => {
-    return value1 === value2;
-  };
-
-  const handleFormSubmit = async () => {
-    try {
-      if (!isPassword(password, password2) || !pwCondition(password)) {
-        alert('모든 항목을 제대로 입력해주십시오');
-        return;
-      }
-      await authService.createUserWithEmailAndPassword(email, password);
-      alert('회원가입이 완료되었습니다.');
-      navigation.navigate('SuccessLogin');
-    } catch (error) {
-      console.error('회원가입 오류:', error);
-      alert('회원가입 중 오류가 발생했습니다.');
-    }
-  };
-
 
   return(
     <View style={styles.container}>
-      {/*main header */}
-      <View style={{flexDirection:'row',}}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.backBTN}> ⟨ </Text>
-        </TouchableOpacity>
-        <Text style={styles.topTitle}>회원가입</Text>
-      </View>
+      <TouchableOpacity
+        style={styles.back}
+        onPress={() => navigation.goBack()}>
+        <Text style={styles.backBTN}> ⟨ </Text>
+      </TouchableOpacity>
 
-    <View style={{alignItems:'center', marginTop:200}}>
-      {/*email 입력*/}
+      <Text style={styles.topTitle}>회원가입</Text>
+      
       <TextInput
-        style={styles.input}
-        onChangeText={(value) => setEmail(value)}
-        value={text}
+        style={styles.inputS}
         placeholder="이메일"
-        keyboardType="email-address"
+        keyboardType="email"
+        val={email}
+          onChangeText={handleEmailChange}
       />
-      {/*PW 입력*/}
+
+<Text style={styles.errTxt}>{validation}</Text>
+    <Text style={{top: 232,
+    fontSize: 12,
+    color: '#ff0000', position: 'absolute'}}>{emailContent}</Text>
       <TextInput
-        style={styles.input}
+        style={styles.inputS}
         setPassword={setPassword}
-        value={password}
         placeholder="비밀번호"
-        secureTextEntry
-        onChangeText={handlePasswordChange}
-      />
-      {/*PW 확인 입력 */}
-      <TextInput
-        style={styles.input}
-        placeholder="비밀번호 확인"
+        keyboardType="email"
         secureTextEntry={true}
-        value={password2}
-        onChangeText={handlePassword2Change}
+          value={password}
+          onChangeText={handlePasswordChange}
       />
-    </View>
-      <Text style={{top: 26,fontSize: 12, color: '#ff0000',}}>{passwordContent1}</Text>
-      <Text style={{top: 80,fontSize: 12,color: '#ff0000',}}>{passwordContent}</Text>
+      <Text style={styles.errTxt}>{passwordContent1}</Text>
+      <TextInput
+        style={styles.inputS}
+        placeholder="비밀번호 확인"
+        keyboardType="email"
+        secureTextEntry={true}
+          value={password2}
+          onChangeText={handlePassword2Change}
+      />
+      
+      <Text style={styles.errTxt}>{passwordContent}</Text>
 
       <TouchableOpacity
         style={styles.buttonS}
-        onPress={handleFormSubmit}>
+        onPress={handleUserInfoChange}
+        >
         <Text style={styles.buttonText}>회원가입</Text>
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.log}
-        onPress={() => navigation.navigate('Loginpg')}>
+        onPress={() => navigation.navigate('Reset')}>
         <Text style={styles.saveTxt}>이미 계정이 있나요?  로그인하기</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+
 const styles = StyleSheet.create({
   topTitle: {
     fontSize: 24,
@@ -183,6 +207,11 @@ backBTN: {
   marginLeft:-140,
   marginTop:11,
 },
+  errTxt: {
+    top: 100,
+    fontSize: 12,
+    color: '#ff0000',
+  },
 })
 
 export default SignupPg;

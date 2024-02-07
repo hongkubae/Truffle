@@ -8,14 +8,35 @@ import {
   TextInput,
   StyleSheet, 
 } from 'react-native';
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
+import { updateUser } from '../BackFunc/DbFunc';
+
+
 
 function Budgetpg({navigation}) {
-  const [text, onChangeText] = React.useState('');
+  const [budget, onChangeBudget] = useState('');
+
+  const changeBudget = (value: string) => {
+    const removedCommaValue: number = Number(value.replace(/,/g, ''));
+    onChangeBudget(removedCommaValue.toLocaleString());
+  };
+
+
+{/* updateUser()들 Budget page랑 ForgotPW랑 각각 다름 */}
+  const updateUser = async (userId, updatedData) => {
+    if (budget!=="") {
+      const userDoc = doc(db, 'users', userId);
+  await updateDoc(userDoc, updatedData);
+    }
+};
+
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.back}
-        onPress={() =>  navigation.goBack()}>
+        onPress={() => navigation.goBack()}>
         <Text style={styles.backBTN}> ⟨ </Text>
       </TouchableOpacity>
 
@@ -25,21 +46,20 @@ function Budgetpg({navigation}) {
       </Text>
       <TextInput
         style={styles.input}
-        onChangeText={onChangeText}
-        value={text}
+        value={budget}
+        onChangeText={changeBudget}
         placeholder="300,000원"
         keyboardType="numeric"
       />
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Login')}>
+        onPress={updateUser}>
         <Text style={styles.buttonText}>시작하기</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -114,6 +134,11 @@ const styles = StyleSheet.create({
   },
   backBTN: {
     fontSize: 25,
+  },
+  errTxt: {
+    top: 100,
+    fontSize: 12,
+    color: '#ff0000',
   },
 })
 
