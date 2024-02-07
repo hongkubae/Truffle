@@ -170,7 +170,7 @@ const RefTab = () => {
                             style={styles.input}
                             onChangeText={handleInputChange}
                             value={inputValue}
-                            placeholder="Type here..."
+                            placeholder="수량"
                             keyboardType="number-pad"
                         />
                         <Text style={styles.units}>{foodUnits}</Text>
