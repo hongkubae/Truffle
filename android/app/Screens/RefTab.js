@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal,
   Animated, TouchableWithoutFeedback, Dimensions, PanResponder, TextInput,} from 'react-native';
 import  {  vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, bean, grain, meat, milk, selected }  from '../components/IngredientsArray';
 import BottomSheet from '../components/BottomSheet';
+import EditIngredientsIcon from "../assets/icons/EditIngredientsIcon";
+import RefTruffleLogo from "../assets/logo/RefTruffleLogo";
 
 const RefTab = () => {
 
@@ -96,7 +98,7 @@ const RefTab = () => {
       {!isItem && (
         <View style={styles.container}>
           <View style={styles.imgContainer}>
-            {/* 앱 아이콘 이미지 */}
+            <RefTruffleLogo/>
           </View>
           <View style={styles.statusText}>
             <Text>냉장고가 텅 비었어요.</Text>
@@ -112,7 +114,7 @@ const RefTab = () => {
               {selectedFood && selectedFood.map((food, index) => (
                             <View key={index} style={styles.foods}>
                                 <View style={styles.circle}>
-                                  {/* 음식사진 */}
+                                  {food.img}
                                 </View>
                                 <Text style={styles.foodName}>
                                   {/* 음식이름  */} {food.name}
@@ -124,7 +126,7 @@ const RefTab = () => {
                                   {/* 단위 */} {food.unit}
                                 </Text>
                             <TouchableOpacity onPress={pressButton} style={styles.pencil}>
-                              {/* 안에 연필이미지 */}
+                              <EditIngredientsIcon/>
                             </TouchableOpacity>
                             </View>
                         ))}
@@ -169,6 +171,7 @@ const RefTab = () => {
                             onChangeText={handleInputChange}
                             value={inputValue}
                             placeholder="Type here..."
+                            keyboardType="number-pad"
                         />
                         <Text style={styles.units}>{foodUnits}</Text>
                     </View>
@@ -329,7 +332,6 @@ const styles = StyleSheet.create({
   },
   pencil:{
     width: 30,
-    backgroundColor: 'green',
     height: 30,
     marginLeft: 10,
     display: 'flex',
@@ -387,12 +389,13 @@ const styles = StyleSheet.create({
       alignItems: 'center'
   },
   input:{
-      marginTop: 20,
+      marginTop: 10,
       borderBottomColor: '#BCBCBC',
       borderBottomWidth: 1,
       width: 99,
-      height: 24,
+      height: 40,
       textAlign: 'center',
+      fontSize:18
   },
   units:{
       height: 24,
