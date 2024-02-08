@@ -3,17 +3,20 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from 'firebase/auth';
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAIPnJxRXXFjP3obdArnnVBG3dn_0-5zUU",
+  apiKey: "AIzaSyBZq36G0AMz4dh_hlVS7X9xY2aXGCZLmVo",
   authDomain: "youth-truffle.firebaseapp.com",
   projectId: "youth-truffle",
   storageBucket: "youth-truffle.appspot.com",
   messagingSenderId: "295038915158",
-  appId: "1:295038915158:web:51896dbb4fab698720e1f7",
-  measurementId: "G-9Z19JS6YK2"
+  appId: "1:295038915158:android:0f78a90b8721647520e1f7",
+  databaseURL: "https://firestore.googleapis.com/v1/projects/youth-truffle/databases/(default)/documents",
 };
+
+const db = app.firestore();
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const authService = getAuth(app);
-export { authService };
+export { authService, db };

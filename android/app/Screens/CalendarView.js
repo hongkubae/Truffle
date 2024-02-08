@@ -84,8 +84,7 @@ const goToPreviousMonth = () => {
 
   const handleDayClick = (date) => {
     if (selectedDate === date) {
-      // 이미 선택된 날짜를 두 번 탭하면 주간 캘린더만 보이도록 처리
-      setSelectedDate(null);
+        setSelectedDate(null);
     } else {
       setSelectedDate(date);
     }
