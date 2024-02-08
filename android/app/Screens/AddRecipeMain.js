@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, TextInput, StyleSheet, Modal } from 'react-native';
 
-function AddA() {
+function AddRecipeMain() {
   const [text, onChangeText] = useState('');
   const [min, setMin] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -246,4 +246,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default AddA;
+export default AddRecipeMain;

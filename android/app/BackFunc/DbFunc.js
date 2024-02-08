@@ -1,7 +1,7 @@
 // dbFunctions.js 이부분은 수정 필요할수도 있음!!
 
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { db } from './firebaseConfig';
+import { db } from '../firebaseConfig';
 
 // 모든 사용자 가져오기
 // 이건 우리가 사용자들 관리할때 쓸 수 있는 함수. 관리자권한의 계정에서 사용 가능

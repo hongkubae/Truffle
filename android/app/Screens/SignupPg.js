@@ -9,38 +9,40 @@ import {
   StyleSheet, 
 } from 'react-native';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { db, authService } from '../../firebaseConfig';
+import { db } from './firebaseConfig';
+import { authService } from "../app/firebaseConfig";
 
-function SignupPg({navigation}) {
+
+function SignupPg({ navigation }) {
+
+{/* catch 오류문구 */}
+const [validation, setValidation] = useState("");
+
+
+{/* try-catch로 수정했는데 맞는지 불확실: 이미 존재하는 이메일인지 체크해야함-- 아님 login()이랑 합쳐야할듯? */}
+  const handleUserInfoChange = async () => {
+    try {
+      const { user } = await authService.createUserWithEmailAndPassword(email, password);
+      const userRef = collection(db, 'users');
+      const newUserDoc = doc(userRef, user.uid);
+      await addDoc(newUserDoc, { user_email: email, user_password: password, user_id: user.uid });
+      setValidation('회원가입에 성공했습니다.');
+      } catch (error) {
+      console.error('회원가입 오류:', error);
+      if (error.code === 'auth/email-already-in-use'){
+        setValidation('이미 존재하는 이메일입니다.');
+      } else {
+      setValidation('회원가입 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const [passwordContent, setPasswordContent] = useState('');
   const [passwordContent1, setPasswordContent1] = useState('');
   const [email, setEmail] = useState('');
   const [emailContent, setEmailContent] = useState('');
-{/* catch 오류문구 */}
-const [validation, setValidation] = useState("");
-
-{/* try-catch로 수정했는데 맞는지 불확실: 이미 존재하는 이메일인지 체크해야함-- 아님 login()이랑 합쳐야할듯? */}
-  const handleUserInfoChange = async (event) => {
-    event.preventDefault();
-    try {
-      await authService.createUserWithEmailAndPassword(email, password);
-      const userData = {
-        email:email,
-        password:password
-      };
-      const usersCollection = collection(db, 'users');
-      await addDoc(usersCollection, userData);
-    } catch (error) {
-      if (error.code === 'auth/email-already-in-use') {
-        setValidation('이미 존재하는 이메일입니다.');
-      } else {
-        console.error('Signup error:', error);
-        setValidation('회원가입 중 오류가 발생했습니다.');
-      }
-    }
-  };
 
 const validateEmail = email => {
   {/* 이메일 조건설정 */}
@@ -84,7 +86,6 @@ const validateEmail = email => {
     }
   };
 
-
   return(
     <View style={styles.container}>
       <TouchableOpacity
@@ -98,7 +99,7 @@ const validateEmail = email => {
       <TextInput
         style={styles.inputS}
         placeholder="이메일"
-        keyboardType="email"
+        keyboardType="email-address"
         val={email}
           onChangeText={handleEmailChange}
       />
@@ -111,7 +112,7 @@ const validateEmail = email => {
         style={styles.inputS}
         setPassword={setPassword}
         placeholder="비밀번호"
-        keyboardType="email"
+        keyboardType="email-address"
         secureTextEntry={true}
           value={password}
           onChangeText={handlePasswordChange}
@@ -120,7 +121,7 @@ const validateEmail = email => {
       <TextInput
         style={styles.inputS}
         placeholder="비밀번호 확인"
-        keyboardType="email"
+        keyboardType="email-address"
         secureTextEntry={true}
           value={password2}
           onChangeText={handlePassword2Change}
@@ -136,7 +137,7 @@ const validateEmail = email => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.log}
-        onPress={() => navigation.navigate('Reset')}>
+        onPress={() => navigation.navigate('Loginpg')}>
         <Text style={styles.saveTxt}>이미 계정이 있나요?  로그인하기</Text>
       </TouchableOpacity>
     </View>
@@ -172,11 +173,10 @@ title: {
   fontFamily: 'NanumGothic',
   color: '#000', // 글자색상 추가
 },
-
 input: {
   fontSize: 15,
   borderBottomWidth: 0.5,
-  height: 40,
+  height: 50,
   width: 232,
   marginBottom: 30,
   color: '#878787',

@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App () {
   //--로그인 여부 판단해서 로그인||메인 네비게이터 분리--\\
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <NavigationContainer independent = {true}>

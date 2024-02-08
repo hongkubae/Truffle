@@ -5,12 +5,14 @@ import  {  vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, be
 import BottomSheet from '../components/BottomSheet';
 import EditIngredientsIcon from "../assets/icons/EditIngredientsIcon";
 import RefTruffleLogo from "../assets/logo/RefTruffleLogo";
-import DbFunc from "../BackFunc/DbFunc";
 
-const RefTab = () => {
+const AddRecipeIngredients = () => {
+
   const [isItem, setIsItem] = useState(true);
   const checkItem = () =>{
+    
   }
+
   const [vegetableArray, changeVegetable] = useState(vegetable);
   const [breadArray, changeBread] = useState(bread);
   const [fruitArray, changeFruit] = useState(fruit);
@@ -24,6 +26,7 @@ const RefTab = () => {
   const [meatArray, changeMeat] = useState(meat);
   const [milkArray, changeMilk] = useState(milk);
   const [selectedFood, changeSelectedFood] = useState(selected);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
 
@@ -478,4 +481,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RefTab;
+export default AddRecipeIngredients;

@@ -10,11 +10,11 @@ import {
 } from 'react-native';
 import { authService } from '../app/firebaseConfig';
 import { updateUser } from '../BackFunc/DbFunc';
-
+import Eye from "../assets/icons/Eye";
 
 
 {/*비밀번호 재설정 */}
-function ForgotPW() {
+function ForgotPW({navigation}) {
 
 {/*const [imageSrc, setImageSrc] = useState("https://via.placeholder.com/118x66"); // 초기 상태는 선택이 되지 않은 상태를 나타내기 위함
 const [isClicked, setIsClicked] = useState(false);
@@ -166,7 +166,7 @@ const handleClick = () => {
         val={email}
           onChangeText={handleEmailChange}
         placeholder="이메일"
-        keyboardType="email"
+        keyboardType="email-address"
         editable={!isButtonPressed}
       />
 
@@ -215,7 +215,7 @@ const handleClick = () => {
         setPassword={setPassword}
         updatedData={password}
         placeholder="비밀번호"
-        keyboardType="email"
+        keyboardType="email-address"
         secureTextEntry={true}
           
           onChangeText={handlePasswordChange}
@@ -228,7 +228,7 @@ const handleClick = () => {
       <TextInput
         style={styles.inputP}
         placeholder="비밀번호 확인"
-        keyboardType="email"
+        keyboardType="email-address"
         secureTextEntry={true}
           updatedData={password2}
           onChangeText={handlePassword2Change}

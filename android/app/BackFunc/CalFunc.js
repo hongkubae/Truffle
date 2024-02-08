@@ -1,5 +1,5 @@
 // Import necessary Firebase functions
-import { db } from './firebaseConfig'
+import { db } from '../firebaseConfig'
 
 //주간 달력을 가져오는 함수 input값으로 selectedData, 즉 선택한 날짜를 받음
 const getWeeklyCalendar = async (selectedDate) => {

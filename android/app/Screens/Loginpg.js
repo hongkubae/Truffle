@@ -5,12 +5,12 @@ import {
   Image,
   View,
   TouchableOpacity,
-  TextInput,
   StyleSheet, 
+  TextInput,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { onSubmit } from '../BackFunc/AuthFunc';
+//import { onSubmit } from './authFunctions';
 import { authService } from '../firebaseConfig';
 
 
@@ -18,7 +18,10 @@ function Loginpg({ navigation }) {
 const [password, setPassword] = useState('');
 const [email, setEmail] = useState('');
 const [validation, setValidation] = useState("");
+{/* 로그인 정보 저장 async storage */}
+const [rememberMe, setRememberMe] = useState(false);
 
+  
 const handlePasswordChange = (value) => {
     setPassword(value);
   };
@@ -26,12 +29,7 @@ const handlePasswordChange = (value) => {
     setEmail(val);
   };
 
-
-{/* 로그인 정보 저장 async storage */}
-  const [rememberMe, setRememberMe] = useState(false);
-
   useEffect(() => {
-    // Load stored email and password when the component mounts
     loadLoginInfo();
   }, []);
 
@@ -95,19 +93,18 @@ const onSubmit = async (event) => {
         val={email}
         onChangeText={handleEmailChange}
         placeholder="이메일"
-        keyboardType="email"
+        keyboardType="email-address"
       />
       <TextInput
         style={styles.input}
         value={password}
         onChangeText={handlePasswordChange}
         placeholder="비밀번호"
-        keyboardType="email"
+        keyboardType="email-address"
       />
 
         {/* 비밀번호나 이메일 안맞았을떄-- 버튼누르고 체크후 띄울수 있게 어떻게하지 */}
-        <Text style={{bottom: 20, fontSize: 12,
-    color: '#ff0000', }}>{validation}</Text>
+        <Text style={{bottom: 20, fontSize: 12, color: '#ff0000', }}>{validation}</Text>
 
       <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
@@ -148,11 +145,10 @@ const styles = StyleSheet.create({
     fontFamily: 'NanumGothic',
     color: '#000', // 글자색상 추가
   },
-
   input: {
     fontSize: 15,
     borderWidth: 0.5,
-    height: 40,
+    height: 50,
     width: 232,
     marginBottom: 30,
     color: '#878787',
@@ -180,7 +176,6 @@ const styles = StyleSheet.create({
     left: 100,
     paddingHorizontal: 100,
   },
-
   button: {
     top: 85,
     backgroundColor: '#FEA655',
@@ -195,7 +190,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'NanumGothic',
   },
-
   //budgetpg
   introBudget: {
     fontSize: 20,
@@ -215,7 +209,6 @@ const styles = StyleSheet.create({
   backBTN: {
     fontSize: 25,
   },
-
   //signuppg
   topTitle: {
     fontSize: 24,
@@ -223,7 +216,6 @@ const styles = StyleSheet.create({
   },
   log: {
     top: 193,
-
   },
   inputS: {
     fontSize: 15,
@@ -245,7 +237,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 20,
   },
-  
   //success
   center: {
     fontSize: 20,
@@ -253,7 +244,6 @@ const styles = StyleSheet.create({
     marginBottom: 55,
     textAlign: 'center',
   },
-
   //forgotPW
   inputP: {
     fontSize: 15,
@@ -318,4 +308,4 @@ const styles = StyleSheet.create({
     color: '#ff0000',
   },
 });
-  export default Loginpg;
+export default Loginpg;

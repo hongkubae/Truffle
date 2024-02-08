@@ -3,7 +3,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {View, Button, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import BookmarkTab from "../Screens/BookmarkTab";
-import RecipeTab from "../Screens/RecipeTab";
+import RecipeDetailStackNavigation from "../navigations/RecipeDetailStackNavigation";
 import RefTab from "../Screens/RefTab";
 
 const Tab = createMaterialTopTabNavigator();
@@ -31,8 +31,8 @@ function RecipeTabNavigator() {
         options={{ tabBarLabel: '냉장고' }} 
       />
       <Tab.Screen
-        name="RecipeTab"
-        component={RecipeTab}
+        name="RecipeTabStack"
+        component={RecipeDetailStackNavigation}
         options={{ tabBarLabel: '레시피' }} 
       />
       <Tab.Screen
