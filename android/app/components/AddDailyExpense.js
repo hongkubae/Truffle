@@ -41,7 +41,7 @@ const AddDailyExpense = ({ EditVisible, toggleAddDailyExpense, selectedDate }) =
   };
 
   return (
-      <View style={{alignItems:'center', marginTop:50}}>
+      <View style={{alignItems:'center', marginTop:20}}>
         <ProductList/>
         <Line/>
 

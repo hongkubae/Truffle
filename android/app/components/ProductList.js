@@ -7,67 +7,58 @@ import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
 const ProductList = () => {
 
   const [items, setItems] = useState([]);
-  const [quantity, setQuantity] = useState('');
-  const [itemName, setItemName] = useState('');
-  const [price, setPrice] = useState('');
+  const [inputs, setInputs] = useState([{ quantity: '', itemName: '', price: '' }]);
+
+  const handleInputChange = (text, index, key) => {
+    const newInputs = [...inputs];
+    newInputs[index][key] = text;
+    setInputs(newInputs);
+  };
 
   const handleAddItem = () => {
-    if (quantity && itemName && price) {
-      const newItem = {
-        quantity,
-        itemName,
-        price,
-      };
-
+    const newItem = inputs[inputs.length - 1];
+    if (newItem.quantity && newItem.itemName && newItem.price) {
       setItems([...items, newItem]);
-      setQuantity('');
-      setItemName('');
-      setPrice('');
+      setInputs([...inputs, { quantity: '', itemName: '', price: '' }]);
     }
   };
 
-  return (
-      <View>
-        <View style={{alignItems:'center', marginTop:50}}>
-          
-          <View style={{ marginTop:50, flexDirection:'row', gap:20, alignItems:'center'}}>
-          <TouchableOpacity onPress={handleAddItem} >
-            <SmallAddBTNGrey/>
-          </TouchableOpacity>
-          <TextInput
-            placeholder="품목"
-            style={[styles.input, {width:100}]}
-            value={itemName}
-            onChangeText={(text) => setItemName(text)}
-            />
-            <TextInput
-            placeholder="수량"
-            style={styles.input}
-            value={quantity}
-            keyboardType="number-pad"
-            onChangeText={(text) => setQuantity(text)}
-            />
-            <TextInput
-            placeholder="가격"
-            style={styles.input}
-            value={price}
-            keyboardType="number-pad"
-            onChangeText={(text) => setPrice(text)}
-            />
-            <Text style={{fontSize:18}}>₩</Text>
-            </View>
-        </View>
+  // 모든 TextInput이 값이 채워졌는지 확인
+  const areInputsFilled = () => {
+    return inputs.every(input => input.quantity && input.itemName && input.price);
+  };
 
-         <View style={{marginTop:20, backgroundColor:'#F8F9FA'}}>
-          {items.map((item, index) => (
-          <ListItem key={index} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Subtitle>{`# ${item.quantity} ${item.itemName} ${item.price}원`}</ListItem.Subtitle>
-            </ListItem.Content>
-          </ListItem>
-          ))}
+  return (
+    <View style={{ alignItems: 'center' }}>
+       {inputs.map((input, index) => (
+        <View key={index} style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+          <TextInput
+            placeholder="항목 입력"
+            style={[styles.input, { width: 100 }]}
+            value={input.itemName}
+            onChangeText={(text) => handleInputChange(text, index, 'itemName')}
+          />
+          <TextInput
+            placeholder="수량"
+            style={[styles.input, {width:40}]}
+            value={input.quantity}
+            keyboardType="number-pad"
+            onChangeText={(text) => handleInputChange(text, index, 'quantity')}
+          />
+          <TextInput
+            placeholder="가격"
+            style={[styles.input, {width:100}]}
+            value={input.price}
+            keyboardType="number-pad"
+            onChangeText={(text) => handleInputChange(text, index, 'price')}
+          />
+          <Text style={{ fontSize: 18 }}>₩</Text>
         </View>
-      </View>
+      ))}
+       <TouchableOpacity onPress={areInputsFilled() ? handleAddItem : null} style={{ marginTop: 10, marginBottom:10 }}>
+        <SmallAddBTNGrey />
+      </TouchableOpacity>
+    </View>
   );
 };
 
