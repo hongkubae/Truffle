@@ -58,38 +58,30 @@ const Receipt = ({selectedDate}) => {
     </View>
 
     {receiptData?.items && receiptData.items.map((item, index) => (
-    <View key={index} style={{alignItems:'center', marginTop:20}}>
-      <View style={{ flexDirection:'row', gap:45}}>
-        <Text>{index + 1}</Text>
-        <Text>{item[0]}</Text>
-        <Text>{item[1]}</Text>
-        <Text>{item[2]}원</Text>
-        {/*구매목록 */}  
-      </View>
-      <Line marginTop={20}/>
-    </View>
-  ))}
-
-  {receiptData?.pay && receiptData.pay.map((pay, index) => (
-    <View style={{marginTop:20, marginLeft:20}}>
-      <View style={{ flexDirection:'row',}}>
-        <Text> PAY</Text>
-        <Text>{receiptData?.pay[index]?.pay}</Text>
-        {/*pay*/}  
-      </View>
-      <View style={{ flexDirection:'row',}}>
-        <Text> SHOP</Text>
-        <Text>{receiptData?.pay[index]?.shop}</Text>
-        {/*shop*/}  
-      </View>
-      <View style={{ flexDirection:'row',}}>
-        <Text> TAG</Text>
-        <Text> {receiptData?.pay[index]?.tag}</Text>
-        {/*tag*/}  
-      </View>
-      <Line marginTop={20} alignItems={'center'}/>
-    </View>
-  ))}
+        <View key={index} style={{ alignItems: 'center', marginTop: 20 }}>
+          <View style={{ flexDirection: 'row', gap: 45 }}>
+            <Text>{index + 1}</Text>
+            <Text>{item[0]}</Text>
+            <Text>{item[1]}</Text>
+            <Text>{item[2]}원</Text>
+            {/*구매목록 */}
+          </View>
+          {receiptData.pay[index] && (
+            <View style={{ flexDirection: 'row', gap: 45 }}>
+              <Text>PAY</Text>
+              <Text>{receiptData.pay[index]?.pay}</Text>
+              {/*pay*/}
+              <Text>SHOP</Text>
+              <Text>{receiptData.pay[index]?.shop}</Text>
+              {/*shop*/}
+              <Text>TAG</Text>
+              <Text> {receiptData.pay[index]?.tag}</Text>
+              {/*tag*/}
+            </View>
+          )}
+          <Line marginTop={20} alignItems={'center'} />
+        </View>
+      ))}
     
     <View style={{ marginTop:20, marginLeft:20}}>
       <View style={{ flexDirection:'row', gap:45}}>
