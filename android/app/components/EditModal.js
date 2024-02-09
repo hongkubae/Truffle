@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
-import { View, Button, Modal, Text, TouchableOpacity, StyleSheet,Dimensions, TextInput } from 'react-native';
+import { View, Button, Modal, Text, TouchableOpacity, StyleSheet,Dimensions, TextInput, ScrollView, SafeAreaView } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Line from "../assets/icons/Line";
 import AddDailyExpense from "./AddDailyExpense";
 import AddBTNIcon from "../assets/icons/AddBTNIcon";
+import TruffleLogo from "../assets/logo/TruffleLogo";
 
 const EditModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
 
-  const [items, setItems] = useState([]);
-  const [quantity, setQuantity] = useState('');
-  const [itemName, setItemName] = useState('');
-  const [shop, setShop] = useState('');
   const [dailyExpense, setDailyExpense] = useState('0');
+  const [expenseCount, setExpenseCount] = useState(0);
 
+  const handleAddExpense = () => {
+    setExpenseCount(prevCount => prevCount + 1);
+  };
 
   return (
     <Modal
@@ -23,30 +24,35 @@ const EditModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
         toggleEditModal();
       }}
     >
-    <View style={styles.modalContainer}>
-      <View style={{alignItems:'center', marginTop:50}}>
-        <Text>{selectedDate}</Text>
-        <Text>{dailyExpense} 원</Text>
-        <Line/>
-        <AddDailyExpense/>
-        <Line/>
-      </View>
-        
-       <TouchableOpacity onPress={toggleEditModal}>
-          <Text>back to weekly cal view</Text>
-        </TouchableOpacity>
+    <SafeAreaView>
+      <ScrollView>
+        <View style={styles.modalContainer}>
+          <View style={{alignItems:'center', marginTop:50}}>
+            <TouchableOpacity onPress={handleAddExpense}>
+              <AddBTNIcon />
+            </TouchableOpacity>
+            <Text>{selectedDate}</Text>
+            <Text style={{fontSize:38,}}>{dailyExpense} 원</Text>
+            <Line/>
+            <AddDailyExpense/>
+            <Line/>
 
-      </View>
-    </Modal>
+            {[...Array(expenseCount)].map((_, index) => (
+            <AddDailyExpense key={index} />
+            ))}
+            <Text>MEMO</Text>
+
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
-    width: Dimensions.get('window').width,
-    height:Dimensions.get('window').height,
     backgroundColor:'#F8F9FA'
-
   },
   modalContent: {
     backgroundColor: 'white',

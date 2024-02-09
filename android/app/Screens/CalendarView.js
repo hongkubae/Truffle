@@ -6,6 +6,8 @@ import Svg, { Circle, Text as SvgText } from 'react-native-svg';
 import MonthlyCal from "../components/MonthlyCal";
 import WeekCalView from "../Screens/WeekCalView";
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
+import LeftArrow from "../assets/icons/LeftArrow";
+import RightArrow from "../assets/icons/RightArrow";
 
 const CalendarView = ({navigation, props}) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -35,7 +37,6 @@ const CalendarView = ({navigation, props}) => {
           date: day.format('YYYY-MM-DD'),
           dayOfWeek: day.format('ddd'),
           isCurrentMonth: day.isSame(currentDate, 'month'),
-          expense: getExpenseForDate(day.format('YYYY-MM-DD')),
         });
         day.add(1, 'day');
       }
@@ -46,27 +47,6 @@ const CalendarView = ({navigation, props}) => {
     setCalendarData(rows);
   };
 
-  const getExpenseForDate = (date) => {
-    const expenseItem = expenses.find((expense) => expense.date === date);
-    return expenseItem ? expenseItem.expense : null;
-  };
-
-
-  const handleAddExpense = () => {
-    if (selectedDate) {
-      const newExpenseItem = { date: selectedDate, expense: newExpense };
-      setExpenses([...expenses, newExpenseItem]);
-      setNewExpense('');
-  
-      setSelectedDate(newExpenseItem.date);
-  
-      generateCalendar();
-    }
-  };
-
-  const renderCalendar = () => {
-    return <MonthlyCal calendarData={calendarData} selectedDate={selectedDate} handleDayClick={handleDayClick} />;
-  };
 
 
 const goToPreviousMonth = () => {
@@ -83,11 +63,7 @@ const goToPreviousMonth = () => {
   };
 
   const handleDayClick = (date) => {
-    if (selectedDate === date) {
-        setSelectedDate(null);
-    } else {
       setSelectedDate(date);
-    }
     console.log('Clicked on date:', date);
   };
 
@@ -95,16 +71,16 @@ const goToPreviousMonth = () => {
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30 }}>
         <TouchableOpacity onPress={goToPreviousMonth}>
-            <Text>왼쪽</Text>
+            <LeftArrow/>
           </TouchableOpacity>
           <Text>{currentDate.format('yyyy년 M월')}</Text>
           <TouchableOpacity onPress={goToNextMonth}>
-            <Text>오른쪽</Text>
+            <RightArrow/>
           </TouchableOpacity>
         </View>
       
         <Table>
-          {renderCalendar()}
+          <MonthlyCal calendarData={calendarData} selectedDate={selectedDate} handleDayClick={handleDayClick} />
         </Table>
 
         <TouchableOpacity

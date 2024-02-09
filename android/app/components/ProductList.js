@@ -30,7 +30,7 @@ const ProductList = () => {
       <View>
         <View style={{alignItems:'center', marginTop:50}}>
           
-          <View style={{ marginTop:50, flexDirection:'row', gap:20, justifyContent:'center'}}>
+          <View style={{ marginTop:50, flexDirection:'row', gap:20, alignItems:'center'}}>
           <TouchableOpacity onPress={handleAddItem} >
             <SmallAddBTNGrey/>
           </TouchableOpacity>
@@ -54,7 +54,8 @@ const ProductList = () => {
             keyboardType="number-pad"
             onChangeText={(text) => setPrice(text)}
             />
-              </View>
+            <Text style={{fontSize:18}}>₩</Text>
+            </View>
         </View>
 
          <View style={{marginTop:20, backgroundColor:'#F8F9FA'}}>

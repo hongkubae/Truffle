@@ -41,12 +41,12 @@ const AddDailyExpense = ({ EditVisible, toggleAddDailyExpense, selectedDate }) =
   };
 
   return (
-      <View style={styles.modalContainer}>
-        <View style={{alignItems:'center', marginTop:50}}>
-          <ProductList/>
-          <Line/>
-          <View style={{alignItems:'start-end'}}>
-          <View style={{flexDirection:'row'}}>
+      <View style={{alignItems:'center', marginTop:50}}>
+        <ProductList/>
+        <Line/>
+
+        <View style={{alignItems:'flex-start', marginLeft:-20}}>
+          <View style={styles.tagStyle}>
             <Text>PAY</Text>
             <TouchableOpacity
               style={[styles.button, cashOrCard === 'cash' && styles.selectedButton]}
@@ -62,7 +62,7 @@ const AddDailyExpense = ({ EditVisible, toggleAddDailyExpense, selectedDate }) =
             </TouchableOpacity>    
           </View>
 
-          <View style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+          <View style={styles.tagStyle}>
             <Text>SHOP</Text>
             <TextInput
             placeholder="..."
@@ -71,7 +71,8 @@ const AddDailyExpense = ({ EditVisible, toggleAddDailyExpense, selectedDate }) =
             onChangeText={(text) => setShop(text)}
             />
           </View>
-          <View style={{flexDirection:'row'}}>
+
+          <View style={styles.tagStyle}>
             <Text>TAG</Text>
 
             <TouchableOpacity
@@ -98,17 +99,10 @@ const AddDailyExpense = ({ EditVisible, toggleAddDailyExpense, selectedDate }) =
         </View>
       <Line/>
     </View>
-  </View>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    width: Dimensions.get('window').width,
-    height:Dimensions.get('window').height,
-    backgroundColor:'#F8F9FA'
-
-  },
   modalContent: {
     backgroundColor: 'white',
     width: 304,
@@ -130,25 +124,38 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   button: {
-    padding: 10,
+    padding: 5,
     margin: 5,
     borderRadius: 5,
-    borderColor:'#D4D4D4'
+    borderColor:'#D4D4D4',
+    borderWidth:1,
+    width:60,
   },
   selectedButton: {
     borderColor: '#FEA655',
-    padding: 10,
+    padding: 5,
     margin: 5,
-    borderRadius: 1,
+    borderRadius: 5,
+    borderWidth:1,
+    width:60,
   },
   buttonText: {
     color: '#D4D4D4',
     fontSize: 14,
+    textAlign:'center'
   },
   selectedButtonText: {
     color: '#FEA655',
     fontSize: 14,
+    textAlign:'center'
   },
+  tagStyle:{
+    flexDirection:'row',
+    alignItems:'center',
+    gap:10,
+    marginTop:5,
+    marginBottom:5
+  }
   
 });
 

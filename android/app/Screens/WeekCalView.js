@@ -10,12 +10,9 @@ const WeeklyCalView = ({ route, navigation }) => {
     <View>
       <Text>{selectedDate}</Text>
       <WeeklyCal selectedDate={selectedDate} handleDayClick={handleDayClick} />
-      <TouchableOpacity onPress={()=>navigation.goBack()}>
-        <Text>월간 보기</Text>
-     </TouchableOpacity>
-     
-     <Receipt selectedDate={selectedDate}/>
-
+      <View style={{marginTop:30}}>
+        <Receipt selectedDate={selectedDate}/>
+      </View>
     </View>
 
   );

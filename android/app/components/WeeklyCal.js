@@ -6,7 +6,7 @@ import firestore from "@react-native-firebase/firestore";
 
 const WeeklyCal = ({ selectedDate, handleDayClick }) => {
   const [amounts, setAmounts] = useState({});
-  const startOfWeek = moment(selectedDate).startOf('week');
+  const startOfWeek = moment(selectedDate || new Date()).startOf('week');
   const weekDays = Array.from({ length: 7 }, (_, index) => moment(startOfWeek).add(index, 'day'));
   const circleRadius = 16;
 
@@ -46,7 +46,7 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
   return (
     <View style={styles.container}>
       {weekDays.map((day, index) => (
-        <TouchableOpacity
+        <View
           key={index}
           onPress={() => handleDayClick(day.format('YYYY-MM-DD'))}
           style={{
@@ -78,7 +78,7 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
                 <Text style={styles.expenseText}>{amounts[day.format('YYYY-MM-DD')]} </Text>
             </Svg>
           </View>
-        </TouchableOpacity>
+        </View>
       ))}
     </View>
   );
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   expenseText:{
     marginTop:28,
     textAlign:'center',
-    color:'#D55A44',
+    color:'grey',
     fontSize:11
   }
 })

@@ -40,12 +40,33 @@ const MonthlyCal = ({ calendarData, handleDayClick }) => {
 
   const getAllAmountsForDates = async () => {
     const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
-      const allAmounts = {};
-      for (let row of calendarData) {
-        for (let day of row){
-        const amount = await getAmountForDate(day.date);
-        allAmounts[day.date] = amount;
-      }}
+    const allAmounts = {};
+    const dateSet = new Set();
+  
+    // Unique dates extraction
+    for (let row of calendarData) {
+      for (let day of row) {
+        dateSet.add(day.date);
+      }
+    }
+  
+    const uniqueDates = Array.from(dateSet);
+  
+    // Fetching amounts in batches
+    const batchSize = 10; // Adjust the batch size as needed
+    const totalBatches = Math.ceil(uniqueDates.length / batchSize);
+    let processedCount = 0;
+  
+    while (processedCount < totalBatches) {
+      const batch = uniqueDates.slice(processedCount * batchSize, (processedCount + 1) * batchSize);
+      const batchPromises = batch.map(date => getAmountForDate(date));
+      const batchResults = await Promise.all(batchPromises);
+      batch.forEach((date, index) => {
+        allAmounts[date] = batchResults[index];
+      });
+      processedCount++;
+    }
+  
     return allAmounts;
   };
 
@@ -89,7 +110,7 @@ const MonthlyCal = ({ calendarData, handleDayClick }) => {
                     y={circleRadius + 20}
                     fontSize={10}
                     textAnchor="middle"
-                    fill='red'
+                    fill='grey'
                     style={{ overflow: 'visible' }}
                   >
                     {allAmounts[day.date]}
