@@ -7,6 +7,7 @@ import AddBTNIcon from "../assets/icons/AddBTNIcon";
 import TruffleLogo from "../assets/logo/TruffleLogo";
 import SaveBTN from "../assets/icons/SaveBTN";
 import LeftArrow from "../assets/icons/LeftArrow";
+//import AsyncStorage from "@react-native-community/async-storage";
 
 const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
 
@@ -19,7 +20,6 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
   };
 
   return (
-    
     <Modal
       animationType="slide"
       transparent={true}

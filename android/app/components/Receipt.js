@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text,StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text,StyleSheet, TouchableOpacity, Dimensionsm, SafeAreaView, ScrollView, Dimensions } from 'react-native';
 import TopTri from "../assets/icons/TopTri.svg";
 import BottomTri from "../assets/icons/BottomTri.svg";
 import EditBTN from "../assets/icons/EditBTN.svg";
@@ -38,14 +38,17 @@ const Receipt = ({selectedDate}) => {
 
   return (
 
-<View style={{alignItems:'center'}}>
-  <TopTri/>
-   <View style={styles.container}>
-     <View style={{marginLeft:10}}>
-      <TouchableOpacity onPress={toggleEditModal}>
-       <EditBTN/>
-      </TouchableOpacity>
-      <EditReceiptModal EditVisible={EditVisible} toggleEditModal={toggleEditModal} selectedDate={selectedDate}/>
+    <View style={{alignItems:'center'}}>
+    <TopTri/>
+    <SafeAreaView>
+    <ScrollView>
+    <View>
+    <View style={styles.container}>
+      <View style={{marginLeft:10}}>
+        <TouchableOpacity onPress={toggleEditModal}>
+          <EditBTN/>
+        </TouchableOpacity>
+        <EditReceiptModal EditVisible={EditVisible} toggleEditModal={toggleEditModal} selectedDate={selectedDate}/>
       </View>
 
 
@@ -57,33 +60,117 @@ const Receipt = ({selectedDate}) => {
         </View>
       <Line marginTop={20}/>
       </View>
-
+      
       {receiptData?.items && receiptData.items.map((item, index) => (
       <View key={index} style={{alignItems:'flex-start', marginTop:20, marginLeft:20}}>
-        <View style={{ flexDirection:'row',justifyContent:'space-between'}}>
+        <View style={styles.tagStyle}>
           <Text>{index + 1}</Text>
-          <Text>{item[0]}</Text>
-          <Text>{item[1]}</Text>
-          <Text>{item[2]}원</Text>
+          <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[0]}</Text>
+          <Text style={{width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[0]}</Text>
+          <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[0]}원</Text>
           {/*구매목록 */}
         </View>
-        <Line marginTop={20}/>
+        
+        {receiptData?.items[index]?.name.length > 1 && (
+        <View style={styles.tagStyle}>
+          {/* 두 번째 아이템 이름 출력 */}
+          <Text>{index + 1}</Text>
+          <Text style={{ width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[1]}</Text>
+          <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[1]}</Text>
+          <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[1]}원</Text>
+        </View>
+        )}
+
+            {/* 세 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 2 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[2]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[2]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[2]}원</Text>
+      </View>
+    )}
+    {/* 네 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 3 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[3]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[3]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[3]}원</Text>
+      </View>
+    )}
+    {/* 다섯 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 4 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[4]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[4]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[4]}원</Text>
+      </View>
+    )}
+    {/* 여섯 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 5 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[5]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[5]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[5]}원</Text>
+      </View>
+    )}
+    {/* 일곱 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 6 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[6]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[6]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[6]}원</Text>
+      </View>
+    )}
+    {/* 여덟 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 7 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[7]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[7]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[7]}원</Text>
+      </View>
+    )}
+    {/* 아홉 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 8 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[8]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[8]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[8]}원</Text>
+      </View>
+    )}
+    {/* 열 번째 아이템 */}
+    {receiptData?.items[index]?.name.length > 9 && (
+      <View style={styles.tagStyle}>
+        <Text>{index + 1}</Text>
+        <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[9]}</Text>
+        <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[9]}</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[9]}원</Text>
+      </View>
+    )}
+
+    <Line marginTop={20}/>
 
       {receiptData.pay[index] && (
-      <View style={{marginTop:20, marginLeft:20}}>
-        <View style={{ flexDirection:'row',}}>
-          <Text> PAY</Text>
-          <Text>{receiptData?.pay[index]?.pay}</Text>
-          {/*pay*/}  
+      <View style={{marginTop:20,}}>
+        <View style={styles.tagStyle}>
+          <Text style={{width:100}}> PAY</Text>
+          <Text style={{textAlign:'flex-start', width:150}}>{receiptData?.pay[index]?.pay}</Text>
+          {/*pay*/}
         </View>
-        <View style={{ flexDirection:'row',}}>
-          <Text> SHOP</Text>
-          <Text>{receiptData?.pay[index]?.shop}</Text>
+        <View style={styles.tagStyle}>
+          <Text style={{width:100}}> SHOP</Text>
+          <Text style={{textAlign:'flex-start', width:150}}>{receiptData?.pay[index]?.shop}</Text>
           {/*shop*/}  
         </View>
-      <View style={{ flexDirection:'row',}}>
-        <Text> TAG</Text>
-        <Text> {receiptData?.pay[index]?.tag}</Text>
+      <View style={styles.tagStyle}>
+        <Text style={{width:100}}> TAG</Text>
+        <Text style={{textAlign:'flex-start', width:150}}>{receiptData?.pay[index]?.tag}</Text>
         {/*tag*/}  
       </View>
     </View>
@@ -93,16 +180,16 @@ const Receipt = ({selectedDate}) => {
   ))}
     
     <View style={{ marginTop:20, marginLeft:20}}>
-      <View style={{ flexDirection:'row', gap:45}}>
-        <Text> MEMO</Text>
-        {/*MEMO */}  
-      </View>
-      <Text>{receiptData?.memo}</Text>
+      <Text>MEMO</Text>
+      <Text style={{backgroundColor:'pink', height:300}}>{receiptData?.memo}</Text>
     </View>
-
   </View>
-  <BottomTri marginTop={-5}/>
-</View>
+  </View>
+    <BottomTri marginTop={-3}/>
+    </ScrollView>
+ </SafeAreaView>
+  </View>
+
   );
 };
 
@@ -115,12 +202,19 @@ const styles = StyleSheet.create({
   },
   expenseText:{
     fontSize:28,
+    fontWeight:'bold',
+    color:'black'
   },
   expenseHeader:{
     flexDirection:'row',
     width: Dimensions.get('window').width*0.7,
     justifyContent:'space-between'
-  }
+  },
+  tagStyle:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between'
+  },
 })
 
 export default Receipt;
