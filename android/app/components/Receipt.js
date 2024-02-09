@@ -4,7 +4,7 @@ import TopTri from "../assets/icons/TopTri.svg";
 import BottomTri from "../assets/icons/BottomTri.svg";
 import EditBTN from "../assets/icons/EditBTN.svg";
 import Line from "../assets/icons/Line.svg";
-import EditModal from "../components/EditModal";
+import EditReciptModal from "../components/EditReciptModal";
 
 const Receipt = ({selectedDate}) => {
   const [EditVisible, setEditVisible] = useState(false);
@@ -22,7 +22,7 @@ const Receipt = ({selectedDate}) => {
       <TouchableOpacity onPress={toggleEditModal}>
        <EditBTN/>
       </TouchableOpacity>
-      <EditModal EditVisible={EditVisible} toggleEditModal={toggleEditModal} selectedDate={selectedDate}/>
+      <EditReciptModal EditVisible={EditVisible} toggleEditModal={toggleEditModal} selectedDate={selectedDate}/>
       </View>
 
     <View style={{alignItems:'center',}}>

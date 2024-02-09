@@ -6,7 +6,7 @@ import AddDailyExpense from "./AddDailyExpense";
 import AddBTNIcon from "../assets/icons/AddBTNIcon";
 import TruffleLogo from "../assets/logo/TruffleLogo";
 
-const EditModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
+const EditReciptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
 
   const [dailyExpense, setDailyExpense] = useState('0');
   const [expenseCount, setExpenseCount] = useState(0);
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default EditModal;
+export default EditReciptModal;

@@ -8,7 +8,6 @@ const WeeklyCalView = ({ route, navigation }) => {
 
   return (
     <View>
-      <Text>{selectedDate}</Text>
       <WeeklyCal selectedDate={selectedDate} handleDayClick={handleDayClick} />
       <View style={{marginTop:30}}>
         <Receipt selectedDate={selectedDate}/>

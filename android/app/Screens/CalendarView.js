@@ -1,5 +1,5 @@
 import React, { useState, useEffect, } from 'react';
-import { View, Text, TouchableOpacity , StyleSheet, TextInput, FlatList} from 'react-native';
+import { View, Text, TouchableOpacity , StyleSheet, TextInput, FlatList, Dimensions} from 'react-native';
 import { Table, Row } from 'react-native-table-component';
 import moment from 'moment';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
@@ -47,8 +47,6 @@ const CalendarView = ({navigation, props}) => {
     setCalendarData(rows);
   };
 
-
-
 const goToPreviousMonth = () => {
     setCurrentDate(moment(currentDate).subtract(1, 'month'));
   };
@@ -69,11 +67,13 @@ const goToPreviousMonth = () => {
 
     return (
       <View style={styles.container}>
+        <Text style={styles.Texts}>Calendar</Text>
+      <View style={styles.calContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30 }}>
         <TouchableOpacity onPress={goToPreviousMonth}>
             <LeftArrow/>
           </TouchableOpacity>
-          <Text>{currentDate.format('yyyy년 M월')}</Text>
+          <Text>{currentDate.format('MMMM YYYY')}</Text>
           <TouchableOpacity onPress={goToNextMonth}>
             <RightArrow/>
           </TouchableOpacity>
@@ -89,17 +89,18 @@ const goToPreviousMonth = () => {
         <AddBTNIcon/>
       </TouchableOpacity>
       </View>
+    </View>
     );
   };
 
   const styles = StyleSheet.create({
     button:{
       position: 'absolute',
-      bottom: -160,
+      bottom: -120,
       left: 280,
       zIndex:1
     },
-    container:{
+    calContainer:{
       padding: 20,
       marginLeft: 30,
       marginRight: 30,
@@ -107,6 +108,18 @@ const goToPreviousMonth = () => {
       borderRadius: 10,
       backgroundColor: 'white',
       height: 460,
+    },
+    container: {
+      width: Dimensions.get('window').width,
+      height:Dimensions.get('window').height ,
+      backgroundColor: '#f8f9fa',
+    },
+    Texts: {
+      color: '#474646',
+      //font-family: NanumGothic,
+      fontSize: 24,
+      marginLeft: 22,
+      marginTop: 20,
     },
   })
 
