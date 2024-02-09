@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text,StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text,StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import TopTri from "../assets/icons/TopTri.svg";
 import BottomTri from "../assets/icons/BottomTri.svg";
 import EditBTN from "../assets/icons/EditBTN.svg";
@@ -48,47 +48,48 @@ const Receipt = ({selectedDate}) => {
       <EditReceiptModal EditVisible={EditVisible} toggleEditModal={toggleEditModal} selectedDate={selectedDate}/>
       </View>
 
+
     <View style={{alignItems:'center',}}>
-      <View style={{ flexDirection:'row'}}>
-        <Text> {receiptData?.amount}</Text>
-        <Text> 원</Text>
-        {/*금액 원 출력 */}  
-      </View>
+      <View style={styles.expenseHeader}>
+        <View style={{width:8}}></View>
+        <Text style={styles.expenseText}> {receiptData?.amount}</Text>
+        <Text style={styles.expenseText}>원</Text>
+        </View>
       <Line marginTop={20}/>
-    </View>
+      </View>
 
-    {receiptData?.items && receiptData.items.map((item, index) => (
-    <View key={index} style={{alignItems:'center', marginTop:20}}>
-      <View style={{ flexDirection:'row', gap:45}}>
-        <Text>{index + 1}</Text>
-        <Text>{item[0]}</Text>
-        <Text>{item[1]}</Text>
-        <Text>{item[2]}원</Text>
-        {/*구매목록 */}  
-      </View>
-      <Line marginTop={20}/>
-    </View>
-  ))}
+      {receiptData?.items && receiptData.items.map((item, index) => (
+      <View key={index} style={{alignItems:'flex-start', marginTop:20, marginLeft:20}}>
+        <View style={{ flexDirection:'row',justifyContent:'space-between'}}>
+          <Text>{index + 1}</Text>
+          <Text>{item[0]}</Text>
+          <Text>{item[1]}</Text>
+          <Text>{item[2]}원</Text>
+          {/*구매목록 */}
+        </View>
+        <Line marginTop={20}/>
 
-  {receiptData?.pay && receiptData.pay.map((pay, index) => (
-    <View style={{marginTop:20, marginLeft:20}}>
-      <View style={{ flexDirection:'row',}}>
-        <Text> PAY</Text>
-        <Text>{receiptData?.pay[index]?.pay}</Text>
-        {/*pay*/}  
-      </View>
-      <View style={{ flexDirection:'row',}}>
-        <Text> SHOP</Text>
-        <Text>{receiptData?.pay[index]?.shop}</Text>
-        {/*shop*/}  
-      </View>
+      {receiptData.pay[index] && (
+      <View style={{marginTop:20, marginLeft:20}}>
+        <View style={{ flexDirection:'row',}}>
+          <Text> PAY</Text>
+          <Text>{receiptData?.pay[index]?.pay}</Text>
+          {/*pay*/}  
+        </View>
+        <View style={{ flexDirection:'row',}}>
+          <Text> SHOP</Text>
+          <Text>{receiptData?.pay[index]?.shop}</Text>
+          {/*shop*/}  
+        </View>
       <View style={{ flexDirection:'row',}}>
         <Text> TAG</Text>
         <Text> {receiptData?.pay[index]?.tag}</Text>
         {/*tag*/}  
       </View>
-      <Line marginTop={20} alignItems={'center'}/>
     </View>
+    )}
+    <Line marginTop={20} alignItems={'center'}/>
+  </View>
   ))}
     
     <View style={{ marginTop:20, marginLeft:20}}>
@@ -106,13 +107,20 @@ const Receipt = ({selectedDate}) => {
 };
 
 const styles = StyleSheet.create({
-
   container:{
     backgroundColor: 'white',
     height: 500,
     width:300,
     marginTop:-5,
   },
+  expenseText:{
+    fontSize:28,
+  },
+  expenseHeader:{
+    flexDirection:'row',
+    width: Dimensions.get('window').width*0.7,
+    justifyContent:'space-between'
+  }
 })
 
 export default Receipt;
