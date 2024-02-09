@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text,StyleSheet, TouchableOpacity, Dimensionsm, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import { View, Text,StyleSheet, TouchableOpacity, Dimensionsm, Dimensions } from 'react-native';
 import TopTri from "../assets/icons/TopTri.svg";
 import BottomTri from "../assets/icons/BottomTri.svg";
 import EditBTN from "../assets/icons/EditBTN.svg";
@@ -37,11 +37,8 @@ const Receipt = ({selectedDate}) => {
   };
 
   return (
-
-    <View style={{alignItems:'center'}}>
+  <View style={{alignItems:'center'}}>
     <TopTri/>
-    <SafeAreaView>
-    <ScrollView>
     <View>
     <View style={styles.container}>
       <View style={{marginLeft:10}}>
@@ -181,13 +178,11 @@ const Receipt = ({selectedDate}) => {
     
     <View style={{ marginTop:20, marginLeft:20}}>
       <Text>MEMO</Text>
-      <Text style={{backgroundColor:'pink', height:300}}>{receiptData?.memo}</Text>
+      <Text style={{marginBottom:50, marginTop:10}}>{receiptData?.memo}</Text>
     </View>
   </View>
   </View>
     <BottomTri marginTop={-3}/>
-    </ScrollView>
- </SafeAreaView>
   </View>
 
   );
@@ -196,7 +191,6 @@ const Receipt = ({selectedDate}) => {
 const styles = StyleSheet.create({
   container:{
     backgroundColor: 'white',
-    height: 500,
     width:300,
     marginTop:-5,
   },

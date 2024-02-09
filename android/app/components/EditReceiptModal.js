@@ -32,13 +32,13 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
       <ScrollView>
         <View>
         <View style={styles.modalContainer}>
-        <View  style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:5}}>
+        <View  style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:10}}>
           <TouchableOpacity onPress={() => {toggleEditModal()}}>
           <LeftArrow height={30} width={30}/>
           </TouchableOpacity>
           <TruffleLogo height={30} width={30}/>
           <TouchableOpacity onPress={handleAddExpense}>
-            <AddBTNIcon height={40} width={40}/>
+            <AddBTNIcon height={35} width={35}/>
           </TouchableOpacity>
         </View>
 
