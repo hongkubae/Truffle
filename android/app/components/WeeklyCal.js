@@ -81,7 +81,7 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
                 fontSize={14}
                 fontWeight="bold"
                 textAnchor="middle"
-                fill={day.format('YYYY-MM-DD') === selectedDate ? 'white' : 'black'}
+                fill={new Date().toISOString().split('T')[0] === day.format('YYYY-MM-DD') ? 'orange' : 'black'}
               >
                 {day.format('DD')}
               </SvgText>
