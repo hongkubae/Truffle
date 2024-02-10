@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text, TouchableOpacity , StyleSheet,ScrollView} from 'react-native';
 import {Dimensions} from 'react-native';
 import {LineChart} from "react-native-chart-kit";
 import { Dropdown } from 'react-native-element-dropdown';
+import moment from 'moment';
 
 const DropdownData =[
   { label: '최근 1주', value: '1' },
@@ -12,8 +13,18 @@ const DropdownData =[
   { label: '최근 1년', value: '5' },
 ];
 
+//--labels에 해당 달 출력--\\
+const currentDate = moment();
+const currentMonth = currentDate.month()+1;
+
+// 현재 달의 날짜를 역순으로 생성하여 labels 배열에 넣습니다.
+const yearLabels = Array.from({ length: 12 }, (_, index) => moment(currentDate).subtract(11-index, 'month').format('MMM'));
+const halfyearLabels = Array.from({ length: 6 }, (_, index) => moment(currentDate).subtract(5-index, 'month').format('MMM'));
+const quarteryearLabels = Array.from({ length: 3 }, (_, index) => moment(currentDate).subtract(2-index, 'month').format('MMM'));
+
 const LineGraph = () => {
-   const [value, setValue] = useState(null);
+  const [value, setValue] = useState(null);
+   //--드롭다운 선택지에 따라 line chart 출력--\\
    const renderDropdown = () => {
      switch(value) {
        case '1': 
@@ -44,6 +55,7 @@ const LineGraph = () => {
         break;
        case '3': 
        return <View>
+       <ScrollView horizontal>
        <LineChart
        data={data3}
        width={450}
@@ -52,6 +64,7 @@ const LineGraph = () => {
        chartConfig={chartConfig}
        bezier
        />
+       </ScrollView>
        </View>;
         break;
        case '4': 
@@ -151,7 +164,7 @@ const data2 = {
 };
 
 const data3 = {
-  labels: ["month1","month2", "month3",  ],
+  labels: quarteryearLabels,
   datasets: [
     {
       data: [130, 210,300],
@@ -162,7 +175,7 @@ const data3 = {
 };
 
 const data4 = {
-  labels: ["m1","m2", "m3", "m4","m5","m6", ],
+  labels: halfyearLabels,
   datasets: [
     {
       data: [130, 210,300, 250, 110, 280],
@@ -173,7 +186,7 @@ const data4 = {
 };
 
 const data5 = {
-  labels: [ "m1","m2", "m3", "m4","m5","m6", "m7","m8", "m9", "m10","m11", "m12",  ],
+  labels: yearLabels,
   datasets: [
     {
       data: [130, 210,300, 250, 110, 280, 130, 210,300 ,400, 123, 302],
