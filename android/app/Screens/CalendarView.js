@@ -3,8 +3,7 @@ import { View, Text, TouchableOpacity , StyleSheet, TextInput, FlatList, Dimensi
 import { Table, Row } from 'react-native-table-component';
 import moment from 'moment';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
-import MonthlyCal from "../components/MonthlyCal";
-import WeekCalView from "../Screens/WeekCalView";
+import firestore from "@react-native-firebase/firestore";
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import LeftArrow from "../assets/icons/LeftArrow";
 import RightArrow from "../assets/icons/RightArrow";
@@ -16,10 +15,69 @@ const CalendarView = ({navigation, props}) => {
   const [calendarData, setCalendarData] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [newExpense, setNewExpense] = useState('');
+  const [allAmounts, setAllAmounts] = useState({});
   const [selectedMonth, setSelectedMonth] = useState(currentDate.month() + 1);
   const monthOptions = Array.from({ length: 12 }, (_, index) => index + 1);
   const circleRadius = 16;
 
+  //--db에서 정보 가져오기--\\
+  useEffect(() => {
+    getAllAmountsForDates().then((amounts) => {
+      setAllAmounts(amounts);
+    });
+  }, []);
+
+  const getAmountForDate = async (date) => {
+    try{
+      const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+      const docRef = firestore().collection(userId).doc(date);
+      const docSnapshot = await docRef.get();
+
+      if (docSnapshot.exists){
+        const data = docSnapshot.data();
+        return data.amount || 0;
+      } else {
+        return 0;
+      }
+    } catch (error) {
+      console.error('Error fetching amount from date:', error);
+      return 0;
+    }
+  };
+
+  const getAllAmountsForDates = async () => {
+    const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+    const allAmounts = {};
+    const dateSet = new Set();
+  
+    // Unique dates extraction
+    for (let row of calendarData) {
+      for (let day of row) {
+        dateSet.add(day.date);
+      }
+    }
+  
+    const uniqueDates = Array.from(dateSet);
+  
+    // Fetching amounts in batches
+    const batchSize = 10; // Adjust the batch size as needed
+    const totalBatches = Math.ceil(uniqueDates.length / batchSize);
+    let processedCount = 0;
+  
+    while (processedCount < totalBatches) {
+      const batch = uniqueDates.slice(processedCount * batchSize, (processedCount + 1) * batchSize);
+      const batchPromises = batch.map(date => getAmountForDate(date));
+      const batchResults = await Promise.all(batchPromises);
+      batch.forEach((date, index) => {
+        allAmounts[date] = batchResults[index];
+      });
+      processedCount++;
+    }
+  
+    return allAmounts;
+  };
+
+//--캘린더 만들기--\\
   useEffect(() => {
     generateCalendar();
   }, [currentDate]);
@@ -44,7 +102,6 @@ const CalendarView = ({navigation, props}) => {
       rows.push(days);
       days = [];
     }
-
     setCalendarData(rows);
   };
 
@@ -62,8 +119,59 @@ const goToPreviousMonth = () => {
   };
 
   const handleDayClick = (date) => {
-      setSelectedDate(date);
-    console.log('Clicked on date:', date);
+    setSelectedDate(date);
+  };
+  const renderCalendar = ()=>{
+    return calendarData.map((row, rowIndex) => (
+      <Row
+        key={rowIndex}
+        data={row.map((day, colIndex) => (
+          <TouchableOpacity
+            key={colIndex}
+            onPress={() => handleDayClick(day.date)}
+            style={{
+              flex: 1,
+              marginTop: 5,
+              alignItems: 'center',
+            }}
+          >
+            <View>
+              <Svg height={circleRadius * 4} width={circleRadius * 2}>
+                <Circle
+                  cx={circleRadius}
+                  cy={circleRadius}
+                  r={circleRadius}
+                  fill={day.date === selectedDate ? 'orange' : 'transparent'}
+                />
+
+                <SvgText
+                  x={circleRadius}
+                  y={circleRadius + 4}
+                  fontSize={15}
+                  fontWeight="bold"
+                  textAnchor="middle"
+                  fill={day.isCurrentMonth ? (day.date === selectedDate ? 'white' : day.date === moment().format('YYYY-MM-DD') ? 'orange' : 'black') : 'lightgray'}
+                >
+                  {day.date.substring(8)}
+                </SvgText>
+
+                <SvgText
+                  x={circleRadius}
+                  y={circleRadius + 25}
+                  fontSize={11}
+                  textAnchor="middle"
+                  fill='grey'
+                  style={{ overflow: 'visible' }}
+                >
+                  {allAmounts[day.date]}
+                </SvgText>
+              </Svg>
+            </View>
+          </TouchableOpacity>
+        ))}
+        style={{ height: circleRadius * 4 }}
+      />
+    ));
   };
 
     return (
@@ -89,7 +197,7 @@ const goToPreviousMonth = () => {
       </View>
       
         <Table>
-          <MonthlyCal calendarData={calendarData} selectedDate={selectedDate} handleDayClick={handleDayClick} />
+          {renderCalendar()}
         </Table>
 
         <TouchableOpacity
@@ -105,7 +213,7 @@ const goToPreviousMonth = () => {
   const styles = StyleSheet.create({
     button:{
       position: 'absolute',
-      bottom: -120,
+      bottom: -90,
       left: 280,
       zIndex:1
     },
@@ -116,7 +224,7 @@ const goToPreviousMonth = () => {
       marginTop: 80,
       borderRadius: 10,
       backgroundColor: 'white',
-      height: 460,
+      height: 500,
     },
     container: {
       width: Dimensions.get('window').width,

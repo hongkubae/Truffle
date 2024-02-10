@@ -5,7 +5,7 @@ import AlarmPopup from "../assets/logo/AlarmPopup.svg";
 const AlarmInfoAlert = ({ infoVisible, infoToggleModal }) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={infoVisible}
       onRequestClose={() => {

@@ -51,7 +51,7 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
               <Text style={{fontSize:24, fontWeight:'400'}}>원</Text>
             </View>
             <Line/>
-            
+
             <AddDailyExpense/>
             {[...Array(expenseCount)].map((_, index) => (
             <AddDailyExpense key={index} />

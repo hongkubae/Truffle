@@ -19,36 +19,21 @@ function DonutChart () {
             series={series}
             sliceColor={sliceColor}
             coverRadius={0.65}
-            coverFill={'white'}            
+            coverFill={'white'}
           />
           </View>
-          <View style={{alignItems:'center'}} marginTop={20}>
-            <Text >
-             장보기 배달 외식 
-            </Text>
+          <View style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}} marginTop={20}>
+            <View style={[Styles.colorSlice,{backgroundColor:'#D55A44'}]}></View>
+            <Text >장보기</Text>
+            <View style={[Styles.colorSlice,{backgroundColor:'#FEA655'}]}></View>
+            <Text>배달</Text>
+            <View style={[Styles.colorSlice,{backgroundColor:'#FFD98E'}]}></View>
+            <Text>외식</Text>
           </View>
 
       </View>
     );
   }
-
-  const data = {
-    labels: [
-      'Red',
-      'Blue',
-      'Yellow'
-    ],
-    datasets: [{
-      label: 'My First Dataset',
-      data: [300, 50, 100],
-      backgroundColor: [
-        'rgb(255, 99, 132)',
-        'rgb(54, 162, 235)',
-        'rgb(255, 205, 86)'
-      ],
-      hoverOffset: 4
-    }]
-  };
 
 const Styles = StyleSheet.create({
   container: {
@@ -61,14 +46,12 @@ const Styles = StyleSheet.create({
     borderColor:'black',
     borderRadius:12,
   },
-
   Texts: {
     color: '#838383',
     //fontFamily: 'NanumGothic, sans-serif',
     fontSize: 12,
     marginLeft: 10,
   },
-
   chart: {
     flex: 1
   },
@@ -77,6 +60,12 @@ const Styles = StyleSheet.create({
     bottom: 130,
     left: Dimensions.get('window').width /2.6,
     zIndex:1,
+  },
+  colorSlice:{
+    height:12,
+    width:12,
+    marginRight:5,
+    marginLeft:5
   }
 
 })

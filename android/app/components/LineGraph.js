@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TouchableOpacity , StyleSheet,} from 'react-native';
+import { View, Text, TouchableOpacity , StyleSheet,ScrollView} from 'react-native';
 import {Dimensions} from 'react-native';
 import {LineChart} from "react-native-chart-kit";
 import { Dropdown } from 'react-native-element-dropdown';
@@ -17,22 +17,24 @@ const LineGraph = () => {
    const renderDropdown = () => {
      switch(value) {
        case '1': 
-       return <View> 
+       return <View>
+        <ScrollView horizontal>
         <LineChart
         data={data}
-        width={320}
+        width={380}
         height={220}
         withVerticalLines={false}
         chartConfig={chartConfig}
         bezier
         />
+        </ScrollView>
         </View>;
         break;
        case '2': 
        return <View>
         <LineChart
         data={data2}
-        width={320}
+        width={400}
         height={220}
         withVerticalLines={false}
         chartConfig={chartConfig}
@@ -44,7 +46,7 @@ const LineGraph = () => {
        return <View>
        <LineChart
        data={data3}
-       width={320}
+       width={450}
        height={220}
        withVerticalLines={false}
        chartConfig={chartConfig}
@@ -54,38 +56,46 @@ const LineGraph = () => {
         break;
        case '4': 
        return <View>
+        <ScrollView horizontal>
        <LineChart
        data={data4}
-       width={320}
+       width={600}
        height={220}
        withVerticalLines={false}
        chartConfig={chartConfig}
        bezier
        />
+       </ScrollView>
        </View>;
         break;
        case '5': 
        return <View>
+       <ScrollView horizontal>
        <LineChart
        data={data5}
-       width={320}
+       width={700}
        height={220}
        withVerticalLines={false}
        chartConfig={chartConfig}
        bezier
        />
+       </ScrollView>
        </View>;
+
         break;
+
        default: 
        return <View>
+       <ScrollView horizontal>
        <LineChart
        data={data}
-       width={320}
+       width={400}
        height={220}
        withVerticalLines={false}
        chartConfig={chartConfig}
        bezier
        />
+       </ScrollView>
        </View>;
      }
    }
