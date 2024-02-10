@@ -3,18 +3,19 @@ import { View, Button, Modal, Text, TouchableOpacity, StyleSheet,Dimensions, Tex
 import { ListItem } from 'react-native-elements';
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductList = () => {
 
   const [items, setItems] = useState([]);
   const [inputs, setInputs] = useState([{ quantity: '', itemName: '', price: '' }]);
-
+  //--input 바뀌었을 때--\\
   const handleInputChange = (text, index, key) => {
     const newInputs = [...inputs];
     newInputs[index][key] = text;
     setInputs(newInputs);
   };
-
+  //--input 받기--\\
   const handleAddItem = () => {
     const newItem = inputs[inputs.length - 1];
     if (newItem.quantity && newItem.itemName && newItem.price) {
@@ -23,7 +24,7 @@ const ProductList = () => {
     }
   };
 
-  // 모든 TextInput이 값이 채워졌는지 확인
+  //--모든 TextInput이 값이 채워졌는지 확인(안채우면 add안됨)--\\
   const areInputsFilled = () => {
     return inputs.every(input => input.quantity && input.itemName && input.price);
   };

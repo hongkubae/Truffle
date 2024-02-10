@@ -93,7 +93,7 @@ const Styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width,
     height:Dimensions.get('window').height ,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#F8F9FA',
   },
   InputStyle: {
     color: '#474646',

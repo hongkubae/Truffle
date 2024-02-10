@@ -97,7 +97,7 @@ const MonthlyCal = ({ calendarData, handleDayClick }) => {
                   <SvgText
                     x={circleRadius}
                     y={circleRadius + 4}
-                    fontSize={12}
+                    fontSize={15}
                     fontWeight="bold"
                     textAnchor="middle"
                     fill={day.isCurrentMonth ? (day.date === selectedDate ? 'white' : day.date === moment().format('YYYY-MM-DD') ? 'orange' : 'black') : 'lightgray'}
@@ -108,7 +108,7 @@ const MonthlyCal = ({ calendarData, handleDayClick }) => {
                   <SvgText
                     x={circleRadius}
                     y={circleRadius + 20}
-                    fontSize={10}
+                    fontSize={11}
                     textAnchor="middle"
                     fill='grey'
                     style={{ overflow: 'visible' }}

@@ -9,6 +9,7 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
   const startOfWeek = moment(selectedDate || new Date()).startOf('week');
   const weekDays = Array.from({ length: 7 }, (_, index) => moment(startOfWeek).add(index, 'day'));
   const circleRadius = 16;
+  const week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   useEffect(() => {
     getAmountsForWeek(weekDays).then((amounts) => {
@@ -42,8 +43,17 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
     }
     return amounts;
   };
-  
+
   return (
+    <View style={styles.calContainer}>
+      <Text style={{color:'black', fontSize:16, fontWeight:'bold', textAlign:'center'}}>{moment(selectedDate).format('MMMM YYYY')}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
+        {week.map((weekday, index) => (
+          <View key={index} style={{ flex: 1, alignItems: 'center' }}>
+            <Text style={{fontSize:12, color:"grey"}}>{weekday}</Text>
+          </View>
+        ))}
+      </View>
     <View style={styles.container}>
       {weekDays.map((day, index) => (
         <View
@@ -56,6 +66,7 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
           }}
         >
           <View>
+         
             <Svg height={circleRadius * 4} width={circleRadius * 2}>
               <Circle
                 cx={circleRadius}
@@ -67,7 +78,7 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
               <SvgText
                 x={circleRadius}
                 y={circleRadius + 4}
-                fontSize={12}
+                fontSize={14}
                 fontWeight="bold"
                 textAnchor="middle"
                 fill={day.format('YYYY-MM-DD') === selectedDate ? 'white' : 'black'}
@@ -81,28 +92,30 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
         </View>
       ))}
     </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-
   container:{
-    padding: 20,
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 80,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    height: 70,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   expenseText:{
-    marginTop:28,
+    marginTop:30,
     textAlign:'center',
     color:'grey',
     fontSize:11
-  }
+  },
+  calContainer:{
+    padding: 20,
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 50,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    height:130
+  },
 })
 
 

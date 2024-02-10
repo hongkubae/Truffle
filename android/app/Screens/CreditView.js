@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width,
     height:Dimensions.get('window').height,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#F8F9FA',
   },
   Texts: {
     color: '#474646',

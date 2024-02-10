@@ -10,6 +10,7 @@ import LeftArrow from "../assets/icons/LeftArrow";
 import RightArrow from "../assets/icons/RightArrow";
 
 const CalendarView = ({navigation, props}) => {
+  const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentDate, setCurrentDate] = useState(moment());
   const [calendarData, setCalendarData] = useState([]);
@@ -73,11 +74,19 @@ const goToPreviousMonth = () => {
         <TouchableOpacity onPress={goToPreviousMonth}>
             <LeftArrow/>
           </TouchableOpacity>
-          <Text>{currentDate.format('MMMM YYYY')}</Text>
+          <Text style={{color:'black', fontSize:16, fontWeight:'bold'}}>{currentDate.format('MMMM YYYY')}</Text>
           <TouchableOpacity onPress={goToNextMonth}>
             <RightArrow/>
           </TouchableOpacity>
         </View>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+        {weekdays.map((weekday, index) => (
+          <View key={index} style={{ flex: 1, alignItems: 'center' }}>
+            <Text style={{fontSize:12, color:"grey"}}>{weekday}</Text>
+          </View>
+        ))}
+      </View>
       
         <Table>
           <MonthlyCal calendarData={calendarData} selectedDate={selectedDate} handleDayClick={handleDayClick} />
@@ -86,7 +95,7 @@ const goToPreviousMonth = () => {
         <TouchableOpacity
         style={styles.button}
         onPress={()=>navigation.navigate('WeekCalView', {selectedDate:selectedDate, handleDayClick:handleDayClick})}>
-        <AddBTNIcon/>
+        <AddBTNIcon width={70} height={70}/>
       </TouchableOpacity>
       </View>
     </View>
@@ -112,7 +121,7 @@ const goToPreviousMonth = () => {
     container: {
       width: Dimensions.get('window').width,
       height:Dimensions.get('window').height ,
-      backgroundColor: '#f8f9fa',
+      backgroundColor: '#F8F9FA',
     },
     Texts: {
       color: '#474646',

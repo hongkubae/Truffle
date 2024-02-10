@@ -32,6 +32,7 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
       <ScrollView>
         <View>
         <View style={styles.modalContainer}>
+          {/* 뒤로 가기 로고 플러스 버튼*/}
         <View  style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:10}}>
           <TouchableOpacity onPress={() => {toggleEditModal()}}>
           <LeftArrow height={30} width={30}/>
@@ -41,15 +42,16 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
             <AddBTNIcon height={35} width={35}/>
           </TouchableOpacity>
         </View>
-
           <View style={{alignItems:'center', marginTop:20}}>
+            {/* 선택 날자 총액*/}
             <Text>{selectedDate}</Text>
             <View style={styles.expenseHeader}>
               <View style={{width:8}}></View>
-              <Text style={styles.expenseText}>{dailyExpense}</Text>
-              <Text style={styles.expenseText}>원</Text>
+              <Text style={styles.expenseText}>{dailyExpense.toLocaleString()}</Text>
+              <Text style={{fontSize:24, fontWeight:'400'}}>원</Text>
             </View>
             <Line/>
+            
             <AddDailyExpense/>
             {[...Array(expenseCount)].map((_, index) => (
             <AddDailyExpense key={index} />
@@ -139,7 +141,8 @@ const styles = StyleSheet.create({
   expenseHeader:{
     flexDirection:'row',
     width: Dimensions.get('window').width*0.7,
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+    alignItems:'center'
   }
   
 });

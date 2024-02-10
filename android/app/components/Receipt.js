@@ -48,14 +48,13 @@ const Receipt = ({selectedDate}) => {
         <EditReceiptModal EditVisible={EditVisible} toggleEditModal={toggleEditModal} selectedDate={selectedDate}/>
       </View>
 
-
     <View style={{alignItems:'center',}}>
       <View style={styles.expenseHeader}>
         <View style={{width:8}}></View>
-        <Text style={styles.expenseText}> {receiptData?.amount}</Text>
-        <Text style={styles.expenseText}>원</Text>
+        <Text style={styles.expenseText}> {receiptData?.amount.toLocaleString()}</Text>
+        <Text style={{fontSize:24, fontWeight:'600', marginTop:5}}>원</Text>
         </View>
-      <Line marginTop={20}/>
+      <Line marginTop={10}/>
       </View>
       
       {receiptData?.items && receiptData.items.map((item, index) => (
@@ -64,7 +63,7 @@ const Receipt = ({selectedDate}) => {
           <Text>{index + 1}</Text>
           <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[0]}</Text>
           <Text style={{width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[0]}</Text>
-          <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[0]}원</Text>
+          <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[0].toLocaleString()} ₩</Text>
           {/*구매목록 */}
         </View>
         
@@ -74,7 +73,7 @@ const Receipt = ({selectedDate}) => {
           <Text>{index + 1}</Text>
           <Text style={{ width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[1]}</Text>
           <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[1]}</Text>
-          <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[1]}원</Text>
+          <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[1].toLocaleString()} ₩</Text>
         </View>
         )}
 
@@ -84,7 +83,7 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[2]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[2]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[2]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[2].toLocaleString()} ₩</Text>
       </View>
     )}
     {/* 네 번째 아이템 */}
@@ -93,7 +92,7 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[3]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[3]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[3]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[3].toLocaleString()} ₩</Text>
       </View>
     )}
     {/* 다섯 번째 아이템 */}
@@ -102,7 +101,7 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[4]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[4]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[4]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[4].toLocaleString()} ₩</Text>
       </View>
     )}
     {/* 여섯 번째 아이템 */}
@@ -111,7 +110,7 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[5]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[5]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[5]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[5].toLocaleString()} ₩</Text>
       </View>
     )}
     {/* 일곱 번째 아이템 */}
@@ -120,7 +119,7 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[6]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[6]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[6]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[6].toLocaleString()} ₩</Text>
       </View>
     )}
     {/* 여덟 번째 아이템 */}
@@ -129,7 +128,7 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[7]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[7]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[7]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[7].toLocaleString()} ₩</Text>
       </View>
     )}
     {/* 아홉 번째 아이템 */}
@@ -138,7 +137,7 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[8]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[8]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[8]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[8].toLocaleString()} ₩</Text>
       </View>
     )}
     {/* 열 번째 아이템 */}
@@ -147,10 +146,9 @@ const Receipt = ({selectedDate}) => {
         <Text>{index + 1}</Text>
         <Text style={{width:120, textAlign:'center'}}>{receiptData?.items[index]?.name[9]}</Text>
         <Text style={{ width:30, textAlign:'center'}}>{receiptData?.items[index]?.quantity[9]}</Text>
-        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[9]}원</Text>
+        <Text style={{width:130, textAlign:'center'}}>{receiptData?.items[index]?.price[9].toLocaleString()} ₩</Text>
       </View>
     )}
-
     <Line marginTop={20}/>
 
       {receiptData.pay[index] && (
