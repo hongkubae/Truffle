@@ -43,10 +43,17 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
     }
     return amounts;
   };
+  const headerDate = (selectedDate) =>{
+    if (selectedDate === null){
+      return moment(new Date()).format('MMMM YYYY');
+    }else{
+      return moment(selectedDate).format('MMMM YYYY');
+    }
+  };
 
   return (
     <View style={styles.calContainer}>
-      <Text style={{color:'black', fontSize:16, fontWeight:'bold', textAlign:'center'}}>{moment(selectedDate).format('MMMM YYYY')}</Text>
+      <Text style={{color:'black', fontSize:16, fontWeight:'bold', textAlign:'center'}}>{headerDate(selectedDate)}</Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
         {week.map((weekday, index) => (
           <View key={index} style={{ flex: 1, alignItems: 'center' }}>
@@ -81,7 +88,7 @@ const WeeklyCal = ({ selectedDate, handleDayClick }) => {
                 fontSize={14}
                 fontWeight="bold"
                 textAnchor="middle"
-                fill={new Date().toISOString().split('T')[0] === day.format('YYYY-MM-DD') ? 'orange' : 'black'}
+                fill={(new Date().toISOString().split('T')[0] === day.format('YYYY-MM-DD') && selectedDate===null) ? 'orange' : (day.format('YYYY-MM-DD') === selectedDate ? 'white' : 'black')}
               >
                 {day.format('DD')}
               </SvgText>
