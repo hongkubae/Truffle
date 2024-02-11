@@ -4,7 +4,7 @@ import { ListItem } from 'react-native-elements';
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-//import 그 파이어베이스 리엑트 어쩌구에서 추가하는
+import firestore from "@react-native-firebase/firestore";
 
 const ProductList = ({productlistData, selectedDate}) => {
   const [inputs, setInputs] = useState([{ itemNameArr: [], quantityArr: [], priceArr: [] }]);
@@ -64,7 +64,7 @@ const ProductList = ({productlistData, selectedDate}) => {
     try{
       const user = firebase.auth().currentUser;
       if (user) {
-        const uid = user.uid; //여기 값으로 바꿔야함...
+        const uid = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
         const docRef = firestore.collection(uid).doc(selectedDate);
         await docRef.set({items: imputs});
         console.log('Data saved to Firestore');
