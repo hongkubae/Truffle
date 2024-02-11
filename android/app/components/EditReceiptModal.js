@@ -52,9 +52,9 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
             </View>
             <Line/>
 
-            <AddDailyExpense/>
+            <AddDailyExpense selectedDate={selectedDate}/>
             {[...Array(expenseCount)].map((_, index) => (
-            <AddDailyExpense key={index} />
+            <AddDailyExpense selectedDate={selectedDate} key={index} />
             ))}
 
             <View style={styles.memoContainer}>

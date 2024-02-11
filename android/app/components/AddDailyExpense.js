@@ -4,45 +4,68 @@ import { ListItem } from 'react-native-elements';
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import ProductList from "./ProductList";
 import Line from "../assets/icons/Line";
-const AddDailyExpense = ({ EditVisible, toggleAddDailyExpense, selectedDate }) => {
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-  const [items, setItems] = useState([]);
-  const [quantity, setQuantity] = useState('');
-  const [itemName, setItemName] = useState('');
-  const [shop, setShop] = useState('');
+const AddDailyExpense = ({selectedDate}) => {
   const [dailyExpense, setDailyExpense] = useState('0');
+  
+  const [inputTagList, setInputTaglist] = useState([{cashOrCardArr: [], shopArr:[], tagsArr:[]}]);
+  
+  const [shop, setShop] = useState('');
   const [cashOrCard, setCashOrCard] = useState(null);
   const [tags, setTags] = useState(null);
 
-  //--장보기 외식 배달 string 변환--\\
+  const [shopArr, setShopArr] = useState([shop]);
+  const [cashOrCardArr, setCashOrCardArr] = useState([cashOrCard]);
+  const [tagsArr, setTagsArr] = useState([tags]);
+
+  const [productlistData, setProductlistData]=useState('');
+
+  const handleProductlistData = (data)=>{
+    setProductlistData(data);
+  };
+
+  //--장보기 외식 배달 string 변환 변환 후 array에 저장--\\
   const handleTags = (buttonName) => {
+    let tagsReturnVal = '';
     if(buttonName=='shopping'){
       setTags(buttonName);
-      return console.log('장보기');
+      tagsReturnVal='장보기';
     }else if (buttonName == 'eatOut'){
       setTags(buttonName);
-      return console.log('외식');
+      tagsReturnVal='외식';
     }
     else{
       setTags(buttonName);
-      return console.log('배달');
+      tagsReturnVal='배달';
     }
+    setTagsArr(prevTagsArr => [...prevTagsArr, tagsReturnVal]);
   };
 
-//--현금 카드 string 변환--\\
+//--현금 카드 string 변환 후 array에 저장--\\
   const handleCashOrCard = (buttonName) => {
+    let btnReturnVal='';
     if(buttonName=='cash'){
       setCashOrCard(buttonName);
-      return console.log('현금');
+      btnReturnVal='현금';
     }else{
       setCashOrCard(buttonName);
-      return console.log('카드');
+      btnReturnVal='카드';
     }
+    setCashOrCardArr(prevCashOrCardArr => [...prevCashOrCardArr, btnReturnVal]);
   };
 
+  //----\\
+  const saveTagsList = async () => {
+    try {
+      await AsyncStorage.setItem('products', JSON.stringify(products));
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
   return (
       <View style={{alignItems:'center', marginTop:20}}>
-        <ProductList/>
+        <ProductList selectedDate={selectedDate} productlistData={handleProductlistData}/>
         <Line/>
 
         <View style={{alignItems:'flex-start', marginLeft:-20}}>
