@@ -6,7 +6,6 @@ import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductList = ({productlistData, selectedDate}) => {
-  const [products, setProducts] = useState([]);
   const [inputs, setInputs] = useState([{ itemNameArr: [], quantityArr: [], priceArr: [] }]);
 
   const [itemNameArr, setItemNameArr] = useState([itemName]);
@@ -27,11 +26,11 @@ const ProductList = ({productlistData, selectedDate}) => {
   const handleAddItem = () => {
     const newItem = inputs[inputs.length - 1];
     if (newItem.quantity && newItem.itemName && newItem.price) {
-      setProducts([...products, newItem]);
       saveData(); // 데이터 저장
       setInputs([...inputs, { itemNameArr: [], quantityArr: [], priceArr: [] }]); // 입력값 초기화
     }
   };
+
   //--모든 TextInput이 값이 채워졌는지 확인(안채우면 add안됨)--\\
   const areInputsFilled = () => {
     return inputs.every(input => input.quantity && input.itemName && input.price);
@@ -39,8 +38,7 @@ const ProductList = ({productlistData, selectedDate}) => {
   //--AsyncStorage에 데이터 저장--\\
   const saveData = async () => {
     try {
-      await AsyncStorage.setItem('products', JSON.stringify(products));
-      await AsyncStorage.setItem('inputs', JSON.stringify(inputs));
+      await AsyncStorage.setItem(selectedDate, JSON.stringify(inputs));
     } catch (error) {
       console.error('Error saving data:', error);
     }
@@ -49,21 +47,16 @@ const ProductList = ({productlistData, selectedDate}) => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const storedProducts = await AsyncStorage.getItem('products');
-        const storedInputs = await AsyncStorage.getItem('inputs'); // inputs 불러오기
-
-        if (storedProducts) {
-          setProducts(JSON.parse(storedProducts));
-        }
+        const storedInputs = await AsyncStorage.getItem(selectedDate); // 해당 날짜의 inputs 불러오기
         if (storedInputs) {
-          setInputs(JSON.parse(storedInputs)); // inputs 설정
+          setInputs(JSON.parse(storedInputs));
         }
       } catch (error) {
         console.error('Error loading data:', error);
       }
     };
     loadData();
-  }, []);
+  }, [selectedDate]);
 
   return (
     <View style={{ alignItems: 'center' }}>
