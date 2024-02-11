@@ -4,6 +4,7 @@ import { ListItem } from 'react-native-elements';
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+//import 그 파이어베이스 리엑트 어쩌구에서 추가하는
 
 const ProductList = ({productlistData, selectedDate}) => {
   const [inputs, setInputs] = useState([{ itemNameArr: [], quantityArr: [], priceArr: [] }]);
@@ -39,6 +40,7 @@ const ProductList = ({productlistData, selectedDate}) => {
   const saveData = async () => {
     try {
       await AsyncStorage.setItem(selectedDate, JSON.stringify(inputs));
+      await saveToFirestore();
     } catch (error) {
       console.error('Error saving data:', error);
     }
@@ -57,6 +59,22 @@ const ProductList = ({productlistData, selectedDate}) => {
     };
     loadData();
   }, [selectedDate]);
+
+  const saveToFirestore = async () => {
+    try{
+      const user = firebase.auth().currentUser;
+      if (user) {
+        const uid = user.uid; //여기 값으로 바꿔야함...
+        const docRef = firestore.collection(uid).doc(selectedDate);
+        await docRef.set({items: imputs});
+        console.log('Data saved to Firestore');
+      } else {
+        console.error('User not authenticated');
+      } catch (error) {
+      console.error('Error saving to Firestore: ', error);
+    }
+  };
+      
 
   return (
     <View style={{ alignItems: 'center' }}>
