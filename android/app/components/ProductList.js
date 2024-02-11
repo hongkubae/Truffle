@@ -70,7 +70,8 @@ const ProductList = ({productlistData, selectedDate}) => {
         console.log('Data saved to Firestore');
       } else {
         console.error('User not authenticated');
-      } catch (error) {
+      } }
+    catch (error) {
       console.error('Error saving to Firestore: ', error);
     }
   };
