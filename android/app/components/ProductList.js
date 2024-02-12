@@ -60,23 +60,6 @@ const ProductList = ({productlistData, selectedDate}) => {
     loadData();
   }, [selectedDate]);
 
-  const saveToFirestore = async () => {
-    try{
-      const user = firebase.auth().currentUser;
-      if (user) {
-        const uid = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
-        const docRef = firestore.collection(uid).doc(selectedDate);
-        await docRef.set({items: imputs});
-        console.log('Data saved to Firestore');
-      } else {
-        console.error('User not authenticated');
-      } }
-    catch (error) {
-      console.error('Error saving to Firestore: ', error);
-    }
-  };
-      
-
   return (
     <View style={{ alignItems: 'center' }}>
        {inputs.map((input, index) => (
