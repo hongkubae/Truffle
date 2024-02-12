@@ -17,15 +17,22 @@ const CalendarView = ({ navigation, props }) => {
   const [selectedMonth, setSelectedMonth] = useState(currentDate.month() + 1);
   const monthOptions = Array.from({ length: 12 }, (_, index) => index + 1);
   const circleRadius = 16;
-
+  const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
   //--db에서 정보 가져오기--\\
+  useEffect(() => {
+    generateCalendarData();
+  }, [currentDate]);
+
   useEffect(() => {
     getAllAmountsForDates().then((amounts) => {
       setAllAmounts(amounts);
     });
+  }, [calendarData]);
+
+  useEffect(() => {
+    getAllAmountsForCurrentMonth();
   }, []);
-
-
+  
   const getAllAmountsForDates = async () => {
     const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
     const allAmounts = {};
@@ -56,9 +63,32 @@ const CalendarView = ({ navigation, props }) => {
     return allAmounts;
   };
 
+  const getAllAmountsForCurrentMonth = async () => {
+    const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+    const firstDayOfMonth = moment(currentDate).startOf('month');
+    const lastDayOfMonth = moment(currentDate).endOf('month');
+
+    const start = firstDayOfMonth.format('YYYY-MM-DD');
+    const end = lastDayOfMonth.format('YYYY-MM-DD');
+
+    const amounts = {};
+    const dateArray = [];
+
+    for (let m = moment(start); m.diff(end, 'days') <= 0; m.add(1, 'days')) {
+      const date = m.format('YYYY-MM-DD');
+      dateArray.push(date);
+    }
+
+    for (const date of dateArray) {
+      const amount = await getAmountForDate(userId, date);
+      amounts[date] = amount;
+    }
+
+    setAmountsArray(dateArray.map(date => amounts[date]));
+  };
+
   const getAmountForDate = async (date) => {
     try {
-      const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
       const docRef = firestore().collection(userId).doc(date);
       const docSnapshot = await docRef.get();
 
@@ -74,7 +104,7 @@ const CalendarView = ({ navigation, props }) => {
     }
   };
 
-  const generateCalendar = useMemo(() => {
+  const generateCalendarData = () => {
     const firstDay = moment(currentDate).startOf('month').startOf('week');
     const lastDay = moment(currentDate).endOf('month').endOf('week');
   
@@ -94,8 +124,8 @@ const CalendarView = ({ navigation, props }) => {
       rows.push(days);
       days = [];
     }
-    return rows;
-  }, [currentDate]);  
+    setCalendarData(rows);
+  };
 
   const goToPreviousMonth = () => {
     setCurrentDate(moment(currentDate).subtract(1, 'month'));
@@ -115,7 +145,7 @@ const CalendarView = ({ navigation, props }) => {
   };
 
   const renderCalendar = useMemo(() => {
-    return generateCalendar.map((row, rowIndex) => (
+    return calendarData.map((row, rowIndex)  => (
       <Row
         key={rowIndex}
         data={row.map((day, colIndex) => (
@@ -165,7 +195,7 @@ const CalendarView = ({ navigation, props }) => {
         style={{ height: circleRadius * 4 }}
       />
     ));
-  }, [generateCalendar, selectedDate, handleDayClick, allAmounts]);
+  }, [generateCalendarData, selectedDate, handleDayClick, allAmounts]);
 
   return (
     <View style={styles.container}>
@@ -196,7 +226,7 @@ const CalendarView = ({ navigation, props }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('WeekCalView', { selectedDate: selectedDate, handleDayClick: handleDayClick })}>
-          <AddBTNIcon width={70} height={70} />
+          <AddBTNIcon width={70} height={70}/>
         </TouchableOpacity>
       </View>
     </View>
@@ -208,7 +238,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -90,
     left: 280,
-    zIndex: 1
+    zIndex: 1,
+  },
+  addBTNstyle:{
+    startColor:'pink',
+    endColor:'blue'
   },
   calContainer: {
     padding: 20,

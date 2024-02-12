@@ -5,18 +5,19 @@ import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import ProductList from "./ProductList";
 import Line from "../assets/icons/Line";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import firestore from '@react-native-firebase/firestore';
 
 const AddDailyExpense = ({selectedDate}) => {
   const [dailyExpense, setDailyExpense] = useState('0');
   
-  const [inputTagList, setInputTaglist] = useState([{cashOrCardArr: [], shopArr:[], tagsArr:[]}]);
+  const [inputTagList, setInputTaglist] = useState([{payArr: [], shopArr:[], tagsArr:[]}]);
   
   const [shop, setShop] = useState('');
-  const [cashOrCard, setCashOrCard] = useState(null);
+  const [pay, setPay] = useState(null);
   const [tags, setTags] = useState(null);
 
   const [shopArr, setShopArr] = useState([shop]);
-  const [cashOrCardArr, setCashOrCardArr] = useState([cashOrCard]);
+  const [payArr, setPayArr] = useState([pay]);
   const [tagsArr, setTagsArr] = useState([tags]);
 
   const [productlistData, setProductlistData]=useState('');
@@ -31,6 +32,7 @@ const AddDailyExpense = ({selectedDate}) => {
     if(buttonName=='shopping'){
       setTags(buttonName);
       tagsReturnVal='장보기';
+      
     }else if (buttonName == 'eatOut'){
       setTags(buttonName);
       tagsReturnVal='외식';
@@ -43,16 +45,16 @@ const AddDailyExpense = ({selectedDate}) => {
   };
 
 //--현금 카드 string 변환 후 array에 저장--\\
-  const handleCashOrCard = (buttonName) => {
+  const handlepay = (buttonName) => {
     let btnReturnVal='';
     if(buttonName=='cash'){
-      setCashOrCard(buttonName);
+      setPay(buttonName);
       btnReturnVal='현금';
     }else{
-      setCashOrCard(buttonName);
+      setPay(buttonName);
       btnReturnVal='카드';
     }
-    setCashOrCardArr(prevCashOrCardArr => [...prevCashOrCardArr, btnReturnVal]);
+    setPayArr(prevpayArr => [...prevpayArr, btnReturnVal]);
   };
 
   //----\\
@@ -63,6 +65,41 @@ const AddDailyExpense = ({selectedDate}) => {
       console.error('Error saving data:', error);
     }
   };
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSaveData = async () => {
+    try {
+      setLoading(true);
+      const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+      const date = '2024-02-11'; // 저장할 문서의 날짜
+      const data = {
+        amount: totalPrice,
+        items: [
+          { name: ["수박", "씨"], quantity: [1, 1], price: [20000, 5000] },
+          { name: ["씨박"], quantity: [1], price: [10000] },
+          { name: ["박씨", "발씨"], quantity: [3, 1], price: [2000, 500] }
+        ],
+        pay: [
+          { pay: payArr[0], shop: shopArr[0], tag: tagArr[0] },
+          { pay: payArr[1], shop: shopArr[1], tag: tagArr[1] },
+          { pay: payArr[2], shop: shopArr[2], tag: tagArr[2] }
+        ],
+        memo: memo
+      };
+
+      // 파이어스토어에 데이터 저장
+      await firestore().collection(userId).doc(date).set(data);
+
+      Alert.alert('Success', 'Data saved successfully.');
+    } catch (error) {
+      console.error('Error saving data:', error);
+      Alert.alert('Error', 'Failed to save data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
       <View style={{alignItems:'center', marginTop:20}}>
         <ProductList selectedDate={selectedDate} productlistData={handleProductlistData}/>
@@ -72,16 +109,16 @@ const AddDailyExpense = ({selectedDate}) => {
           <View style={styles.tagStyle}>
             <Text>PAY</Text>
             <TouchableOpacity
-              style={[styles.button, cashOrCard === 'cash' && styles.selectedButton]}
-              onPress={() => handleCashOrCard('cash')}
+              style={[styles.button, pay === 'cash' && styles.selectedButton]}
+              onPress={() => handlepay('cash')}
             >
-            <Text style={[styles.buttonText, cashOrCard === 'cash' && styles.selectedButtonText]}>현금</Text>
+            <Text style={[styles.buttonText, pay === 'cash' && styles.selectedButtonText]}>현금</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.button, cashOrCard === 'card' && styles.selectedButton]}
-              onPress={() => handleCashOrCard('card')}
+              style={[styles.button, pay === 'card' && styles.selectedButton]}
+              onPress={() => handlepay('card')}
             >
-            <Text style={[styles.buttonText, cashOrCard === 'card' && styles.selectedButtonText]}>카드</Text>
+            <Text style={[styles.buttonText, pay === 'card' && styles.selectedButtonText]}>카드</Text>
             </TouchableOpacity>    
           </View>
 

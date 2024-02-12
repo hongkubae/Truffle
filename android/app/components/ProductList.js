@@ -6,39 +6,64 @@ import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductList = ({productlistData, selectedDate}) => {
-  const [inputs, setInputs] = useState([{ itemNameArr: [], quantityArr: [], priceArr: [] }]);
+  const [items, setItems] = useState([{ nameArr: [], quantityArr: [], priceArr: [] }]);
 
-  const [itemNameArr, setItemNameArr] = useState([itemName]);
+  const [nameArr, setNameArr] = useState([name]);
   const [quantityArr, setQuantityArr] = useState([quantity]);
   const [priceArr, setPriceArr] = useState([price]);
 
-  const [itemName, setItemName] = useState('');
+  const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
 
   //--input 바뀌었을 때--\\
   const handleInputChange = (text, index, key) => {
-    const newInputs = [...inputs];
-    newInputs[index][key] = text;
-    setInputs(newInputs);
+    const newItems = [...items];
+    newItems[index][key] = text;
+  
+    // 해당하는 값들을 nameArr, quantityArr, priceArr에 저장
+    const { name, quantity, price } = newItems[index];
+    const updatedNameArr = [...nameArr];
+    const updatedQuantityArr = [...quantityArr];
+    const updatedPriceArr = [...priceArr];
+    updatedNameArr[index] = name;
+    updatedQuantityArr[index] = quantity;
+    updatedPriceArr[index] = price;
+  
+    // 상태 업데이트
+    setNameArr(updatedNameArr);
+    setQuantityArr(updatedQuantityArr);
+    setPriceArr(updatedPriceArr);
+  
+    setItems(newItems);
   };
   //--input 받기--\\
   const handleAddItem = () => {
-    const newItem = inputs[inputs.length - 1];
-    if (newItem.quantity && newItem.itemName && newItem.price) {
+    const newItem = items[items.length - 1];
+    if (newItem.quantity && newItem.name && newItem.price) {
+      setNameArr(prevNameArr => [...prevNameArr, newItem.name]);
+      setQuantityArr(prevQuantityArr => [...prevQuantityArr, newItem.quantity]);
+      setPriceArr(prevPriceArr => [...prevPriceArr, newItem.price]);
+  
+      // 새로운 항목을 items 배열에 추가하고 입력값 초기화
       saveData(); // 데이터 저장
-      setInputs([...inputs, { itemNameArr: [], quantityArr: [], priceArr: [] }]); // 입력값 초기화
+      setItems(prevItems => [...prevItems, { nameArr: [], quantityArr: [], priceArr: [] }]);
+      setName('');
+      setQuantity('');
+      setPrice('');
     }
+    
+    console.log(newItem.name, newItem.quantity, newItem.price);
   };
 
   //--모든 TextInput이 값이 채워졌는지 확인(안채우면 add안됨)--\\
-  const areInputsFilled = () => {
-    return inputs.every(input => input.quantity && input.itemName && input.price);
+  const areitemsFilled = () => {
+    return items.every(input => input.quantity && input.name && input.price);
   };
   //--AsyncStorage에 데이터 저장--\\
   const saveData = async () => {
     try {
-      await AsyncStorage.setItem(selectedDate, JSON.stringify(inputs));
+      await AsyncStorage.setItem(selectedDate, JSON.stringify(items));
     } catch (error) {
       console.error('Error saving data:', error);
     }
@@ -47,9 +72,9 @@ const ProductList = ({productlistData, selectedDate}) => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const storedInputs = await AsyncStorage.getItem(selectedDate); // 해당 날짜의 inputs 불러오기
-        if (storedInputs) {
-          setInputs(JSON.parse(storedInputs));
+        const storeditems = await AsyncStorage.getItem(selectedDate); // 해당 날짜의 items 불러오기
+        if (storeditems) {
+          setItems(JSON.parse(storeditems));
         }
       } catch (error) {
         console.error('Error loading data:', error);
@@ -60,13 +85,13 @@ const ProductList = ({productlistData, selectedDate}) => {
 
   return (
     <View style={{ alignItems: 'center' }}>
-       {inputs.map((input, index) => (
+       {items.map((input, index) => (
         <View key={index} style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
           <TextInput
             placeholder="항목 입력"
             style={[styles.input, { width: 100 }]}
-            value={input.itemName}
-            onChangeText={(text) => handleInputChange(text, index, 'itemName')}
+            value={input.name}
+            onChangeText={(text) => handleInputChange(text, index, 'name')}
           />
           <TextInput
             placeholder="수량"
@@ -85,7 +110,7 @@ const ProductList = ({productlistData, selectedDate}) => {
           <Text style={{ fontSize: 18 }}>₩</Text>
         </View>
       ))}
-       <TouchableOpacity onPress={areInputsFilled() ? handleAddItem : null} style={{ marginTop: 10, marginBottom:10 }}>
+       <TouchableOpacity onPress={areitemsFilled() ? handleAddItem : null} style={{ marginTop: 10, marginBottom:10 }}>
         <SmallAddBTNGrey />
       </TouchableOpacity>
     </View>

@@ -9,7 +9,7 @@ import SaveBTN from "../assets/icons/SaveBTN";
 import LeftArrow from "../assets/icons/LeftArrow";
 //import AsyncStorage from "@react-native-community/async-storage";
 
-const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
+const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, handleSaveData }) => {
 
   const [dailyExpense, setDailyExpense] = useState('0');
   const [expenseCount, setExpenseCount] = useState(0);
@@ -69,7 +69,7 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate }) => {
           </View>
           <TouchableOpacity
           style={{alignItems:'center', marginBottom:200}}
-          onPress={() => {toggleEditModal()}}
+          onPress={ handleSaveData}
           >
             <SaveBTN/>
           </TouchableOpacity>

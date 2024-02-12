@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text,StyleSheet, TouchableOpacity, Dimensionsm, Dimensions } from 'react-native';
+import { View, Text,StyleSheet, TouchableOpacity, Dimensionsm, Dimensions, Platform } from 'react-native';
 import TopTri from "../assets/icons/TopTri.svg";
 import BottomTri from "../assets/icons/BottomTri.svg";
 import EditBTN from "../assets/icons/EditBTN.svg";
@@ -191,6 +191,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width:300,
     marginTop:-5,
+    ...Platform.select({
+      android:{
+        elevation:3,
+      }
+    })
   },
   expenseText:{
     fontSize:28,
