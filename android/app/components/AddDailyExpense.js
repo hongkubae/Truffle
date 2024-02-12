@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Button, Modal, Text, TouchableOpacity, StyleSheet,Dimensions, TextInput } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
@@ -7,7 +7,7 @@ import Line from "../assets/icons/Line";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firestore from '@react-native-firebase/firestore';
 
-const AddDailyExpense = ({selectedDate}) => {
+const AddDailyExpense = ({selectedDate, items, nameArr, quantityArr, priceArr}) => {
   const [dailyExpense, setDailyExpense] = useState('0');
   
   const [inputTagList, setInputTaglist] = useState([{payArr: [], shopArr:[], tagsArr:[]}]);
@@ -32,7 +32,7 @@ const AddDailyExpense = ({selectedDate}) => {
     if(buttonName=='shopping'){
       setTags(buttonName);
       tagsReturnVal='장보기';
-      
+
     }else if (buttonName == 'eatOut'){
       setTags(buttonName);
       tagsReturnVal='외식';
@@ -43,6 +43,12 @@ const AddDailyExpense = ({selectedDate}) => {
     }
     setTagsArr(prevTagsArr => [...prevTagsArr, tagsReturnVal]);
   };
+  useEffect(() => {
+    console.log(tagsArr[tagsArr.length - 1]); // 최신 업데이트된 값 출력
+  }, [tagsArr]);
+  useEffect(() => {
+    console.log(payArr[payArr.length - 1]); // 최신 업데이트된 값 출력
+  }, [payArr]);
 
 //--현금 카드 string 변환 후 array에 저장--\\
   const handlepay = (buttonName) => {
@@ -66,38 +72,9 @@ const AddDailyExpense = ({selectedDate}) => {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-
-  const handleSaveData = async () => {
-    try {
-      setLoading(true);
-      const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
-      const date = '2024-02-11'; // 저장할 문서의 날짜
-      const data = {
-        amount: totalPrice,
-        items: [
-          { name: ["수박", "씨"], quantity: [1, 1], price: [20000, 5000] },
-          { name: ["씨박"], quantity: [1], price: [10000] },
-          { name: ["박씨", "발씨"], quantity: [3, 1], price: [2000, 500] }
-        ],
-        pay: [
-          { pay: payArr[0], shop: shopArr[0], tag: tagArr[0] },
-          { pay: payArr[1], shop: shopArr[1], tag: tagArr[1] },
-          { pay: payArr[2], shop: shopArr[2], tag: tagArr[2] }
-        ],
-        memo: memo
-      };
-
-      // 파이어스토어에 데이터 저장
-      await firestore().collection(userId).doc(date).set(data);
-
-      Alert.alert('Success', 'Data saved successfully.');
-    } catch (error) {
-      console.error('Error saving data:', error);
-      Alert.alert('Error', 'Failed to save data.');
-    } finally {
-      setLoading(false);
-    }
+  const handleAddShop = () => {
+    setShopArr(prevShopArr => [...prevShopArr, shop]);
+    console.log(shopArr);
   };
 
   return (
@@ -123,7 +100,8 @@ const AddDailyExpense = ({selectedDate}) => {
           </View>
 
           <View style={styles.tagStyle}>
-            <Text>SHOP</Text>
+            <Text onPress={
+            handleAddShop}>SHOP</Text>
             <TextInput
             placeholder="..."
             style={styles.input}

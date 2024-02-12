@@ -46,8 +46,7 @@ const ProductList = ({productlistData, selectedDate}) => {
       setQuantityArr(prevQuantityArr => [...prevQuantityArr, newItem.quantity]);
       setPriceArr(prevPriceArr => [...prevPriceArr, newItem.price]);
   
-      // 새로운 항목을 items 배열에 추가하고 입력값 초기화
-      saveData(); // 데이터 저장
+      saveData();
       setItems(prevItems => [...prevItems, { nameArr: [], quantityArr: [], priceArr: [] }]);
       setName('');
       setQuantity('');

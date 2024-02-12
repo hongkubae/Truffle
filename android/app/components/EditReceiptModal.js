@@ -9,7 +9,7 @@ import SaveBTN from "../assets/icons/SaveBTN";
 import LeftArrow from "../assets/icons/LeftArrow";
 //import AsyncStorage from "@react-native-community/async-storage";
 
-const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, handleSaveData }) => {
+const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, nameArr, quantityArr, priceArr, payArr, shopArr, tagsArr, handleAddShop  }) => {
 
   const [dailyExpense, setDailyExpense] = useState('0');
   const [expenseCount, setExpenseCount] = useState(0);
@@ -18,6 +18,47 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, handleSa
   const handleAddExpense = () => {
     setExpenseCount(prevCount => prevCount + 1);
   };
+
+  
+  const [loading, setLoading] = useState(false);
+
+  const handleSaveData = async () => {
+    try {
+    
+      setLoading(true);
+      const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+      const totalPrice=1000;
+      const date = '2024-02-29'; // 저장할 문서의 날짜
+      const data = {
+        amount: totalPrice,
+        items: [
+          { name: nameArr[0], quantity: quantityArr[0], price: priceArr[0] },
+          { name: nameArr[1], quantity: quantityArr[1], price: priceArr[1] },
+          { name: nameArr[2], quantity: quantityArr[2], price: priceArr[2] }
+        ],
+        pay: [
+          { pay: payArr[0], shop: shopArr[0], tag: tagsArr[0] },
+          { pay: payArr[1], shop: shopArr[1], tag: tagsArr[1] },
+          { pay: payArr[2], shop: shopArr[2], tag: tagsArr[2] }
+        ],
+        memo: memo
+      };
+
+      // 파이어스토어에 데이터 저장
+      await firestore().collection(userId).doc(date).set(data);
+
+      Alert.alert('Success', 'Data saved successfully.');
+    } catch (error) {
+      console.error('Error saving data:', error);
+      Alert.alert('Error', 'Failed to save data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkingArr = () => {
+    console.log(nameArr, quantityArr, priceArr, payArr, shopArr, tagsArr);
+  }
 
   return (
     <Modal
@@ -69,7 +110,7 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, handleSa
           </View>
           <TouchableOpacity
           style={{alignItems:'center', marginBottom:200}}
-          onPress={ handleSaveData}
+          onPress={checkingArr}
           >
             <SaveBTN/>
           </TouchableOpacity>
