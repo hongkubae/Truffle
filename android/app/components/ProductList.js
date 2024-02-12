@@ -4,6 +4,7 @@ import { ListItem } from 'react-native-elements';
 import AddBTNIcon from "../assets/icons/AddBTNIcon.svg";
 import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import firestore from "@react-native-firebase/firestore";
 
 const ProductList = ({productlistData, selectedDate}) => {
   const [items, setItems] = useState([{ nameArr: [], quantityArr: [], priceArr: [] }]);
