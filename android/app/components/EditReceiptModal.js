@@ -1,25 +1,158 @@
-import React, {useState} from 'react';
-import { View, Button, Modal, Text, TouchableOpacity, StyleSheet,Dimensions, TextInput, ScrollView, SafeAreaView } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Button, Modal, Text, TouchableOpacity, StyleSheet,Dimensions, TextInput, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Line from "../assets/icons/Line";
-import AddDailyExpense from "./AddDailyExpense";
+import SmallAddBTNGrey from "../assets/icons/SmallAddBTNGrey";
 import AddBTNIcon from "../assets/icons/AddBTNIcon";
 import TruffleLogo from "../assets/logo/TruffleLogo";
 import SaveBTN from "../assets/icons/SaveBTN";
 import LeftArrow from "../assets/icons/LeftArrow";
-//import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import firestore from "@react-native-firebase/firestore";
 
-const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, nameArr, quantityArr, priceArr, payArr, shopArr, tagsArr, handleAddShop  }) => {
+const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
+  const [items, setItems] = useState([{ nameArr: [], quantityArr: [], priceArr: [] }]);
 
-  const [dailyExpense, setDailyExpense] = useState('0');
+  const [nameArr, setNameArr] = useState([name]);
+  const [quantityArr, setQuantityArr] = useState([quantity]);
+  const [priceArr, setPriceArr] = useState([price]);
+
+  const [name, setName] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [price, setPrice] = useState('');
+
+  //--input 바뀌었을 때--\\
+  const handleInputChange = (text, index, key) => {
+    const newItems = [...items];
+    newItems[index][key] = text;
+  
+    // 해당하는 값들을 nameArr, quantityArr, priceArr에 저장
+    const { name, quantity, price } = newItems[index];
+    const updatedNameArr = [...nameArr];
+    const updatedQuantityArr = [...quantityArr];
+    const updatedPriceArr = [...priceArr];
+    updatedNameArr[index] = name;
+    updatedQuantityArr[index] = quantity;
+    updatedPriceArr[index] = price;
+  
+    // 상태 업데이트
+    setNameArr(updatedNameArr);
+    setQuantityArr(updatedQuantityArr);
+    setPriceArr(updatedPriceArr);
+  
+    setItems(newItems);
+  };
+  //--input 받기--\\
+  const handleAddItem = () => {
+    const newItem = items[items.length - 1];
+    if (newItem.quantity && newItem.name && newItem.price) {
+      setNameArr(prevNameArr => [...prevNameArr, newItem.name]);
+      setQuantityArr(prevQuantityArr => [...prevQuantityArr, newItem.quantity]);
+      setPriceArr(prevPriceArr => [...prevPriceArr, newItem.price]);
+  
+      saveData();
+      setItems(prevItems => [...prevItems, { nameArr: [], quantityArr: [], priceArr: [] }]);
+      setName('');
+      setQuantity('');
+      setPrice('');
+    }
+  };
+
+  //--모든 TextInput이 값이 채워졌는지 확인(안채우면 add안됨)--\\
+  const areitemsFilled = () => {
+    return items.every(input => input.quantity && input.name && input.price);
+  };
+  //--AsyncStorage에 데이터 저장--\\
+  const saveData = async () => {
+    try {
+      await AsyncStorage.setItem(selectedDate, JSON.stringify(items));
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
+  //--AsyncStorage에서 데이터 불러오기--\\
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const storeditems = await AsyncStorage.getItem(selectedDate); // 해당 날짜의 items 불러오기
+        if (storeditems) {
+          setItems(JSON.parse(storeditems));
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    };
+    loadData();
+  }, [selectedDate]);
+//--AddDailyExpense--\\  
+  const [inputTagList, setInputTaglist] = useState([{payArr: [], shopArr:[], tagsArr:[]}]);
+  
+  const [shop, setShop] = useState('');
+  const [pay, setPay] = useState(null);
+  const [tags, setTags] = useState(null);
+
+  const [shopArr, setShopArr] = useState([shop]);
+  const [payArr, setPayArr] = useState([pay]);
+  const [tagsArr, setTagsArr] = useState([tags]);
+
+  //--장보기 외식 배달 string 변환 변환 후 array에 저장--\\
+  const handleTags = (buttonName) => {
+    let tagsReturnVal = '';
+    if(buttonName=='shopping'){
+      setTags(buttonName);
+      tagsReturnVal='장보기';
+
+    }else if (buttonName == 'eatOut'){
+      setTags(buttonName);
+      tagsReturnVal='외식';
+    }
+    else{
+      setTags(buttonName);
+      tagsReturnVal='배달';
+    }
+    setTagsArr(tagsReturnVal);
+  };
+
+//--현금 카드 string 변환 후 array에 저장--\\
+  const handlepay = (buttonName) => {
+    let btnReturnVal='';
+    if(buttonName=='cash'){
+      setPay(buttonName);
+      btnReturnVal='현금';
+    }else{
+      setPay(buttonName);
+      btnReturnVal='카드';
+    }
+    setPayArr(btnReturnVal);
+  };
+  //--shop input--\\
+  const handleShopChange = (text) => {
+    setShop(text);
+    setShopArr(text);
+  };
+  
+  // SaveBTN을 눌렀을 때 inputTagList 저장
+  const handleInputTagListSave = () => {
+    setInputTaglist([{shopArr, payArr, tagsArr}]);
+  };
+  
+  //--EditReciptModal--\\
+  const [dailyExpense, setDailyExpense] = useState(0);
   const [expenseCount, setExpenseCount] = useState(0);
   const [memo,setMemo]=useState('');
 
   const handleAddExpense = () => {
     setExpenseCount(prevCount => prevCount + 1);
   };
-
-  
+  //--하루 총액 구하기--\\
+  useEffect(() => {
+    let totalExpense = 0;
+    priceArr.forEach(elem => {
+      totalExpense += parseFloat(elem);
+    });
+    setDailyExpense(totalExpense);
+  }, [priceArr]);
+  //----파이어베이스에 업데이트----\\
   const [loading, setLoading] = useState(false);
 
   const handleSaveData = async () => {
@@ -27,34 +160,27 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, nameArr,
     
       setLoading(true);
       const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
-      const totalPrice=1000;
-      const date = '2024-02-29'; // 저장할 문서의 날짜
+      const totalPrice=dailyExpense;
+      const date = selectedDate;
       const data = {
-        amount: totalPrice,
-        items: [
-          { name: nameArr[0], quantity: quantityArr[0], price: priceArr[0] },
-          { name: nameArr[1], quantity: quantityArr[1], price: priceArr[1] },
-          { name: nameArr[2], quantity: quantityArr[2], price: priceArr[2] }
-        ],
-        pay: [
-          { pay: payArr[0], shop: shopArr[0], tag: tagsArr[0] },
-          { pay: payArr[1], shop: shopArr[1], tag: tagsArr[1] },
-          { pay: payArr[2], shop: shopArr[2], tag: tagsArr[2] }
-        ],
-        memo: memo
-      };
-
-      // 파이어스토어에 데이터 저장
-      await firestore().collection(userId).doc(date).set(data);
-
-      Alert.alert('Success', 'Data saved successfully.');
-    } catch (error) {
-      console.error('Error saving data:', error);
-      Alert.alert('Error', 'Failed to save data.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  amount: totalPrice,
+  items: [
+    { name: nameArr, quantity: quantityArr, price: priceArr },
+  ],
+  pay: [
+    { pay: payArr, shop: shopArr, tag: tagsArr },
+  ],
+  memo: memo
+};
+  await firestore().collection(userId).doc(date).set(data);
+  Alert.alert('Success', 'Data saved successfully.');
+  } catch (error) {
+    console.error('Error saving data:', error);
+    Alert.alert('Error', 'Failed to save data.');
+  } finally {
+    setLoading(false);
+  }
+ };
 
   const checkingArr = () => {
     console.log(nameArr, quantityArr, priceArr, payArr, shopArr, tagsArr);
@@ -88,34 +214,118 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate, nameArr,
             <Text>{selectedDate}</Text>
             <View style={styles.expenseHeader}>
               <View style={{width:8}}></View>
-              <Text style={styles.expenseText}>{dailyExpense.toLocaleString()}</Text>
+              <Text style={styles.expenseText}>{dailyExpense}</Text>
               <Text style={{fontSize:24, fontWeight:'400'}}>원</Text>
             </View>
             <Line/>
+            {/*ProductList */}
+        {items.map((input, index) => (
+        <View key={index} style={{ flexDirection: 'row', gap: 20, alignItems: 'center', marginTop:10 }}>
+          <TextInput
+            placeholder="항목 입력"
+            style={[styles.ProductInput, { width: 100 }]}
+            value={input.name}
+            onChangeText={(text) => handleInputChange(text, index, 'name')}
+          />
+          <TextInput
+            placeholder="수량"
+            style={[styles.ProductInput, {width:40}]}
+            value={input.quantity}
+            keyboardType="number-pad"
+            onChangeText={(text) => handleInputChange(text, index, 'quantity')}
+          />
+          <TextInput
+            placeholder="가격"
+            style={[styles.ProductInput, {width:100}]}
+            value={input.price}
+            keyboardType="number-pad"
+            onChangeText={(text) => handleInputChange(text, index, 'price')}
+          />
+          <Text style={{ fontSize: 18 }}>₩</Text>
+        </View>
+        ))}
+        <TouchableOpacity onPress={handleAddItem} disabled={!areitemsFilled()} style={{ marginTop: 10, marginBottom:10 }}>
+          <SmallAddBTNGrey />
+        </TouchableOpacity>
+        <Line/>
+          {/*AddDailyExpense*/}
+        <View style={{alignItems:'flex-start', marginLeft:-20}}>
+          <View style={styles.tagStyle}>
+            <Text>PAY</Text>
+            <TouchableOpacity
+              style={[styles.TagsBTN, pay === 'cash' && styles.selectedBTN]}
+              onPress={() => handlepay('cash')}
+            >
+            <Text style={[styles.TagsBTNText, pay === 'cash' && styles.selectedBTNText]}>현금</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.TagsBTN, pay === 'card' && styles.selectedBTN]}
+              onPress={() => handlepay('card')}
+            >
+            <Text style={[styles.TagsBTNText, pay === 'card' && styles.selectedBTNText]}>카드</Text>
+            </TouchableOpacity>    
+          </View>
 
-            <AddDailyExpense selectedDate={selectedDate}/>
-            {[...Array(expenseCount)].map((_, index) => (
-            <AddDailyExpense selectedDate={selectedDate} key={index} />
-            ))}
-
-            <View style={styles.memoContainer}>
-              <Text>MEMO</Text>
-            </View>
+          <View style={styles.tagStyle}>
+            <Text>SHOP</Text>
             <TextInput
             placeholder="..."
-            style={styles.input}
-            value={memo}
-            onChangeText={(text) => setMemo(text)}
+            style={styles.shopInput}
+            value={shop}
+            onChangeText={handleShopChange}
             />
+          </View>
+
+          <View style={styles.tagStyle}>
+            <Text>TAG</Text>
+
+            <TouchableOpacity
+              style={[styles.TagsBTN, tags === 'shopping' && styles.selectedBTN]}
+              onPress={() => handleTags('shopping')}
+            >
+            <Text style={[styles.TagsBTNText, tags === 'shopping' && styles.selectedBTNText]}>장보기</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.TagsBTN, tags === 'eatOut' && styles.selectedBTN]}
+              onPress={() => handleTags('eatOut')}
+            >
+            <Text style={[styles.TagsBTNText, tags === 'eatOut' && styles.selectedBTNText]}>외식</Text>
+            </TouchableOpacity> 
+
+            <TouchableOpacity
+              style={[styles.TagsBTN, tags === 'deliverty' && styles.selectedBTN]}
+              onPress={() => handleTags('deliverty')}
+            >
+            <Text style={[styles.TagsBTNText, tags === 'deliverty' && styles.selectedBTNText]}>배달</Text>
+            </TouchableOpacity> 
+          </View>
+        </View>
+      <Line/>
+
+      <View style={styles.memoContainer}>
+        <Text>MEMO</Text>
+          </View>
+          <TextInput
+          placeholder="..."
+          style={styles.input}
+          value={memo}
+          onChangeText={(text) => setMemo(text)}
+          />
           </View>
           <TouchableOpacity
           style={{alignItems:'center', marginBottom:200}}
-          onPress={checkingArr}
+          onPress={()=>{
+            handleSaveData();
+            toggleEditModal();
+            handleInputTagListSave();
+            checkingArr();
+          }}
           >
             <SaveBTN/>
           </TouchableOpacity>
         </View>
-        </View>
+      </View>
     </ScrollView>
   </SafeAreaView>
 </Modal>
@@ -150,26 +360,6 @@ const styles = StyleSheet.create({
     marginTop:10,
     borderRadius:10,
   },
-  button: {
-    padding: 10,
-    margin: 5,
-    borderRadius: 5,
-    borderColor:'#D4D4D4'
-  },
-  selectedButton: {
-    borderColor: '#FEA655',
-    padding: 10,
-    margin: 5,
-    borderRadius: 1,
-  },
-  buttonText: {
-    color: '#D4D4D4',
-    fontSize: 14,
-  },
-  selectedButtonText: {
-    color: '#FEA655',
-    fontSize: 14,
-  },
   memoContainer:{
     width: Dimensions.get('window').width,
     alignItems:'flex-start',
@@ -184,8 +374,58 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width*0.7,
     justifyContent:'space-between',
     alignItems:'center'
-  }
-  
+  },
+  ProductInput: {
+    height: 38,
+    backgroundColor:'white',
+    borderColor: 'gray',
+    borderBottomWidth:1,
+    marginBottom: 8,
+    paddingHorizontal: 8,
+    fontSize:14,
+    textAlign:'center'
+  },
+  shopInput: {
+    height: 35,
+    width:100,
+    borderColor: 'gray',
+    borderBottomWidth:1,
+    fontSize:14,
+    textAlign:'center'
+  },
+  TagsBTN: {
+    padding: 5,
+    margin: 5,
+    borderRadius: 5,
+    borderColor:'#D4D4D4',
+    borderWidth:1,
+    width:60,
+  },
+  selectedBTN: {
+    borderColor: '#FEA655',
+    padding: 5,
+    margin: 5,
+    borderRadius: 5,
+    borderWidth:1,
+    width:60,
+  },
+  TagsBTNText: {
+    color: '#D4D4D4',
+    fontSize: 14,
+    textAlign:'center'
+  },
+  selectedBTNText: {
+    color: '#FEA655',
+    fontSize: 14,
+    textAlign:'center'
+  },
+  tagStyle:{
+    flexDirection:'row',
+    alignItems:'center',
+    gap:10,
+    marginTop:5,
+    marginBottom:5
+  },
 });
 
 export default EditReceiptModal;
