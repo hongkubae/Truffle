@@ -6,12 +6,14 @@ import ConfirmIcon from "../assets/icons/ConfirmIcon.svg";
 import XIcon from "../assets/icons/XIcon.svg";
 import MonthlyExceptionModal from "../assets/icons/MonthlyExceptionModal.svg";
 import SmallYesIcon from "../assets/icons/SmallYesIcon.svg";
+import firestore from "@react-native-firebase/firestore";
 
 
 
 const MonthlyModifyView = ({navigation}) => {
   const [text, setText] = useState('');
   const inputWidth=Dimensions.get('window').width/1.3;
+
   const onChangeText =(inputText) => {
     const numValue = inputText.replaceAll(',', '');
     inputText = numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); 
@@ -20,6 +22,18 @@ const MonthlyModifyView = ({navigation}) => {
   const [exceptionModal, setExceptionModal] = useState(false);
   const toggleException = () => {
     setExceptionModal(!exceptionModal);
+  };
+
+  const updateUserBudget = async () => {
+    try {
+      const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+      await firestore().collection('users').doc(userId).update({
+        user_budget: text.replace(/,/g, ''),
+      });
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error updating user budget:', error);
+    }
   };
 
   return (
@@ -55,7 +69,8 @@ const MonthlyModifyView = ({navigation}) => {
             toggleException();
           } 
           else{
-            navigation.goBack()}
+            updateUserBudget();
+          }
           }}>
           {/* 백엔드로 전달하기*/}
           <ConfirmIcon/>
