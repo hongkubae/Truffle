@@ -4,6 +4,7 @@ import PieChart from 'react-native-pie-chart'
 import TruffleLogo from "../assets/logo/TruffleLogo.svg";
 
 function DonutChart () {
+  /*
   const [userbudget, setUserBudget] = useState(0);
   const [expenses, setExpenses] = useState({
     eatOut: 0, //외식
@@ -111,6 +112,7 @@ function DonutChart () {
 
       </View>
     );
+    */
   }
 
 const Styles = StyleSheet.create({
