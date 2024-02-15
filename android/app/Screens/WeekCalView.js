@@ -5,7 +5,6 @@ import Receipt from "../components/Receipt";
 
 const WeeklyCalView = ({ route, navigation }) => {
   const {selectedDate, handleDayClick}=route.params;
-
   return (
     <SafeAreaView>
       <ScrollView>

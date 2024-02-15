@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import { Table, Row } from 'react-native-table-component';
 import moment from 'moment';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
@@ -18,6 +18,7 @@ const CalendarView = ({ navigation, props }) => {
   const monthOptions = Array.from({ length: 12 }, (_, index) => index + 1);
   const circleRadius = 16;
   const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+ 
   //--db에서 정보 가져오기--\\
   useEffect(() => {
     generateCalendarData();
@@ -200,6 +201,7 @@ const CalendarView = ({ navigation, props }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.Texts}>Calendar</Text>
+      <ActivityIndicator color='grey'/>
       <View style={styles.calContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30 }}>
           <TouchableOpacity onPress={goToPreviousMonth}>
@@ -210,8 +212,9 @@ const CalendarView = ({ navigation, props }) => {
             <RightArrow />
           </TouchableOpacity>
         </View>
-
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+        
           {weekdays.map((weekday, index) => (
             <View key={index} style={{ flex: 1, alignItems: 'center' }}>
               <Text style={{ fontSize: 12, color: "grey" }}>{weekday}</Text>

@@ -10,7 +10,7 @@ import firestore from "@react-native-firebase/firestore";
 const Receipt = ({selectedDate}) => {
   const [receiptData, setReceiptData] = useState(null);
   const [EditVisible, setEditVisible] = useState(false);
-
+ 
   useEffect(() => {
     const fetchReceiptData = async () => {
       try {
