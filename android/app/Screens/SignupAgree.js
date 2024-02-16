@@ -53,7 +53,7 @@ const [isPressed, setIsPressed] = useState(false);
     <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
         onPress={allAgree}> 
-        <Image style={{left: 2, top: 3}} source={require('./assets/checkIcon.png')}/>
+        <Image style={{left: 2, top: 3}} source={require('../assets/icons/checkIcon.png')}/>
       </TouchableOpacity>
 
         <Text style={{color: '#000', left: 35, marginRight: 5 }}>전체 동의</Text>
@@ -75,7 +75,7 @@ const [isPressed, setIsPressed] = useState(false);
 <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
         onPress={allAgree}> 
-        <Image style={{left: 2, top: 3}} source={require('./assets/checkIcon.png')}/>
+        <Image style={{left: 2, top: 3}} source={require('../assets/icons/checkIcon.png')}/>
       </TouchableOpacity>
 
         <Text style={{color: '#000', left: 33, marginRight: 5 }}>만 14세 이상 이용 동의</Text>
@@ -97,14 +97,14 @@ const [isPressed, setIsPressed] = useState(false);
 <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
         onPress={allAgree}> 
-        <Image style={{left: 2, top: 3}} source={require('./assets/checkIcon.png')}/>
+        <Image style={{left: 2, top: 3}} source={require('../assets/icons/checkIcon.png')}/>
       </TouchableOpacity>
 
         <Text style={{color: '#000', left: 33, marginRight: 5 }}>서비스 이용약관 동의</Text>
         <Text style={{color: '#FFC470', left: 35, }}>(필수)</Text>
         <TouchableOpacity style={{position: 'absolute', left: 260, top: 0, }} 
         onPress={() => navigation.navigate('Agreement1')}>
-        <Text style={{ color: '#979797', fontSize: 20, bottom: 4}}>></Text>
+        <Text style={{ color: '#979797', fontSize: 20, bottom: 4}}></Text>
         </TouchableOpacity>
     </View>
       </TouchableOpacity>
@@ -123,14 +123,14 @@ const [isPressed, setIsPressed] = useState(false);
 <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
         onPress={allAgree}> 
-        <Image style={{left: 2, top: 3}} source={require('./assets/checkIcon.png')}/>
+        <Image style={{left: 2, top: 3}} source={require('../assets/icons/checkIcon.png')}/>
       </TouchableOpacity>
 
         <Text style={{color: '#000', left: 33, marginRight: 5 }}>개인정보 수집 및 이용 동의</Text>
         <Text style={{color: '#FFC470', left: 35, }}>(필수)</Text>
         <TouchableOpacity style={{position: 'absolute', left: 260, top: 0, }}
         onPress={() => navigation.navigate('Agreement2')}>
-        <Text style={{ color: '#979797', fontSize: 20, bottom: 4}}>></Text>
+        <Text style={{ color: '#979797', fontSize: 20, bottom: 4}}></Text>
         </TouchableOpacity>
     </View>
       </TouchableOpacity>
@@ -149,14 +149,14 @@ const [isPressed, setIsPressed] = useState(false);
 <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
         onPress={allAgree}> 
-        <Image style={{left: 2, top: 3}} source={require('./assets/checkIcon.png')}/>
+        <Image style={{left: 2, top: 3}} source={require('../assets/icons/checkIcon.png')}/>
       </TouchableOpacity>
 
         <Text style={{color: '#000', left: 33, marginRight: 5 }}>개인정보 수집 및 이용 동의</Text>
         <Text style={{color: '#979797', left: 35, }}>(선택)</Text>
         <TouchableOpacity style={{position: 'absolute', left: 260, top: 0, }}
         onPress={() => navigation.navigate('Agreement3')}>
-        <Text style={{ color: '#979797', fontSize: 20, bottom: 4}}>></Text>
+        <Text style={{ color: '#979797', fontSize: 20, bottom: 4}}></Text>
         </TouchableOpacity>
     </View>
       </TouchableOpacity>
@@ -175,7 +175,7 @@ const [isPressed, setIsPressed] = useState(false);
 <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
         onPress={allAgree}> 
-        <Image style={{left: 2, top: 3}} source={require('./assets/checkIcon.png')}/>
+        <Image style={{left: 2, top: 3}} source={require('../assets/icons/checkIcon.png')}/>
       </TouchableOpacity>
 
         <Text style={{color: '#000', left: 33, marginRight: 5 }}>이메일 마케팅 수신 동의</Text>

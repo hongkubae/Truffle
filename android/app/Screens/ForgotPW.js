@@ -170,44 +170,7 @@ const handleClick = () => {
         editable={!isButtonPressed}
       />
 
-
-
-      <TouchableOpacity
-        style={[styles.midButton, {backgroundColor: isStartButtonDisabled ? '#CCCCCC' : '#FEA655'} ]}
-        onPress={handleStartTimer} 
-                disabled={isStartButtonDisabled && isSecondButtonPressed}> 
-                
-        <Text style={styles.buttonText}>인증번호 발송</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.resend}
-        onPress={handleResetTimer}
-        disabled={isResendButtonDisabled} >
-        <Text style={styles.saveTxt}>인증번호 재발송</Text>
-      </TouchableOpacity>
-      <TextInput
-        style={styles.inputRe}   
-    placeholder="인증번호"
-    value={num}
-    onChangeText={handleNumChange}
-        keyboardType="numeric"
-        editable={!isButtonPressed}
-      />
-    
-
-{/* 타이머 */}
-<Text style={{ color: 'purple', position: 'absolute', top: 275, paddingLeft: 30}}>{formatTime(remainingTime)}</Text>
-
-
-      <TouchableOpacity
-        style={[styles.smallButton, {backgroundColor: isStopButtonDisabled ? '#CCCCCC' : '#FEA655'} ]}
-        onPress={handleStopTimer} 
-                disabled={isStopButtonDisabled} 
-                
-        >
-        <Text style={styles.buttonText}>확인</Text>
-      </TouchableOpacity>
-<TouchableOpacity style={{top: 98}}>
+  <TouchableOpacity style={{top: 98}}>
     <Eye/>
    </TouchableOpacity>   
       <TextInput
