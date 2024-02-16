@@ -4,22 +4,21 @@ import { NavigationContainer } from "@react-navigation/native";
 import TabNavigator from './android/app/navigations/TabNavigation';
 import LoginStackNavigator from './android/app/navigations/LoginStackNavigation';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-//import {isLoggedIn} from "./app/BackFunc/AuthFunc";
-
+import AuthFunc from './android/app/BackFunc/AuthFunc';
 const Stack = createNativeStackNavigator();
 
 export default function App () {
   //--로그인 여부 판단해서 로그인||메인 네비게이터 분리--\\
-  const [isLogin, setIsLogin] = useState(true);
-
+  //const [isLoggedIn, setisLoggedIn] = useState(true);
+  const { isLoggedIn } = AuthFunc();
   return (
     <NavigationContainer independent = {true}>
       <Stack.Navigator
         screenOptions={({ route }) => ({ headerShown: false })}
-        initialRouteName={isLogin ? 'TabNavigator' : 'LoginStackNavigator'}
+        initialRouteName={isLoggedIn ? 'TabNavigator' : 'LoginStackNavigator'}
       >
         {
-          isLogin ? (
+          isLoggedIn ? (
             <Stack.Screen name='TabNavigator' component={TabNavigator} />
           ) : (
             <Stack.Screen
@@ -27,11 +26,10 @@ export default function App () {
               options={{ animationEnabled: false }} // 초기 로그인 시 네비게이션 애니메이션 제거
             >
               {(props) => (
-                <LoginStackNavigator {...props} setIsLoggedIn={setIsLogin} />
+                 <Stack.Screen name='LoginStackNavigator' component={LoginStackNavigator} />
               )}
             </Stack.Screen>
-          )
-        }
+          )}
       </Stack.Navigator>
     </NavigationContainer>
   );

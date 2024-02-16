@@ -218,6 +218,30 @@ useEffect(() => {
   ],
   memo: memo
 };
+      const currentDate = new Date(date);
+      const currentMonthIndex = currentDate.getMonth();
+      const userRef = firestore().collection('users').doc(userId);
+      
+    const currentShoppingSnapshot = await userRef.get();
+    const currentShopping = currentShoppingSnapshot.data().shopping[currentMonthIndex] || 0;
+
+    const currentEatOutSnapshot = await userRef.get();
+    const currentEatOut = currentEatOutSnapshot.data().eatOut[currentMonthIndex] || 0;
+
+    const currentDeliverySnapshot = await userRef.get();
+    const currentDelivery = currentDeliverySnapshot.data().delivery[currentMonthIndex] || 0;
+
+      
+    const updatedShopping = currentShopping + totalShopping;
+    const updatedEatOut = currentEatOut + totalEatOut;
+    const updatedDelivery = currentDelivery + totalDelivery;
+
+      await userRef.update({
+        [`shopping.${currentMonthIndex}`]: updatedShopping,
+        [`eatOut.${currentMonthIndex}`]: updatedEatOut,
+        [`delivery.${currentMonthIndex}`]: updatedDelivery
+      });
+      
   await firestore().collection(userId).doc(date).set(data);
   handleInputTagListSave();
   Alert.alert('Success', 'Data saved successfully.');

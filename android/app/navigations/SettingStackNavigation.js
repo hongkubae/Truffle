@@ -16,3 +16,4 @@ const SettingStackNavigation = () => {
 };
 
 export default SettingStackNavigation
+rt1
