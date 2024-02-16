@@ -94,8 +94,8 @@ useEffect(() => {
   loadData();
 }, [selectedDate]);
 //--AddDailyExpense--\\  
-  const [inputTagList, setInputTaglist] = useState([{itmes:[{nameArr:[], quantityArr:[], priceArr:[]}],payArr: [], shopArr:[], tagsArr:[]}]);
-  
+  const [inputTagList, setInputTaglist] = useState([{items:[{nameArr:[], quantityArr:[], priceArr:[]}],payArr: [], shopArr:[], tagsArr:[]}]);
+
   const [shop, setShop] = useState('');
   const [pay, setPay] = useState(null);
   const [tags, setTags] = useState(null);

@@ -122,20 +122,76 @@ const LineGraph = () => {
     }
   };
 
-const renderDropdown = () => {
-  switch (value) {
-    case '1':
-      return data1 ? <LineChart data={data1} width={380} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
-    case '3':
-      return data3 ? <LineChart data={data3} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
-    case '4':
-      return data4 ? <LineChart data={data4} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
-    case '5':
-      return data5 ? <LineChart data={data5} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
-    default:
-      return data1 ? <LineChart data={data1} width={400} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
-  }
-};
+  const renderDropdown = () => {
+    switch (value) {
+      case '1':
+        return data1 ? (
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <LineChart
+              data={data1}
+              width={380}
+              height={220}
+              withVerticalLines={false}
+              chartConfig={chartConfig}
+              bezier
+            />
+          </ScrollView>
+        ) : null;
+      case '3':
+        return data3 ? (
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <LineChart
+              data={data3}
+              width={450}
+              height={220}
+              withVerticalLines={false}
+              chartConfig={chartConfig}
+              bezier
+            />
+          </ScrollView>
+        ) : null;
+      case '4':
+        return data4 ? (
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <LineChart
+              data={data4}
+              width={390}
+              height={220}
+              withVerticalLines={false}
+              chartConfig={chartConfig}
+              bezier
+            />
+          </ScrollView>
+        ) : null;
+      case '5':
+        return data5 ? (
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <LineChart
+              data={data5}
+              width={360}
+              height={220}
+              withVerticalLines={false}
+              chartConfig={chartConfig}
+              bezier
+            />
+          </ScrollView>
+        ) : null;
+      default:
+        return data1 ? (
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            <LineChart
+              data={data1}
+              width={400}
+              height={220}
+              withVerticalLines={false}
+              chartConfig={chartConfig}
+              bezier
+            />
+          </ScrollView>
+        ) : null;
+    }
+  };
+  
 
 return (
   <View style={styles.container}>
@@ -196,6 +252,9 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
+  },
+   scrollView: {
+    flex: 1,
   },
 })
 
