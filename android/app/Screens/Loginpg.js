@@ -5,31 +5,61 @@ import {
   Image,
   View,
   TouchableOpacity,
-  StyleSheet, 
   TextInput,
+  StyleSheet, Email
 } from 'react-native';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-//import { onSubmit } from './authFunctions';
-import { authService } from '../firebaseConfig';
+import auth from '@react-native-firebase/auth';
+import Eye from "../assets/icons/Eye";
 
 
 function Loginpg({ navigation }) {
 const [password, setPassword] = useState('');
 const [email, setEmail] = useState('');
 const [validation, setValidation] = useState("");
-{/* 로그인 정보 저장 async storage */}
-const [rememberMe, setRememberMe] = useState(false);
 
-  
 const handlePasswordChange = (value) => {
     setPassword(value);
   };
+
+  
+
+  const signIn = () => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        navigation.navigate('Budgetpg'); // 로그인 후 Budgetpg로 이동
+      })
+      .catch((error) => {
+        setValidation('일치하는 이메일 혹은 비밀번호가 없습니다.');
+        console.error('로그인 오류:', error);
+      });
+  };
+
+
   const handleEmailChange = (val) => {
     setEmail(val);
   };
 
+
+  const checkLoggedIn = () => {
+    const user = auth().currentUser;
+  
+    if (user) {
+      console.log('사용자가 로그인되어 있습니다:', user.email);
+      return true;
+    } else {
+      console.log('사용자가 로그인되어 있지 않습니다.');
+      return false;
+    }
+  };
+  
+
+  
+{/* 로그인 정보 저장 async storage */}
+  const [rememberMe, setRememberMe] = useState(false);
+
   useEffect(() => {
+    // Load stored email and password when the component mounts
     loadLoginInfo();
   }, []);
 
@@ -59,29 +89,33 @@ const handlePasswordChange = (value) => {
     
   };
 
-{/* const getLogInfo = async () => {
-  const email = await AsyncStorage.getItem('email');
-  const password = await AsyncStorage.getItem('password');
-}
-const saveLogInfo = async () => {
-  await AsyncStorage.setItem('email', JSON.stringify(email));
-  await AsyncStorage.setItem('password', JSON.stringify(password));
-} */}
 
+{/* eye 버튼 */}
+const [eye, setEye] = useState({
+    eye: false,
+    eyeOn: false,
+  });
+  const [isSecure, setIsSecure] = useState(true);
 
-{/* 수정됨 */}
-const onSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      if (rememberMe) {
-        {/* 로그인 정보 저장 */}
-        await AsyncStorage.setItem('storedEmail', email);
-        await AsyncStorage.setItem('storedPassword', password);
+  const handleEyeClick = (buttonName) => {
+    setEye((prevStates) => ({
+      ...prevStates,
+      [buttonName]: !prevStates[buttonName],
+    }));
+    setIsSecure((prevIsSecure) => !prevIsSecure);
+  }; 
+
+  const getImageForEye = (buttonName) => {
+    if (eye[buttonName]) {
+      switch (buttonName) {
+        case 'eyeOpen':
+          return require('../assets/icons/Eye');
+        default:
+          return require('../assets/icons/Eye');
       }
-      {/* 로그인 */}
-        await authService.signInWithEmailAndPassword(email, password);
-    } catch (error) {
-      setValidation('일치하는 이메일 혹은 비밀번호가 없습니다.', error);
+    } 
+    else{
+      return require('../assets/icons/Eye');
     }
   };
 
@@ -93,29 +127,42 @@ const onSubmit = async (event) => {
         val={email}
         onChangeText={handleEmailChange}
         placeholder="이메일"
-        keyboardType="email-address"
+        keyboardType="email"
       />
-      <TextInput
+
+
+  <View>
+  <TextInput
         style={styles.input}
         value={password}
         onChangeText={handlePasswordChange}
         placeholder="비밀번호"
-        keyboardType="email-address"
-      />
+        keyboardType="email"
 
-        {/* 비밀번호나 이메일 안맞았을떄-- 버튼누르고 체크후 띄울수 있게 어떻게하지 */}
-        <Text style={{bottom: 20, fontSize: 12, color: '#ff0000', }}>{validation}</Text>
+secureTextEntry={isSecure}
+      />
+{/* eye버튼 */}
+      <TouchableOpacity style={{ position: 'absolute', right: 60, }} onPress={() => handleEyeClick('eyeOpen')}>
+      <Eye />
+        <Image style={{left: 50, top: 7 }} source={getImageForEye('eyeOpen')}/>
+    </TouchableOpacity>
+  </View>
+
+        <Text style={{bottom: 105, fontSize: 12,
+    color: '#ff0000', }}>{validation}</Text>
+
 
       <TouchableOpacity
         style={[styles.save, {backgroundColor: isPressed ? '#FEA655' : '#ccc'} ]} 
         onPress={toggleRememberMe}> 
+        <Image style={{left: 2, top: 3}} source={require('../assets/icons/checkIcon.png')}/>
       </TouchableOpacity>
     <Text style={{ fontSize: 12,
-    color: '#757575', bottom: 23, right: 50 }}>로그인 정보 저장</Text>
+    color: '#757575', bottom: 22, right: 50 }}>로그인 정보 저장</Text>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={onSubmit}>
+        onPress={signIn}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -132,6 +179,7 @@ const onSubmit = async (event) => {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -145,22 +193,27 @@ const styles = StyleSheet.create({
     fontFamily: 'NanumGothic',
     color: '#000', // 글자색상 추가
   },
+
   input: {
     fontSize: 15,
     borderWidth: 0.5,
-    height: 50,
+    height: 28,
     width: 232,
     marginBottom: 30,
     color: '#878787',
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth:0,
+    paddingVertical: 8
   },
   save: {
-    flexDirection: 'row', 
-    justifyContent: 'space-evenly',
-    bottom: 15,
-    right: 45,
+    position: 'absolute',
+    left: 85,
+    top: 375,
+    width: 15,
+    height: 15, 
+    borderRadius: 25,
+    marginBottom: 20,
   },
   saveTxt: {
     fontSize: 12,
@@ -176,6 +229,7 @@ const styles = StyleSheet.create({
     left: 100,
     paddingHorizontal: 100,
   },
+
   button: {
     top: 85,
     backgroundColor: '#FEA655',
@@ -190,6 +244,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'NanumGothic',
   },
+
   //budgetpg
   introBudget: {
     fontSize: 20,
@@ -209,6 +264,7 @@ const styles = StyleSheet.create({
   backBTN: {
     fontSize: 25,
   },
+
   //signuppg
   topTitle: {
     fontSize: 24,
@@ -216,6 +272,7 @@ const styles = StyleSheet.create({
   },
   log: {
     top: 193,
+
   },
   inputS: {
     fontSize: 15,
@@ -228,6 +285,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth:0,
+    paddingVertical: 0
   },
   buttonS: {
     top: 183,
@@ -237,6 +295,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 20,
   },
+  
   //success
   center: {
     fontSize: 20,
@@ -244,6 +303,7 @@ const styles = StyleSheet.create({
     marginBottom: 55,
     textAlign: 'center',
   },
+
   //forgotPW
   inputP: {
     fontSize: 15,
@@ -256,6 +316,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth:0,
+    paddingVertical: 0
   },
   buttonP: {
     top: 93,
@@ -288,6 +349,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth:0,
+    paddingVertical: 0
   },
   smallButton: {
     left: 85,
@@ -308,4 +370,6 @@ const styles = StyleSheet.create({
     color: '#ff0000',
   },
 });
+
+
 export default Loginpg;

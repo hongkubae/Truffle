@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from "react";
-import { Button, View, StyleSheet, Text, Dimensions,TouchableOpacity, Modal } from "react-native";
+import { Button, View, StyleSheet, Text, Dimensions,TouchableOpacity, Modal} from "react-native";
 import SettingModifyIcon from "../assets/icons/SettingModifyIcon.svg";
 import WithdrawModal from "../assets/icons/WithdrawModal.svg";
 import LogoutModal from "../assets/icons/LogoutModal.svg";
 import YesBTN from "../assets/icons/YesBTN.svg";
 import NoBTN from "../assets/icons/NoBTN.svg";
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const SettingsView = ({navigation}) => {
   const [logoutVisible, setLogoutVisible]=useState(false);
@@ -17,7 +18,7 @@ const SettingsView = ({navigation}) => {
   }, []);
 
   const fetchBudget = async () => {
-    const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+    const userId = 'aBsXiwzPUnVsFAH7dLBtmkum1383';
     try {
       const userRef = firestore().collection('users').doc(userId);
       const snapshot = await userRef.get();
@@ -26,10 +27,28 @@ const SettingsView = ({navigation}) => {
         const userBudget = userData.user_budget;
         setBudget(userBudget);
       } else {
+
         console.log('사용자 문서가 존재하지 않습니다.');
       }
     } catch (error) {
       console.error('예산을 가져오는 중 오류가 발생했습니다:', error);
+    }
+  };
+
+  const handleWithdraw = async () => {
+    const userId = 'aBsXiwzPUnVsFAH7dLBtmkum1383';
+    try {
+        await firestore().collection('users').doc(userId).delete();
+        console.log("사용자 문서가 삭제되었습니다.");
+
+      const user = auth().currentUser;
+      if (user) {
+        user.delete();
+        console.log('사용자가 성공적으로 삭제되었습니다.');
+    } else {
+      console.log('현재 로그인한 사용자가 없습니다.')
+    }}catch (error) {
+      console.error("사용자 탈퇴 중 오류가 발생했습니다:", error);
     }
   };
 
@@ -46,6 +65,15 @@ const SettingsView = ({navigation}) => {
 
   const withdrawVisModal = () => {
     setWithdrawVisible(!withdrawVisible);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await auth().signOut();
+      console.log("사용자가 로그아웃되었습니다.");
+    } catch (error) {
+      console.error("로그아웃 중 오류가 발생했습니다:", error);
+    }
   };
 
   return (
@@ -115,7 +143,7 @@ const SettingsView = ({navigation}) => {
             <View style={Styles.ModalOpen}>
               <LogoutModal/>
               <View style={Styles.ModalBTN}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleLogout}>
                   <YesBTN/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={logoutModal}>
@@ -136,7 +164,7 @@ const SettingsView = ({navigation}) => {
             <View style={Styles.ModalOpen}>
              <WithdrawModal/>
              <View style={Styles.ModalBTN}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleWithdraw}>
                   <YesBTN/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={withdrawVisModal}>
@@ -216,6 +244,4 @@ const Styles = StyleSheet.create({
 }
 
 })
-
-
 export default SettingsView;

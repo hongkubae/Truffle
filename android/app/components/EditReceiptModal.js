@@ -21,7 +21,7 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
   //--input 바뀌었을 때--\\
   const handleInputChange = (text, index, key) => {
     const newItems = [...items];
-    newItems[index][key] = text;
+    newItems[index][key]  = text;
     setItems(newItems);
   };
   //--input 받기--\\
@@ -29,12 +29,12 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
     if (quantity && name && price) {
       const newItem = { name: name, quantity: quantity, price: price };
       setItems([...items, newItem]);
-      setName('');
-      setQuantity('');
-      setPrice('');
     } else {
       Alert.alert('Warning', 'Please fill all fields.');
     }
+    setName('');
+    setQuantity('');
+    setPrice('');
   };
 
   //--모든 TextInput이 값이 채워졌는지 확인(안채우면 add안됨)--\\
@@ -45,9 +45,9 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
   const saveData = async () => {
     try {
       const dataToSave = items.map(item => ({
-        nameArr: item.nameArr,
-        quantityArr: item.quantityArr,
-        priceArr: item.priceArr
+        nameArr: item.name,
+        quantity: item.quantity,
+        price: item.price
       }));
       await AsyncStorage.setItem(selectedDate, JSON.stringify(dataToSave));
     } catch (error) {
@@ -62,9 +62,9 @@ useEffect(() => {
       if (storeditems) {
         const parsedItems = JSON.parse(storeditems);
         const initialItems = parsedItems.map(item => ({
-          nameArr: item.nameArr,
-          quantityArr: item.quantityArr,
-          priceArr: item.priceArr
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
         }));
         setItems(initialItems);
       }
@@ -96,7 +96,7 @@ useEffect(() => {
     // 해당 인덱스의 입력 상태를 업데이트
     setInputTaglist(prevInputTagList => {
       const newList = [...prevInputTagList];
-      newList[index].tags = tagsReturnVal;
+      newList.tags = tagsReturnVal;
       return newList;
     });
   };
@@ -111,7 +111,7 @@ const handlepay = (buttonName, index) => {
   }
   setInputTaglist(prevInputTagList => {
     const newList = [...prevInputTagList];
-    newList[index].pay = btnReturnVal;
+    newList.pay = btnReturnVal;
     return newList;
   });
 };
@@ -119,7 +119,7 @@ const handlepay = (buttonName, index) => {
   const handleShopChange = (text, index) => {
     setInputTaglist(prevInputTagList => {
       const newList = [...prevInputTagList];
-      newList[index].shopArr = text;
+      newList.shopArr = text;
       return newList;
     });
   };
@@ -302,16 +302,16 @@ useEffect(() => {
             <View style={styles.tagStyle}>
               <Text>PAY</Text>
               <TouchableOpacity
-                style={[styles.TagsBTN, inputTag.pay[index] === 'cash' && styles.selectedBTN]}
+                style={[styles.TagsBTN, inputTag.pay === 'cash' && styles.selectedBTN]}
                 onPress={() => handlepay('cash', index)}
               >
-                <Text style={[styles.TagsBTNText, inputTag.pay[index] === 'cash' && styles.selectedBTNText]}>현금</Text>
+                <Text style={[styles.TagsBTNText, inputTag.pay === 'cash' && styles.selectedBTNText]}>현금</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, inputTag.pay[index] === 'card' && styles.selectedBTN]}
+                style={[styles.TagsBTN, inputTag.pay === 'card' && styles.selectedBTN]}
                 onPress={() => handlepay('card', index)}
               >
-                <Text style={[styles.TagsBTNText, inputTag.pay[index] === 'card' && styles.selectedBTNText]}>카드</Text>
+                <Text style={[styles.TagsBTNText, inputTag.pay === 'card' && styles.selectedBTNText]}>카드</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.tagStyle}>
@@ -326,22 +326,22 @@ useEffect(() => {
             <View style={styles.tagStyle}>
               <Text>TAG</Text>
               <TouchableOpacity
-                style={[styles.TagsBTN, inputTag.tags[index] === 'shopping' && styles.selectedBTN]}
+                style={[styles.TagsBTN, inputTag.tags === 'shopping' && styles.selectedBTN]}
                 onPress={() => handleTags('shopping', index)}
               >
-                <Text style={[styles.TagsBTNText, inputTag.tags[index] === 'shopping' && styles.selectedBTNText]}>장보기</Text>
+                <Text style={[styles.TagsBTNText, inputTag.tags === 'shopping' && styles.selectedBTNText]}>장보기</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, (inputTag.tags[index] === 'eatOut' && styles.selectedBTN)]}
+                style={[styles.TagsBTN, (inputTag.tags === 'eatOut' && styles.selectedBTN)]}
                 onPress={() => handleTags('eatOut', index)}
               >
-                <Text style={[styles.TagsBTNText, inputTag.tags[index] === 'eatOut' && styles.selectedBTNText]}>외식</Text>
+                <Text style={[styles.TagsBTNText, inputTag.tags === 'eatOut' && styles.selectedBTNText]}>외식</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, inputTag.tags[index] === 'delivery' && styles.selectedBTN]}
+                style={[styles.TagsBTN, inputTag.tags === 'delivery' && styles.selectedBTN]}
                 onPress={() => handleTags('delivery', index)}
               >
-                <Text style={[styles.TagsBTNText, inputTag.tags[index] === 'delivery' && styles.selectedBTNText]}>배달</Text>
+                <Text style={[styles.TagsBTNText, inputTag.tags === 'delivery' && styles.selectedBTNText]}>배달</Text>
               </TouchableOpacity>
             </View>
           </View>

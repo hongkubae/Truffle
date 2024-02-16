@@ -8,35 +8,29 @@ import {
   TextInput,
   StyleSheet, 
 } from 'react-native';
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
-import { updateUser } from '../BackFunc/DbFunc';
+import firestore from "@react-native-firebase/firestore";
 
 
 
 function Budgetpg({navigation}) {
-  const [budget, onChangeBudget] = useState('');
-
-  const changeBudget = (value: string) => {
-    const removedCommaValue: number = Number(value.replace(/,/g, ''));
-    onChangeBudget(removedCommaValue.toLocaleString());
-  };
-
-
-{/* updateUser()들 Budget page랑 ForgotPW랑 각각 다름 */}
-  const updateUser = async (userId, updatedData) => {
-    if (budget!=="") {
-      const userDoc = doc(db, 'users', userId);
-  await updateDoc(userDoc, updatedData);
+  const [text, onChangeText] = React.useState('');
+  const updateUserBudget = async () => {
+    try {
+      const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+      await firestore().collection('users').doc(userId).update({
+        user_budget: text,
+      });
+      navigation.navigate('Main');
+    } catch (error) {
+      console.error('Error updating user budget:', error);
     }
-};
-
+  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.back}
-        onPress={() => navigation.goBack()}>
+        onPress={() =>  navigation.goBack()}>
         <Text style={styles.backBTN}> ⟨ </Text>
       </TouchableOpacity>
 
@@ -46,20 +40,21 @@ function Budgetpg({navigation}) {
       </Text>
       <TextInput
         style={styles.input}
-        value={budget}
-        onChangeText={changeBudget}
+        onChangeText={onChangeText}
+        value={text}
         placeholder="300,000원"
         keyboardType="numeric"
       />
 
       <TouchableOpacity
         style={styles.button}
-        onPress={updateUser}>
+        onPress={() => updateUserBudget()}>
         <Text style={styles.buttonText}>시작하기</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,11 +129,6 @@ const styles = StyleSheet.create({
   },
   backBTN: {
     fontSize: 25,
-  },
-  errTxt: {
-    top: 100,
-    fontSize: 12,
-    color: '#ff0000',
   },
 })
 

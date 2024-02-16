@@ -1,32 +1,56 @@
-import React, { useState, useEffect, } from 'react';
-import { View, Text, TouchableOpacity , StyleSheet, ScrollView, Image } from 'react-native';
-import { addBookmark, getBookmarkedRecipes } from '../BackFunc/RecipeFunc';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import firestore from "@react-native-firebase/firestore";
 
-const BookmarkTab = ({ userId, navigation }) => {
+const BookmarkTab = ({ navigation }) => {
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
 
   useEffect(() => {
+
+        // 여기서 userId를 설정해야 합니다.
+        const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+        fetchBookmarkedRecipes(userId);
+      }, []);
+  
+      
     const fetchBookmarkedRecipes = async (userId) => {
       try {
-        const recipes = await getBookmarkedRecipes(userId);
-        setBookmarkedRecipes(recipes);
+        const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+        const userRef = firestore().collection('users').doc(userId);
+        const snapshot = await userRef.get();
+        if (!snapshot.exists) {
+          throw new Error("사용자가 존재하지 않습니다.");
+        }
+        const userBookmarkData = snapshot.data();
+        const userBookmarked = userBookmarkData.user_bookmark.join(',');
+        const userBookmarkStr = userBookmarked.split(',');
+
+    let fetchedRecipes = [];
+    for (const docName of userBookmarkStr) {
+      const recipeRef = firestore().collection('recipes').doc(docName);
+      const recipeSnapshot = await recipeRef.get();
+      if (recipeSnapshot.exists) {
+        const recipeData = recipeSnapshot.data();
+        const recipeContents = {
+          id: docName,
+          name: recipeData.recipe_name,
+          image: recipeData.recipe_image,
+          time: recipeData.recipe_time,
+        };
+        fetchedRecipes.push(recipeContents);
+      } else {
+        console.warn(`레시피 문서 "${docName}"을(를) 찾을 수 없습니다.`);
+      }
+    }
+    
+
+    setBookmarkedRecipes(fetchedRecipes);
       } catch (error) {
         console.error('북마크 레시피를 가져오는데 실패했습니다.', error);
       }
     };
 
-    fetchBookmarkedRecipes(userId);
-  }, [userId]);
 
-  const handleAddBookmark = async (recipeId) => {
-    try {
-      await addBookmark(userId, recipeId);
-      fetchBookmarkedRecipes(userId);
-    } catch (error) {
-      console.error('북마크에 레시피를 추가하는데 실패했습니다:', error);
-    }
-  };
-  
   return (
     <ScrollView style={styles.container}>
       <View>
@@ -39,9 +63,11 @@ const BookmarkTab = ({ userId, navigation }) => {
             <Image source={{ uri: recipe.image }} style={{ width: 118, height: 66, left: 12, top: 11, borderRadius: 7 }} />
             <Text style={styles.foodText}>{recipe.name}</Text>
             <View style={{ left: 12, top: 15 }}>
-              <Text style={[styles.lackingText, { color: 'red' }]}>{recipe.lacking}{recipe.lackMore} 부족</Text>
             </View>
-            <Text style={styles.timeText}>{recipe.time[0]} 시간 {recipe.time[1]} 분</Text>
+            <Text style={styles.timeText}>
+              {recipe.time[0] !== 0 && `${recipe.time[0]} 시간 `}
+              {recipe.time[1] !== 0 && `${recipe.time[1]} 분`}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -50,7 +76,7 @@ const BookmarkTab = ({ userId, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
+  container: {
     backgroundColor: '#F8F9FA', // 배경색상 추가
     height: 'auto',
   },
@@ -58,7 +84,7 @@ const styles = StyleSheet.create({
     top: 90,
     backgroundColor: '#F8F9FA', // 배경색상 추가
     height: 'auto',
-  marginBottom: 170,
+    marginBottom: 170,
   },
   cont: {
     flexDirection: 'row',
@@ -103,15 +129,14 @@ const styles = StyleSheet.create({
     fontFamily: 'NanumGothic',
   },
   row: {
-    flexDirection: 'row', 
-    display:'flex',
-    flexWrap:'wrap',
-    justifyContent: 'space-around', 
-    position: 'relative', 
-    paddingHorizontal: 40, 
-    paddingBottom: 80, 
+    flexDirection: 'row',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    position: 'relative',
+    paddingHorizontal: 40,
+    paddingBottom: 80,
     margin: 20,
-    
   },
 });
 
