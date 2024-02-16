@@ -148,44 +148,56 @@ const handlepay = (buttonName, index) => {
   const [shoppingExpense, setShoppingExpense] = useState(0);
   const [eatOutExpense, setEatOutExpense] = useState(0);
   const [deliveryExpense, setDelivertyExpense] = useState(0);
-  //--하루 총액 구하기--\\
-  useEffect(() => {
-    let totalExpense = 0;
-    price.forEach(elem => {
-      totalExpense += parseFloat(elem);
+ //--하루 총액 구하기--\\
+useEffect(() => {
+  let totalExpense = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      totalExpense += parseFloat(elem.price);
     });
-    setDailyExpense(totalExpense);
-  }, [price]);
-  //--장보기 합산--\\
-  useEffect(() => {
-    let totalShopping = 0;
-    if(tags === '장보기'){
-      tags.forEach(elem => {
-        totalShopping += parseFloat(elem);
-      });
-      setShoppingExpense(totalShopping);
-    }
-  }, [tags]);
-   //--외식 합산--\\
-   useEffect(() => {
-    let totalEatOut = 0;
-    if(tags === '외식'){
-      tags.forEach(elem => {
-        totalEatOut += parseFloat(elem);
-      });
-      setEatOutExpense(totalEatOut);
-    }
-  }, [tags]);
-  //--배달 합산--\\
-  useEffect(() => {
-    let totalDelivery = 0;
-    if(tags === '배달'){
-      tags.forEach(elem => {
-        totalDelivery += parseFloat(elem);
-      });
-      setDelivertyExpense(totalDelivery);
-    }
-  }, [tags]);
+  });
+  setDailyExpense(totalExpense);
+}, [inputTagList]);
+
+//--장보기 합산--\\
+useEffect(() => {
+  let totalShopping = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      if (elem.tags === '장보기') {
+        totalShopping += parseFloat(elem.price);
+      }
+    });
+  });
+  setShoppingExpense(totalShopping);
+}, [inputTagList]);
+
+//--외식 합산--\\
+useEffect(() => {
+  let totalEatOut = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      if (elem.tags === '외식') {
+        totalEatOut += parseFloat(elem.price);
+      }
+    });
+  });
+  setEatOutExpense(totalEatOut);
+}, [inputTagList]);
+
+//--배달 합산--\\
+useEffect(() => {
+  let totalDelivery = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      if (elem.tags === '배달') {
+        totalDelivery += parseFloat(elem.price);
+      }
+    });
+  });
+  setDelivertyExpense(totalDelivery);
+}, [inputTagList]);
+
   
   //----파이어베이스에 업데이트----\\
   const [loading, setLoading] = useState(false);
@@ -199,7 +211,7 @@ const handlepay = (buttonName, index) => {
       const data = {
   amount: totalPrice,
   items: [
-    { name: name, quantity: quantity, price: priceA },
+    { name: name, quantity: quantity, price: price },
   ],
   pay: [
     { pay: pay, shop: shop, tag: tags },
@@ -252,37 +264,37 @@ const handlepay = (buttonName, index) => {
               </View>
               <Line/>
             {/*ProductList */}
-            {inputTagList.map((allitems, allIndex) => (
-            <View key={allIndex} style={{alignItems:'cetner'}}>
-              {items.map((input, index) => (
-              <View key={index} style={{ flexDirection: 'row', gap: 20, alignItems: 'center', marginTop: 10 }}>
-                <TextInput
-                  placeholder="항목 입력"
-                  style={[styles.ProductInput, { width: 100 }]}
-                  value={input.name[index]}
-                  onChangeText={(text) => handleInputChange(text, index, 'name')}
-                />
-                <TextInput
-                  placeholder="수량"
-                  style={[styles.ProductInput, { width: 40 }]}
-                  value={input.quantity[index]}
-                  keyboardType="number-pad"
-                  onChangeText={(text) => handleInputChange(text, index, 'quantity')}
-                />
-                <TextInput
-                  placeholder="가격"
-                  style={[styles.ProductInput, { width: 100 }]}
-                  value={input.price[index]}
-                  keyboardType="number-pad"
-                  onChangeText={(text) => handleInputChange(text, index, 'price')}
-                />
-                <Text style={{ fontSize: 18 }}>₩</Text>
-              </View>
-            ))}
-            <TouchableOpacity onPress={handleAddItem} disabled={!areitemsFilled()} style={{ marginTop: 10, marginBottom: 10, alignItems:'center' }}>
-              <SmallAddBTNGrey />
-            </TouchableOpacity>
-            
+            {inputTagList.map((inputTag, index) => (
+  <View key={index} style={{ alignItems: 'center' }}>
+    {inputTag.items.map((item, itemIndex) => (
+      <View key={itemIndex} style={{ flexDirection: 'row', gap: 20, alignItems: 'center', marginTop: 10 }}>
+        <TextInput
+          placeholder="항목 입력"
+          style={[styles.ProductInput, { width: 100 }]}
+          value={item.name}
+          onChangeText={(text) => handleInputChange(text, itemIndex, 'name')}
+        />
+        <TextInput
+          placeholder="수량"
+          style={[styles.ProductInput, { width: 40 }]}
+          value={item.quantity}
+          keyboardType="number-pad"
+          onChangeText={(text) => handleInputChange(text, itemIndex, 'quantity')}
+        />
+        <TextInput
+          placeholder="가격"
+          style={[styles.ProductInput, { width: 100 }]}
+          value={item.price}
+          keyboardType="number-pad"
+          onChangeText={(text) => handleInputChange(text, itemIndex, 'price')}
+        />
+        <Text style={{ fontSize: 18 }}>₩</Text>
+      </View>
+    ))}
+    <TouchableOpacity onPress={handleAddItem} disabled={!areitemsFilled()} style={{ marginTop: 10, marginBottom: 10, alignItems: 'center' }}>
+      <SmallAddBTNGrey />
+    </TouchableOpacity>
+
           <View style={{alignItems:'center'}}>
             <Line />
             {/* AddDailyExpense */}
@@ -290,16 +302,16 @@ const handlepay = (buttonName, index) => {
             <View style={styles.tagStyle}>
               <Text>PAY</Text>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.pay[allIndex] === 'cash' && styles.selectedBTN]}
-                onPress={() => handlepay('cash', allIndex)}
+                style={[styles.TagsBTN, inputTag.pay[index] === 'cash' && styles.selectedBTN]}
+                onPress={() => handlepay('cash', index)}
               >
-                <Text style={[styles.TagsBTNText, allitems.pay[allIndex] === 'cash' && styles.selectedBTNText]}>현금</Text>
+                <Text style={[styles.TagsBTNText, inputTag.pay[index] === 'cash' && styles.selectedBTNText]}>현금</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.pay[allIndex] === 'card' && styles.selectedBTN]}
-                onPress={() => handlepay('card', allIndex)}
+                style={[styles.TagsBTN, inputTag.pay[index] === 'card' && styles.selectedBTN]}
+                onPress={() => handlepay('card', index)}
               >
-                <Text style={[styles.TagsBTNText, allitems.pay[allIndex] === 'card' && styles.selectedBTNText]}>카드</Text>
+                <Text style={[styles.TagsBTNText, inputTag.pay[index] === 'card' && styles.selectedBTNText]}>카드</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.tagStyle}>
@@ -307,29 +319,29 @@ const handlepay = (buttonName, index) => {
               <TextInput
                 placeholder="..."
                 style={styles.shopInput}
-                value={allIndex.shop}
-                onChangeText={(text) => handleShopChange(text, allIndex)}
+                value={index.shop}
+                onChangeText={(text) => handleShopChange(text, index)}
               />
             </View>
             <View style={styles.tagStyle}>
               <Text>TAG</Text>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.tags[allIndex] === 'shopping' && styles.selectedBTN]}
-                onPress={() => handleTags('shopping', allIndex)}
+                style={[styles.TagsBTN, inputTag.tags[index] === 'shopping' && styles.selectedBTN]}
+                onPress={() => handleTags('shopping', index)}
               >
-                <Text style={[styles.TagsBTNText, allitems.tags[allIndex] === 'shopping' && styles.selectedBTNText]}>장보기</Text>
+                <Text style={[styles.TagsBTNText, inputTag.tags[index] === 'shopping' && styles.selectedBTNText]}>장보기</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, (allitems.tags[allIndex] === 'eatOut' && styles.selectedBTN)]}
-                onPress={() => handleTags('eatOut', allIndex)}
+                style={[styles.TagsBTN, (inputTag.tags[index] === 'eatOut' && styles.selectedBTN)]}
+                onPress={() => handleTags('eatOut', index)}
               >
-                <Text style={[styles.TagsBTNText, allitems.tags[allIndex] === 'eatOut' && styles.selectedBTNText]}>외식</Text>
+                <Text style={[styles.TagsBTNText, inputTag.tags[index] === 'eatOut' && styles.selectedBTNText]}>외식</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.tags[allIndex] === 'delivery' && styles.selectedBTN]}
-                onPress={() => handleTags('delivery', allIndex)}
+                style={[styles.TagsBTN, inputTag.tags[index] === 'delivery' && styles.selectedBTN]}
+                onPress={() => handleTags('delivery', index)}
               >
-                <Text style={[styles.TagsBTNText, allitems.tags[allIndex] === 'delivery' && styles.selectedBTNText]}>배달</Text>
+                <Text style={[styles.TagsBTNText, inputTag.tags[index] === 'delivery' && styles.selectedBTNText]}>배달</Text>
               </TouchableOpacity>
             </View>
           </View>
