@@ -12,10 +12,8 @@ import firestore from "@react-native-firebase/firestore";
 
 const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
 
-  const [items, setItems] = useState([{ nameArr: [], quantityArr: [], priceArr: [] }]);
-  const [nameArr, setNameArr] = useState([name]);
-  const [quantityArr, setQuantityArr] = useState([quantity]);
-  const [priceArr, setPriceArr] = useState([price]);
+  const [items, setItems] = useState([{ name: '', quantity: '', price: '' }]);
+
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
@@ -24,35 +22,18 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
   const handleInputChange = (text, index, key) => {
     const newItems = [...items];
     newItems[index][key] = text;
-  
-    // 해당하는 값들을 nameArr, quantityArr, priceArr에 저장
-    const updatedNameArr = [...nameArr];
-    const updatedQuantityArr = [...quantityArr];
-    const updatedPriceArr = [...priceArr];
-    updatedNameArr[index] = newItems[index].nameArr; // 수정
-    updatedQuantityArr[index] = newItems[index].quantityArr; // 수정
-    updatedPriceArr[index] = newItems[index].priceArr; // 수정
-  
-    // 상태 업데이트
-    setNameArr(updatedNameArr);
-    setQuantityArr(updatedQuantityArr);
-    setPriceArr(updatedPriceArr);
-  
     setItems(newItems);
   };
   //--input 받기--\\
   const handleAddItem = () => {
-    const newItem = items[items.length - 1];
-    if (newItem.quantity && newItem.name && newItem.price) {
-      setNameArr(prevNameArr => [...prevNameArr, newItem.nameArr]); // 수정
-      setQuantityArr(prevQuantityArr => [...prevQuantityArr, newItem.quantityArr]); // 수정
-      setPriceArr(prevPriceArr => [...prevPriceArr, newItem.priceArr]); // 수정
-  
-      saveData();
-      setItems(prevItems => [...prevItems, { nameArr: [], quantityArr: [], priceArr: [] }]);
+    if (quantity && name && price) {
+      const newItem = { name: name, quantity: quantity, price: price };
+      setItems([...items, newItem]);
       setName('');
       setQuantity('');
       setPrice('');
+    } else {
+      Alert.alert('Warning', 'Please fill all fields.');
     }
   };
 
@@ -94,23 +75,20 @@ useEffect(() => {
   loadData();
 }, [selectedDate]);
 //--AddDailyExpense--\\  
-  const [inputTagList, setInputTaglist] = useState([{items:[{nameArr:[], quantityArr:[], priceArr:[]}],payArr: [], shopArr:[], tagsArr:[]}]);
+  const [inputTagList, setInputTaglist] = useState([{items:[{name:'', quantity:'', price:''}],pay: '', shop:'', tags:''}]);
 
   const [shop, setShop] = useState('');
   const [pay, setPay] = useState(null);
   const [tags, setTags] = useState(null);
 
-  const [shopArr, setShopArr] = useState([shop]);
-  const [payArr, setPayArr] = useState([pay]);
-  const [tagsArr, setTagsArr] = useState([tags]);
 
   //--장보기 외식 배달 string 변환 변환 후 array에 저장--\\
   const handleTags = (buttonName, index) => {
     // 선택한 버튼의 값에 따라 태그 설정
     let tagsReturnVal = '';
-    if(buttonName=='shopping'){
+    if(buttonName==='shopping'){
       tagsReturnVal='장보기';
-    } else if (buttonName == 'eatOut'){
+    } else if (buttonName === 'eatOut'){
       tagsReturnVal='외식';
     } else {
       tagsReturnVal='배달';
@@ -118,7 +96,7 @@ useEffect(() => {
     // 해당 인덱스의 입력 상태를 업데이트
     setInputTaglist(prevInputTagList => {
       const newList = [...prevInputTagList];
-      newList[index].tagsArr = tagsReturnVal;
+      newList[index].tags = tagsReturnVal;
       return newList;
     });
   };
@@ -133,7 +111,7 @@ const handlepay = (buttonName, index) => {
   }
   setInputTaglist(prevInputTagList => {
     const newList = [...prevInputTagList];
-    newList[index].payArr = btnReturnVal;
+    newList[index].pay = btnReturnVal;
     return newList;
   });
 };
@@ -156,9 +134,9 @@ const handlepay = (buttonName, index) => {
       ...prevInputTagList, 
       { 
         items:[],
-        payArr: [], 
-        shopArr: [], 
-        tagsArr: [],
+        pay: '', 
+        shop: '', 
+        tags: '',
       }
     ]);
   };
@@ -167,15 +145,48 @@ const handlepay = (buttonName, index) => {
   const [dailyExpense, setDailyExpense] = useState(0);
   const [expenseCount, setExpenseCount] = useState(0);
   const [memo,setMemo]=useState('');
-
+  const [shoppingExpense, setShoppingExpense] = useState(0);
+  const [eatOutExpense, setEatOutExpense] = useState(0);
+  const [deliveryExpense, setDelivertyExpense] = useState(0);
   //--하루 총액 구하기--\\
   useEffect(() => {
     let totalExpense = 0;
-    priceArr.forEach(elem => {
+    price.forEach(elem => {
       totalExpense += parseFloat(elem);
     });
     setDailyExpense(totalExpense);
-  }, [priceArr]);
+  }, [price]);
+  //--장보기 합산--\\
+  useEffect(() => {
+    let totalShopping = 0;
+    if(tags === '장보기'){
+      tags.forEach(elem => {
+        totalShopping += parseFloat(elem);
+      });
+      setShoppingExpense(totalShopping);
+    }
+  }, [tags]);
+   //--외식 합산--\\
+   useEffect(() => {
+    let totalEatOut = 0;
+    if(tags === '외식'){
+      tags.forEach(elem => {
+        totalEatOut += parseFloat(elem);
+      });
+      setEatOutExpense(totalEatOut);
+    }
+  }, [tags]);
+  //--배달 합산--\\
+  useEffect(() => {
+    let totalDelivery = 0;
+    if(tags === '배달'){
+      tags.forEach(elem => {
+        totalDelivery += parseFloat(elem);
+      });
+      setDelivertyExpense(totalDelivery);
+    }
+  }, [tags]);
+  
   //----파이어베이스에 업데이트----\\
   const [loading, setLoading] = useState(false);
   const handleSaveData = async () => {
@@ -188,10 +199,10 @@ const handlepay = (buttonName, index) => {
       const data = {
   amount: totalPrice,
   items: [
-    { name: nameArr, quantity: quantityArr, price: priceArr },
+    { name: name, quantity: quantity, price: priceA },
   ],
   pay: [
-    { pay: payArr, shop: shopArr, tag: tagsArr },
+    { pay: pay, shop: shop, tag: tags },
   ],
   memo: memo
 };
@@ -207,7 +218,7 @@ const handlepay = (buttonName, index) => {
  };
 
   const checkingArr = () => {
-    console.log(nameArr, quantityArr, priceArr, payArr, shopArr, tagsArr);
+    console.log(items, pay, shop, tags);
   }
 
   return (
@@ -248,20 +259,20 @@ const handlepay = (buttonName, index) => {
                 <TextInput
                   placeholder="항목 입력"
                   style={[styles.ProductInput, { width: 100 }]}
-                  value={input.nameArr[index]}
+                  value={input.name[index]}
                   onChangeText={(text) => handleInputChange(text, index, 'name')}
                 />
                 <TextInput
                   placeholder="수량"
                   style={[styles.ProductInput, { width: 40 }]}
-                  value={input.quantityArr[index]}
+                  value={input.quantity[index]}
                   keyboardType="number-pad"
                   onChangeText={(text) => handleInputChange(text, index, 'quantity')}
                 />
                 <TextInput
                   placeholder="가격"
                   style={[styles.ProductInput, { width: 100 }]}
-                  value={input.priceArr[index]}
+                  value={input.price[index]}
                   keyboardType="number-pad"
                   onChangeText={(text) => handleInputChange(text, index, 'price')}
                 />
@@ -279,16 +290,16 @@ const handlepay = (buttonName, index) => {
             <View style={styles.tagStyle}>
               <Text>PAY</Text>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.payArr === 'cash' && styles.selectedBTN]}
+                style={[styles.TagsBTN, allitems.pay[allIndex] === 'cash' && styles.selectedBTN]}
                 onPress={() => handlepay('cash', allIndex)}
               >
-                <Text style={[styles.TagsBTNText, allitems.payArr === 'cash' && styles.selectedBTNText]}>현금</Text>
+                <Text style={[styles.TagsBTNText, allitems.pay[allIndex] === 'cash' && styles.selectedBTNText]}>현금</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.payArr === 'card' && styles.selectedBTN]}
+                style={[styles.TagsBTN, allitems.pay[allIndex] === 'card' && styles.selectedBTN]}
                 onPress={() => handlepay('card', allIndex)}
               >
-                <Text style={[styles.TagsBTNText, allitems.payArr === 'card' && styles.selectedBTNText]}>카드</Text>
+                <Text style={[styles.TagsBTNText, allitems.pay[allIndex] === 'card' && styles.selectedBTNText]}>카드</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.tagStyle}>
@@ -303,22 +314,22 @@ const handlepay = (buttonName, index) => {
             <View style={styles.tagStyle}>
               <Text>TAG</Text>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.tagsArr[allIndex] === 'shopping' && styles.selectedBTN]}
+                style={[styles.TagsBTN, allitems.tags[allIndex] === 'shopping' && styles.selectedBTN]}
                 onPress={() => handleTags('shopping', allIndex)}
               >
-                <Text style={[styles.TagsBTNText, allitems.tagsArr[allIndex] === 'shopping' && styles.selectedBTNText]}>장보기</Text>
+                <Text style={[styles.TagsBTNText, allitems.tags[allIndex] === 'shopping' && styles.selectedBTNText]}>장보기</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.tagsArr[allIndex] === 'eatOut' && styles.selectedBTN]}
+                style={[styles.TagsBTN, (allitems.tags[allIndex] === 'eatOut' && styles.selectedBTN)]}
                 onPress={() => handleTags('eatOut', allIndex)}
               >
-                <Text style={[styles.TagsBTNText, allitems.tagsArr[allIndex] === 'eatOut' && styles.selectedBTNText]}>외식</Text>
+                <Text style={[styles.TagsBTNText, allitems.tags[allIndex] === 'eatOut' && styles.selectedBTNText]}>외식</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.TagsBTN, allitems.tagsArr[allIndex] === 'delivery' && styles.selectedBTN]}
+                style={[styles.TagsBTN, allitems.tags[allIndex] === 'delivery' && styles.selectedBTN]}
                 onPress={() => handleTags('delivery', allIndex)}
               >
-                <Text style={[styles.TagsBTNText, allitems.tagsArr[allIndex] === 'delivery' && styles.selectedBTNText]}>배달</Text>
+                <Text style={[styles.TagsBTNText, allitems.tags[allIndex] === 'delivery' && styles.selectedBTNText]}>배달</Text>
               </TouchableOpacity>
             </View>
           </View>
