@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Image, Text, ScrollView, View, FlatList, StyleSheet } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
-const BookMarkItem = ({ item }) => {
+const BookMarkItem = ({ item, navigation }) => {
     const [book, setBook] = useState({
         bookmarkFill: false,
     });
@@ -22,7 +22,9 @@ const BookMarkItem = ({ item }) => {
 
     return (
         <View style={{ alignItems: 'center', left: 20 }}>
-            <TouchableOpacity style={styles.post}>
+            <TouchableOpacity
+            style={styles.post}
+            onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}>
                 <Image 
                     source={{ uri: item.image }} 
                     style={{ width: 132, height: 70, left: 12, top: 9, borderRadius: 7 }} 
@@ -108,7 +110,7 @@ const BookMark = ({ navigation }) => {
             <FlatList
                 data={bookmarkedRecipes}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <BookMarkItem item={item} />}
+                renderItem={({ item }) => <BookMarkItem item={item}  navigation={navigation} />}
                 numColumns={2}
             />
         </View>

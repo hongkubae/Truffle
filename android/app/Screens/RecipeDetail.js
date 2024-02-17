@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  SafeAreaView
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 
@@ -42,11 +43,15 @@ const RecipeDetail = ({ navigation, route }) => {
   };
 
   return (
+    <SafeAreaView>
+    <ScrollView>
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>조리과정</Text>
       </View>
-      <ScrollView style={styles.scrollView}>
+
+      <View style={{alignItems:'center'}}>
+      
         {steps.map((step, index) => (
           <View key={index} style={styles.content}>
             <Text style={styles.stepNumber}>{index + 1}.</Text>
@@ -55,7 +60,8 @@ const RecipeDetail = ({ navigation, route }) => {
             </Text>
           </View>
         ))}
-      </ScrollView>
+      </View>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
@@ -94,6 +100,8 @@ const RecipeDetail = ({ navigation, route }) => {
         </View>
       </Modal>
     </View>
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -111,7 +119,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-end',
-    marginTop: 80,
+    marginTop: 50,
     marginRight: 280,
   },
   headerText: {
@@ -136,6 +144,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     width: 350,
+    marginBottom:10
   },
   stepNumber: {
     fontWeight: 'bold',
@@ -150,6 +159,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginBottom: 20,
+    marginTop:20
   },
   button: {
     backgroundColor: '#FEA655',

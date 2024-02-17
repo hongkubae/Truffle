@@ -2,7 +2,7 @@ import React, { useState, useEffect, } from 'react';
 import { View, Text, TouchableOpacity , StyleSheet, TextInput, FlatList, ScrollView,Switch,Image} from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
-const RecipeTab = () => {
+const RecipeTab = ({navigation}) => {
   const [showUserRecipes, setShowUserRecipes] = useState(false);
   const [recipeData, setRecipeData] = useState([]);
   const [refrigeratorIngredients, setRefrigeratorIngredients] = useState([]);
@@ -65,8 +65,6 @@ const fetchRecipeData = async() => {
           time: recipeData.recipe_time,
         };
         fetchedRecipes.push(recipeContents);
-        console.log(recipeData.recipe_name);
-        console.log(recipeData.recipe_time);
       } else {
         console.warn(`레시피 문서 "${docName}"을(를) 찾을 수 없습니다.`);
       }
@@ -116,7 +114,7 @@ const handleSortOrder = async (orderType) => {
             <TouchableOpacity
               key={recipe.id}
               style={styles.post}
-              onPress={() => console.log('Navigate to Recipe Detail:', recipe.id)}>
+              onPress={() => navigation.navigate('RecipeMain', { recipeId: recipe.id })}>
               <Image source={{ uri: recipe.image }}
                 style={{ width: 118, height: 66, left: 12, top: 11, borderRadius: 7 }}
               />
