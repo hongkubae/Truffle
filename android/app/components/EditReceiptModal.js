@@ -293,7 +293,7 @@ useEffect(() => {
     {inputTag.items.map((item, itemIndex) => (
       <View key={itemIndex} style={{ flexDirection: 'row', gap: 20, alignItems: 'center', marginTop: 10 }}>
         <TextInput
-          placeholder="항목 입력"
+          placeholder="항목 입력 TEST"
           style={[styles.ProductInput, { width: 100 }]}
           value={item.name}
           onChangeText={(text) => handleInputChange(text, itemIndex, 'name')}

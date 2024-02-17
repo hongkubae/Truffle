@@ -5,7 +5,7 @@ const dishes = [
     { id: 1, food: '부대찌개', hour: 1, min: 30, lacking: '햄', img: ''}, { id: 2, food: '닭볶음탕', hour: 1, min: 30, lacking: '닭', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''},{ id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}, { id: 3, food: '부대찌개', hour: 1, min: 30, lacking: '햄', lackMore: '+3', img: ''}]
     {/* 부족한 재료 수 string으로 변환가능한지 */}
 
-const RecipeTab = ({navigation}) => {
+const RecipeDetail = ({navigation}) => {
  const [modalVisible, setModalVisible] = useState(false);
 
 {/*
@@ -382,4 +382,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeTab;
+export default RecipeDetail;

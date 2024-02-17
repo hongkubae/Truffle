@@ -15,5 +15,4 @@ const SettingStackNavigation = () => {
   )
 };
 
-export default SettingStackNavigation
-rt1
+export default SettingStackNavigation;
