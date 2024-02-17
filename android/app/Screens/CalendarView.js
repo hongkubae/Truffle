@@ -9,7 +9,7 @@ import LeftArrow from "../assets/icons/LeftArrow";
 import RightArrow from "../assets/icons/RightArrow";
 
 const CalendarView = ({ navigation, props }) => {
-  const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentDate, setCurrentDate] = useState(moment());
   const [calendarData, setCalendarData] = useState([]);
@@ -170,7 +170,7 @@ const CalendarView = ({ navigation, props }) => {
 
                 <SvgText
                   x={circleRadius}
-                  y={circleRadius + 4}
+                  y={circleRadius + 5}
                   fontSize={15}
                   fontWeight="bold"
                   textAnchor="middle"
@@ -181,7 +181,7 @@ const CalendarView = ({ navigation, props }) => {
 
                 <SvgText
                   x={circleRadius}
-                  y={circleRadius + 25}
+                  y={circleRadius + 27}
                   fontSize={11}
                   textAnchor="middle"
                   fill='grey'
@@ -193,7 +193,7 @@ const CalendarView = ({ navigation, props }) => {
             </View>
           </TouchableOpacity>
         ))}
-        style={{ height: circleRadius * 4 }}
+        style={{ height: circleRadius * 4.1 }}
       />
     ));
   }, [generateCalendarData, selectedDate, handleDayClick, allAmounts]);
@@ -201,13 +201,12 @@ const CalendarView = ({ navigation, props }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.Texts}>Calendar</Text>
-      <ActivityIndicator color='grey'/>
       <View style={styles.calContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30 }}>
           <TouchableOpacity onPress={goToPreviousMonth}>
             <LeftArrow />
           </TouchableOpacity>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>{currentDate.format('MMMM YYYY')}</Text>
+          <Text style={{ color: 'black', fontSize: 16, }}>{currentDate.format('YYYY년 MM월')}</Text>
           <TouchableOpacity onPress={goToNextMonth}>
             <RightArrow />
           </TouchableOpacity>

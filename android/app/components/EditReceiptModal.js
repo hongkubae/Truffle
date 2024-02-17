@@ -19,7 +19,21 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
+  const [inputTagList, setInputTaglist] = useState([{payArr: [], shopArr:[], tagsArr:[]}]);
 
+  const [shop, setShop] = useState('');
+  const [pay, setPay] = useState(null);
+  const [tags, setTags] = useState(null);
+  
+  const [shopArr, setShopArr] = useState([shop]);
+  const [payArr, setPayArr] = useState([pay]);
+  const [tagsArr, setTagsArr] = useState([tags]);
+  const [dailyExpense, setDailyExpense] = useState(0);
+  const [expenseCount, setExpenseCount] = useState(0);
+  const [memo,setMemo]=useState('');
+  const [shoppingExpense, setShoppingExpense] = useState(0);
+  const [eatOutExpense, setEatOutExpense] = useState(0);
+  const [deliveryExpense, setDeliveryExpense] = useState(0);
   //--input 바뀌었을 때--\\
   const handleInputChange = (text, index, key) => {
     const newItems = [...items];
@@ -33,12 +47,12 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
     updatedNameArr[index] = name;
     updatedQuantityArr[index] = quantity;
     updatedPriceArr[index] = price;
+    updatedTagsArr[index] = tags;
 
     // 상태 업데이트
     setNameArr(updatedNameArr);
     setQuantityArr(updatedQuantityArr);
     setPriceArr(updatedPriceArr);
-
     setItems(newItems);
   };
   //--input 받기--\\
@@ -95,60 +109,22 @@ useEffect(() => {
   loadData();
 }, [selectedDate]);
 //--AddDailyExpense--\\  
-const [inputTagList, setInputTaglist] = useState([{payArr: [], shopArr:[], tagsArr:[]}]);
-
-const [shop, setShop] = useState('');
-const [pay, setPay] = useState(null);
-const [tags, setTags] = useState(null);
-
-const [shopArr, setShopArr] = useState([shop]);
-const [payArr, setPayArr] = useState([pay]);
-const [tagsArr, setTagsArr] = useState([tags]);
-
-const [shoppingExpense, setShoppingExpense] = useState(0);
-const [eatOutExpense, setEatOutExpense] = useState(0);
-const [deliveryExpense, setDelivertyExpense] = useState(0);
-let totalShopping = 0;
-let totalEatOut = 0;
-let totalDelivery = 0;
   //--장보기 외식 배달 string 변환 변환 후 array에 저장--\\
   const handleTags = (buttonName) => {
     let tagsReturnVal = '';
-
     if(buttonName=='shopping'){
       setTags(buttonName);
       tagsReturnVal='장보기';
-      priceArr.forEach(elem => {
-          totalShopping += parseFloat(elem.price);
-      });
-      setShoppingExpense(totalShopping);
-      
+
     }else if (buttonName == 'eatOut'){
       setTags(buttonName);
       tagsReturnVal='외식';
-      
-      priceArr.forEach(elem => {
-          totalEatOut += parseFloat(elem.price);
-      });
-      setEatOutExpense(totalEatOut);
     }
     else{
       setTags(buttonName);
       tagsReturnVal='배달';
-      
-      priceArr.forEach(elem => {
-          totalDelivery += parseFloat(elem.price);
-      });
-      setDelivertyExpense(totalDelivery);
     }
     setTagsArr(tagsReturnVal);
-    console.log(totalShopping);
-    console.log(totalEatOut);
-    console.log(totalDelivery);
-
-    console.log(shoppingExpense);
-    console.log(eatOutExpense);
-    console.log(deliveryExpense);
   };
 
 //--현금 카드 string 변환 후 array에 저장--\\
@@ -163,7 +139,6 @@ const handlepay = (buttonName) => {
   }
   setPayArr(btnReturnVal);
 };
-
   //--shop input--\\
   const handleShopChange = (text) => {
     setShop(text);
@@ -188,9 +163,7 @@ const handlepay = (buttonName) => {
   };
   
   //--EditReciptModal--\\
-  const [dailyExpense, setDailyExpense] = useState(0);
-  const [expenseCount, setExpenseCount] = useState(0);
-  const [memo,setMemo]=useState('');
+ 
  //--하루 총액 구하기--\\
  useEffect(() => {
   let totalExpense = 0;
@@ -198,6 +171,27 @@ const handlepay = (buttonName) => {
     totalExpense += parseFloat(elem);
   });
   setDailyExpense(totalExpense);
+}, [priceArr]);
+
+//--장보기 합산--\\
+useEffect(() => {
+  let totalShopping = 0;
+  let totalEatOut = 0;
+  let totalDelivery = 0;
+
+  priceArr.forEach(item => {
+    if (item.items.tags === '장보기') {
+      totalShopping += parseFloat(item.price);
+    } else if (item.items.tags === '외식') {
+      totalEatOut += parseFloat(item.price);
+    } else if (item.items.tags === '배달') {
+      totalDelivery += parseFloat(item.price);
+    }
+  });
+
+  setShoppingExpense(totalShopping);
+  setEatOutExpense(totalEatOut);
+  setDeliveryExpense(totalDelivery);
 }, [priceArr]);
 
 
