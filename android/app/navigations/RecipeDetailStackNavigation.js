@@ -1,5 +1,5 @@
 import RecipeTab from "../Screens/RecipeTab";
-//import RecipeMain from "../Screens/RecipeMain"; {/* 깃에 파일 추가해야함 */}
+import RecipeMain from "../Screens/RecipeMain"; {/* 깃에 파일 추가해야함 */}
 import RecipeDetail from "../Screens/RecipeDetail";
 import AddRecipeMain from "../Screens/AddRecipeMain";
 import AddRecipeIngredients from "../Screens/AddRecipeIngredients";

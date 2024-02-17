@@ -1,31 +1,74 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal,
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Image,
   Animated, TouchableWithoutFeedback, Dimensions, PanResponder, TextInput,} from 'react-native';
 import  {  vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, bean, grain, meat, milk, selected }  from '../components/IngredientsArray';
 import BottomSheet from '../components/BottomSheet';
 import EditIngredientsIcon from "../assets/icons/EditIngredientsIcon";
 import RefTruffleLogo from "../assets/logo/RefTruffleLogo";
 import DbFunc from "../BackFunc/DbFunc";
+import { updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator, fetchUserRefrigerator, fetchIngredient, getAndUpdateFinishedRecipesIngredient, fetchRecipeAll } from '../BackFunc/RecipeFunc'; 
+import firestore from "@react-native-firebase/firestore";
 
 const RefTab = () => {
   const [isItem, setIsItem] = useState(true);
   const checkItem = () =>{
   }
-  const [vegetableArray, changeVegetable] = useState(vegetable);
-  const [breadArray, changeBread] = useState(bread);
-  const [fruitArray, changeFruit] = useState(fruit);
-  const [sausageArray, changeSausage] = useState(sausage);
-  const [seafoodArray, changeSeafood] = useState(seafood);
-  const [truffleArray, changetruffle] = useState(truffle);
-  const [noodleArray, changeNoodle] = useState(noodle);
-  const [spiceArray, changeSpice] = useState(spice);
-  const [beanArray, changeBean] = useState(bean);
-  const [grainArray, changeGrain] = useState(grain);
-  const [meatArray, changeMeat] = useState(meat);
-  const [milkArray, changeMilk] = useState(milk);
+  // const data = db.collection.showOnRefrigerator.get();
+  const [showUserRef, setShowUserRef] = useState();
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = showOnRefrigerator();
+      setShowUserRef(Object.values(data));
+    };
+    
+    fetchData();
+  }, []); 
+
+  console.log("ddddd" + showUserRef)
+  // const [vegetableArray, changeVegetable] = useState(vegetable);
+  // const [breadArray, changeBread] = useState(bread);
+  // const [fruitArray, changeFruit] = useState(fruit);
+  // const [sausageArray, changeSausage] = useState(sausage);
+  // const [seafoodArray, changeSeafood] = useState(seafood);
+  // const [truffleArray, changetruffle] = useState(truffle);
+  // const [noodleArray, changeNoodle] = useState(noodle);
+  // const [spiceArray, changeSpice] = useState(spice);
+  // const [beanArray, changeBean] = useState(bean);
+  // const [grainArray, changeGrain] = useState(grain);
+  // const [meatArray, changeMeat] = useState(meat);
+  // const [milkArray, changeMilk] = useState(milk);
   const [selectedFood, changeSelectedFood] = useState(selected);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [conversion, setConversion] = useState('');
+  const [itemClicked,setItemClicked] = useState();
+  const [isInputSet,setIsInputSet] = useState(false);
+  const [foodCategory,setFoodCategory] =useState('');
+  
+  const isValidInput = (inputValue) =>{
+      inputValue.trim()===''?setIsInputSet(true):setIsInputSet(false);
+      return(isInputSet);
+  }
+  const changeConversion = (foodUnits) =>{
+    switch (foodUnits) {
+        case '개':
+            setConversion('unit_to_gram');
+            break;
+        case '스푼':
+            setConversion('gram_to_spoon');
+            break;
+        case 'ml':
+            setConversion('ml_to_gram');
+            break;
+        case 'g':
+            setConversion('gram_to_gram');
+            break;
+        default:
+            break;
+      }
+}
 
   const pressButton = () => {
       setModalVisible(true);
@@ -106,28 +149,30 @@ const RefTab = () => {
       {isItem && (
         <View style={styles.container}>
           <View style={styles.foodCont}>
-            <ScrollView style={{ gap: 11 }}>
+            <ScrollView style={{ gap: 11, width:'85%' }}>
               {/* <View style={styles.foods}> */}
-              {selectedFood && selectedFood.map((food, index) => (
-                            <View key={index} style={styles.foods}>
-                                <View style={styles.circle}>
-                                  {food.img}
-                                </View>
-                                <Text style={styles.foodName}>
-                                  {/* 음식이름  */} {food.name}
-                                </Text>
-                                <Text style={styles.foodCount}>
-                                  {/* 개수,수량 등 */} {food.amount}
-                                </Text>
-                                <Text style={styles.foodUnit}>
-                                  {/* 단위 */} {food.unit}
-                                </Text>
-                            <TouchableOpacity onPress={pressButton} style={styles.pencil}>
-                              <EditIngredientsIcon/>
-                            </TouchableOpacity>
-                            </View>
-                        ))}
-
+              <View>
+                  {selectedFood && selectedFood.map((food, index) => (
+                    <View key={index} style={styles.foods}>
+                      <View style={styles.circle}>
+                        <Image source={food.image} />
+                      </View>
+                      <Text style={styles.foodName}>{food.name}</Text>
+                      <Text style={styles.foodCount}>{food.weight}</Text>
+                      <Text style={styles.foodUnit}>{food.unit}</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          pressButton();
+                          setFoodCategory(food.category);
+                          setItemClicked(food.name);
+                        }}
+                        style={styles.pencil}
+                      >
+                        {/* EditIngredientsIcon component */}
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
               {/* </View> */}
             </ScrollView>
           </View>
@@ -159,38 +204,40 @@ const RefTab = () => {
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.textGray}>
-                    수량
+                    수량 
                 </Text>
                 <View style={styles.grayBorderContainer}>
                     <View style= {{display: 'flex', flexDirection:'row'}}>
                         <TextInput
                             style={styles.input}
-                            onChangeText={handleInputChange}
+                            onChangeText={(text)=>{handleInputChange(text);isValidInput(text);}}
                             value={inputValue}
                             placeholder="수량"
                             keyboardType="number-pad"
                         />
                         <Text style={styles.units}>{foodUnits}</Text>
                     </View>
+                    {isInputSet && (
+                      <Text style={styles.alaramMessage}>
+                        수량과 단위를 선택해 주세요.
+                      </Text>
+                    )}
                 </View>
                 <Text style={styles.textGray}>
                     단위
                 </Text>
                 <View style={styles.bottomContainer}>
                     <View style={styles.unitsContainer}>
-                        <TouchableOpacity onPress={() => handleUnitPress('개')}>
+                    <TouchableOpacity onPress={() => {changeConversion('개'); handleUnitPress('개')}}>
                             <Text style= {styles.unitSelect}>개</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('큰술')}>
-                            <Text style= {styles.unitSelect}>큰술</Text>
+                        <TouchableOpacity onPress={() => {handleUnitPress('스푼'); changeConversion('스푼')}}>
+                            <Text style= {styles.unitSelect}>스푼</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('작은술')}>
-                            <Text style= {styles.unitSelect}>작은술</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('ml')}>
+                        <TouchableOpacity onPress={() => {handleUnitPress('ml'); changeConversion('ml')}}>
                             <Text style= {styles.unitSelect}>ml</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('g')}>
+                        <TouchableOpacity onPress={() => {handleUnitPress('g'); changeConversion('g')}}>
                             <Text style= {styles.unitSelect}>g</Text>
                         </TouchableOpacity>
                     </View>
@@ -198,7 +245,12 @@ const RefTab = () => {
                         <TouchableOpacity style= {styles.deleteButton} onPress={closeModal}>
                             <Text style={styles.delete}>삭제하기</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style= {styles.nextButton} onPress={closeModal}>
+                        <TouchableOpacity style= {styles.nextButton} onPress={()=>{
+                         if (!isValidInput(inputValue)) { 
+                          closeModal(); 
+                          updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
+                        }
+                          }}>
                             <Text style={styles.next}>다음</Text>
                         </TouchableOpacity>
                     </View>
@@ -279,11 +331,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 430
   },
+  alaramMessage:{
+    marginTop: 10,
+    color: 'red',
+    fontSize: 12
+  },
   foods:{
     borderRadius: 15,
     backgroundColor: '#F8F9FA',
-    width: 300,
-    height: 63,
+    width: '100%',
+    height: 70,
     backgroundColor: 'white',
     elevation: 4, // Adjust the elevation value to control the shadow intensity
     padding: 16,
@@ -308,13 +365,13 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 100,
-    backgroundColor: 'yellow',
+    // backgroundColor: 'yellow',
     marginRight: 16 
   },
   foodName:{
     fontSize: 15,
     color: 'black',
-    width: 100,
+    width: 130,
     height: 20,
     // backgroundColor: 'yellow'
   },
@@ -325,7 +382,10 @@ const styles = StyleSheet.create({
     // backgroundColor: 'purple'
   },
   foodUnit:{
-    marginLeft: 5
+    marginLeft: 5,
+    width: 38,
+    // textAlign: 'right',
+    // backgroundColor: 'yellow'
   },
   pencil:{
     width: 30,
@@ -364,10 +424,14 @@ const styles = StyleSheet.create({
       width: 141
   },
   closeButton:{
-      marginTop: 16,
-      marginLeft: 155,
+      // marginTop: 16,
+      position:'absolute',
+      top: 16,
+      right: 20,
+      // marginLeft: 170,
       width: 38,
       height: 23,
+      fontSize: 20,
       backgroundColor: '#F8F9FA',
       justifyContent: 'center',
       alignItems:'center',
@@ -469,12 +533,12 @@ const styles = StyleSheet.create({
       fontSize: 15
   },
   addButton:{
-    width:50,
-    height:50,
-    borderRadius: 25,
+    width:54,
+    height:54,
+    borderRadius: 27,
     position: 'absolute',
-    right: 20,
-    bottom: 100
+    right: 50,
+    bottom: 50
   }
 });
 

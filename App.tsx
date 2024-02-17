@@ -4,13 +4,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import TabNavigator from './android/app/navigations/TabNavigation';
 import LoginStackNavigator from './android/app/navigations/LoginStackNavigation';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import AuthFunc from './android/app/BackFunc/AuthFunc';
+//import AuthFunc from './android/app/BackFunc/AuthFunc';
 const Stack = createNativeStackNavigator();
 
 function App () {
   //--로그인 여부 판단해서 로그인||메인 네비게이터 분리--\\
-  //const [isLoggedIn, setisLoggedIn] = useState(true);
-  const { isLoggedIn } = AuthFunc();
+  const [isLoggedIn, setisLoggedIn] = useState(true);
+  //const { isLoggedIn } = AuthFunc();
   return (
     <NavigationContainer independent = {true}>
       <Stack.Navigator

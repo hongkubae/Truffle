@@ -18,7 +18,7 @@ const SettingsView = ({navigation}) => {
   }, []);
 
   const fetchBudget = async () => {
-    const userId = 'aBsXiwzPUnVsFAH7dLBtmkum1383';
+    const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
     try {
       const userRef = firestore().collection('users').doc(userId);
       const snapshot = await userRef.get();
@@ -36,7 +36,7 @@ const SettingsView = ({navigation}) => {
   };
 
   const handleWithdraw = async () => {
-    const userId = 'aBsXiwzPUnVsFAH7dLBtmkum1383';
+    const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
     try {
         await firestore().collection('users').doc(userId).delete();
         console.log("사용자 문서가 삭제되었습니다.");

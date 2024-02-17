@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal,
+import { View, Text, StyleSheet, TouchableOpacity, Modal,
   Animated,
   TouchableWithoutFeedback,
   Dimensions,
@@ -9,22 +9,33 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal,
 } from 'react-native';
 import  {  vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, bean, grain, meat, milk }  from './IngredientsArray';
 import SearchIcon from "../assets/icons/SearchIcon";
+import { switchUnitConversion, updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator } from '../BackFunc/RecipeFunc';
 
 const Ingredients = () => {
   const screenHeight = Dimensions.get("screen").height;
   //--검색 쿼리--\\
   const [searchQuery, setSearchQuery] = useState('');
-  const allIngredients = [...vegetable, ...bread, ...fruit, ...sausage, ...truffle, ...noodle, ...spice, ...bean, ...grain, ...meat, ...milk];
+  const allIngredients = [...vegetable, ...bread, ...fruit, ...sausage, ...seafood, ...truffle, ...noodle, ...spice, ...bean, ...grain, ...meat, ...milk];
   const filteredData = searchQuery
     ? allIngredients.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : allIngredients;
-
+    const [isTextInput, setIsTextInput] = useState('');
+  const checkInput = (text) =>{
+    if(text.trim()===''){
+      setIsTextInput(false)
+    }
+  }
   //--모달--\\
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
-
+  const [isInputSet,setIsInputSet] = useState(false);
+  const isValidInput = (inputValue) =>{
+      inputValue.trim()===''?setIsInputSet(true):setIsInputSet(false);
+      return(isInputSet);
+    }
+    const [foodCategory, setFoodCategory] = useState('');
   const pressButton = () => {
       setModalVisible(true);
   };
@@ -85,6 +96,32 @@ const Ingredients = () => {
     const handleUnitPress = (unit) => {
         setFoodUnits(unit);
     };
+    
+    const [conversion, setConversion] = useState('unit_to_gram');
+    const [itemClicked,setItemClicked] = useState();
+
+    const isItemClicked = (item) =>{
+        setItemClicked(item);
+    }
+
+    const changeConversion = (foodUnits) =>{
+        switch (foodUnits) {
+            case '개':
+                setConversion('unit_to_gram');
+                break;
+            case '스푼':
+                setConversion('gram_to_spoon');
+                break;
+            case 'ml':
+                setConversion('ml_to_gram');
+                break;
+            case 'g':
+                setConversion('gram_to_gram');
+                break;
+            default:
+                break;
+          }
+    }
 
   return (
     <View style={styles.container}> 
@@ -94,7 +131,7 @@ const Ingredients = () => {
           <TextInput
           style={styles.search}
           placeholder='검색...'
-          onChangeText={setSearchQuery}
+          onChangeText={(text)=>{setSearchQuery(text); checkInput(text)}}
           value={searchQuery}
           keyboardType="default"
           />
@@ -102,17 +139,18 @@ const Ingredients = () => {
       </View>
 
       <SafeAreaView>
+        
       <View style={styles.foodContainer}>
          <FlatList
-        data={filteredData}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <TouchableOpacity key={item} style={styles.itemContainer} onPress={pressButton}>
-            <View style={styles.circularView}>
-              <Image source={item.img} />
-            </View>
-            <Text>{item.name}</Text>
-          </TouchableOpacity>
+            data={filteredData}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => (
+              <TouchableOpacity key={item} style={styles.itemContainer} onPress={() => { pressButton(); setItemClicked(item.name); setFoodCategory(item.category); } }>
+                <View style={styles.circularView}>
+                  <Image source={item.img} />
+                </View>
+                <Text>{item.name}</Text>
+              </TouchableOpacity>
         )}
         numColumns={5}
       />
@@ -121,15 +159,15 @@ const Ingredients = () => {
 
     
     <Modal
-      visible={modalVisible}
-      animationType={"fade"}
-      transparent
-      statusBarTranslucent
+    visible={modalVisible}
+    animationType={"fade"}
+    transparent
+    statusBarTranslucent
     >
-    <View style={styles.overlay}>
-    <TouchableWithoutFeedback onPress={closeModal}>
-      <View style={styles.background}/>
-    </TouchableWithoutFeedback>
+        <View style={styles.overlay}>
+            <TouchableWithoutFeedback onPress={closeModal}>
+            <View style={styles.background}/>
+            </TouchableWithoutFeedback>
                 <Animated.View
                     style={{...styles.bottomSheetContainer, transform: [{ translateY: translateY }]}}
                     {...panResponders.panHandlers}
@@ -150,39 +188,46 @@ const Ingredients = () => {
                     <View style= {{display: 'flex', flexDirection:'row'}}>
                         <TextInput
                             style={styles.input}
-                            onChangeText={handleInputChange}
+                            onChangeText={(text)=>{handleInputChange(text);isValidInput(text);}}
                             value={inputValue}
                             placeholder="수량"
                             keyboardType="number-pad"
                         />
-                        <Text style={styles.units}>{foodUnits}</Text>
+                        <Text style={styles.units}> {foodUnits} </Text>
                     </View>
+                    {isInputSet && (
+                      <Text style={styles.alaramMessage}>
+                        수량과 단위를 선택해 주세요.
+                      </Text>
+                    )}
                 </View>
                 <Text style={styles.textGray}>
                     단위
                 </Text>
                 <View style={styles.bottomContainer}>
                     <View style={styles.unitsContainer}>
-                        <TouchableOpacity onPress={() => handleUnitPress('개')}>
+                        <TouchableOpacity onPress={() => {changeConversion('개'); handleUnitPress('개')}}>
                             <Text style= {styles.unitSelect}>개</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('큰술')}>
-                            <Text style= {styles.unitSelect}>큰술</Text>
+                        <TouchableOpacity onPress={() => {handleUnitPress('스푼'); changeConversion('스푼')}}>
+                            <Text style= {styles.unitSelect}>스푼</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('작은술')}>
-                            <Text style= {styles.unitSelect}>작은술</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('ml')}>
+                        <TouchableOpacity onPress={() => {handleUnitPress('ml'); changeConversion('ml')}}>
                             <Text style= {styles.unitSelect}>ml</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleUnitPress('g')}>
+                        <TouchableOpacity onPress={() => {handleUnitPress('g'); changeConversion('g')}}>
                             <Text style= {styles.unitSelect}>g</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style= {styles.nextButton} onPress={closeModal}>
-                            <Text style={styles.next}>저장하기</Text>
-                        </TouchableOpacity>
+                    <TouchableOpacity style= {styles.nextButton} onPress={()=>{
+                         if (!isValidInput(inputValue)) { 
+                          closeModal(); 
+                          updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
+                        }
+                          }}>                            
+                        <Text style={styles.next}>저장하기</Text>
+                    </TouchableOpacity>
                     </View>
                 </View>
                 </Animated.View>
@@ -226,6 +271,11 @@ const styles = StyleSheet.create({
       alignItems:'center',
       // backgroundColor:'yellow'
   },
+  alaramMessage:{
+    marginTop: 10,
+    color: 'red',
+    fontSize: 12
+  },
   inputArea:{
       width:'100%',
       alignItems:'center',
@@ -247,12 +297,16 @@ const styles = StyleSheet.create({
   },
   foodContainer:{
       width: '100%',
+    //   backgroundColor: 'yellow',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems:'center'
   },
   foodCategory:{
-      width: 300,
+      // width: 300,
       fontWeight: '400',
       fontSize: 20,
-      marginTop: 28
+      // marginTop: 28
   },
   itemContainer: {
       // borderBottomWidth: 1,
@@ -261,10 +315,10 @@ const styles = StyleSheet.create({
       width: 70,
       marginTop: 10,
       flexDirection:'column',
-      justifyContent:'center',
+    //   justifyContent:'center',
       alignItems: 'center',
-      textAlign:'center',
-      marginRight:12,
+    //   textAlign:'center',
+    //   marginRight:10,
   },
   circularView: {
       width: 50,   
@@ -345,7 +399,7 @@ const styles = StyleSheet.create({
       width: 300,
       height: 63,
       backgroundColor: 'white',
-      elevation: 4, // Adjust the elevation value to control the shadow intensity
+    //   elevation: 4, // Adjust the elevation value to control the shadow intensity
       padding: 16,
       borderRadius: 8,
       marginTop: 11,
@@ -382,7 +436,7 @@ const styles = StyleSheet.create({
       // marginLeft: 10,
       width: 38,
       textAlign: 'right',
-      // backgroundColor: 'purple'
+      backgroundColor: 'purple'
     },
     foodUnit:{
       marginLeft: 5
@@ -424,14 +478,18 @@ const styles = StyleSheet.create({
         width: 141
     },
     closeButton:{
-        marginTop: 16,
-        marginLeft: 155,
-        width: 38,
-        height: 23,
-        backgroundColor: '#F8F9FA',
-        justifyContent: 'center',
-        alignItems:'center',
-        // backgroundColor:'yellow'
+      // marginTop: 16,
+      position:'absolute',
+      top: 16,
+      right: 20,
+      // marginLeft: 170,
+      width: 38,
+      height: 23,
+      fontSize: 20,
+      backgroundColor: '#F8F9FA',
+      justifyContent: 'center',
+      alignItems:'center',
+      // backgroundColor:'yellow'
     },
     textGray:{
         margin: 20,
@@ -541,7 +599,6 @@ const styles = StyleSheet.create({
 export default Ingredients;
 
 /*
-
         <ScrollView contentContainerStyle={styles.foodName} style={styles.scrollView}>
           <Text style={styles.foodCategory}>채소</Text>
             {vegetable && vegetable.map((food, index) => (
