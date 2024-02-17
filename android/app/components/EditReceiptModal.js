@@ -47,7 +47,6 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
     updatedNameArr[index] = name;
     updatedQuantityArr[index] = quantity;
     updatedPriceArr[index] = price;
-    updatedTagsArr[index] = tags;
 
     // 상태 업데이트
     setNameArr(updatedNameArr);
@@ -173,26 +172,31 @@ const handlepay = (buttonName) => {
   setDailyExpense(totalExpense);
 }, [priceArr]);
 
-//--장보기 합산--\\
+//--합산--\\
 useEffect(() => {
   let totalShopping = 0;
   let totalEatOut = 0;
   let totalDelivery = 0;
 
-  priceArr.forEach(item => {
-    if (item.items.tags === '장보기') {
-      totalShopping += parseFloat(item.price);
-    } else if (item.items.tags === '외식') {
-      totalEatOut += parseFloat(item.price);
-    } else if (item.items.tags === '배달') {
-      totalDelivery += parseFloat(item.price);
+  items.forEach(item => {
+    if (item.tagsArr && item.tagsArr.includes('장보기')) {
+      totalShopping += parseFloat(priceArr[item]);
+    } else if (item.tagsArr && item.tagsArr.includes('외식')) {
+      totalEatOut += parseFloat(priceArr[item]);
+    } else if (item.tagsArr && item.tagsArr.includes('배달')) {
+      totalDelivery += parseFloat(priceArr[item]);
     }
   });
-
   setShoppingExpense(totalShopping);
   setEatOutExpense(totalEatOut);
   setDeliveryExpense(totalDelivery);
-}, [priceArr]);
+  console.log('토탈 쇼핑: ', totalShopping);
+  console.log('토탈 외식: ', totalEatOut);
+  console.log('토탈 배달: ', totalDelivery);
+  console.log('쇼핑 값', shoppingExpense);
+  console.log('외식 값', eatOutExpense);
+  console.log('배달 값', deliveryExpense);
+}, [items]);
 
 
   //----파이어베이스에 업데이트----\\
@@ -215,26 +219,9 @@ useEffect(() => {
   memo: memo
 };
       const currentDate = new Date(date);
-      const currentMonthIndex = currentDate.getMonth();
-      const currentYearIndex = currentDate.getFullYear();
-      const defaultMonthIndex = 2;
-      const defaultYearIndex = 2024;
-      let index = 0;
-
-      const monthCalculator = currentMonthIndex - defaultMonthIndex;
-      const yearCalculator = currentYearIndex - defaultYearIndex;
-
-      if (monthCalculator > 0 && yearCalculator === 0) {
-        index += monthCalculator;
-      } else if (monthCalculator < 0 && yearCalculator > 0) {
-        index = (index - monthCalculator) * yearCalculator;
-      } else if (monthCalculator === 0 && yearCalculator > 0) {
-        index = 12 * index;
-      } else if (monthCalculator === 0 && yearCalculator === 0){
-        index = 0;
-      } else {
-        index = monthCalculator * yearCalculator;
-      }
+      const currentMonth = currentDate.getMonth();
+      const currentYear = currentDate.getFullYear();
+      //const index = ${String(currentYear)}-${String(currentMonth).padStart(2, '0')};
       const userRef = firestore().collection('users').doc(userId);
       
     const currentShoppingSnapshot = await userRef.get();

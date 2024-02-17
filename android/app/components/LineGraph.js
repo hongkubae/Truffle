@@ -40,17 +40,15 @@ const LineGraph = () => {
         const data3Labels = [];
         const data3Values = [];
         for (let i = 0; i < 3; i++) {
-          const month = currentMonth - i;
+          const month = currentMonth - i ;
           const year = currentYear - (month <= 0 ? 1 : 0);
           const label = `${year}-${String(month).padStart(2, '0')}`;
-          data3Labels.push(label);
-          const monthData = userData[label];
-          let totalExpense = 0;
-          if (monthData) {
-            Object.values(monthData).forEach(item => {
-              totalExpense += item.eatOut + item.delivery + item.shopping;
-            });
-          }
+          data3Labels.push(label.split('-')[1]);
+          const eatOut = userData.eatOut[label] || 0;
+          const shopping = userData.shopping[label] || 0;
+          const delivery = userData.delivery[label] || 0;
+          const totalExpense = eatOut + shopping + delivery;
+
           data3Values.push(totalExpense);
         }
         setData3({
@@ -68,17 +66,15 @@ const LineGraph = () => {
         const data6Labels = [];
         const data6Values = [];
         for (let i = 0; i < 6; i++) {
-          const month = currentMonth - i;
+          const month = currentMonth - i + (currentMonth - i <= 0 ? 12 : 0);
           const year = currentYear - (month <= 0 ? 1 : 0);
           const label = `${year}-${String(month).padStart(2, '0')}`;
-          data6Labels.push(label);
+          data6Labels.push(label.split('-')[1]);
           const monthData = userData[label];
-          let totalExpense = 0;
-          if (monthData) {
-            Object.values(monthData).forEach(item => {
-              totalExpense += item.eatOut + item.delivery + item.shopping;
-            });
-          }
+          const eatOut = userData.eatOut[label] || 0;
+          const shopping = userData.shopping[label] || 0;
+          const delivery = userData.delivery[label] || 0;
+          const totalExpense = eatOut + shopping + delivery;
           data6Values.push(totalExpense);
         }
         setData6({
@@ -96,17 +92,15 @@ const LineGraph = () => {
         const data12Labels = [];
         const data12Values = [];
         for (let i = 0; i < 12; i++) {
-          const month = currentMonth - i;
+          const month = currentMonth - i + (currentMonth - i <= 0 ? 12 : 0);
           const year = currentYear - (month <= 0 ? 1 : 0);
           const label = `${year}-${String(month).padStart(2, '0')}`;
-          data12Labels.push(label);
+          data12Labels.push(label.split('-')[1]);
           const monthData = userData[label];
-          let totalExpense = 0;
-          if (monthData) {
-            Object.values(monthData).forEach(item => {
-              totalExpense += item.eatOut + item.delivery + item.shopping;
-            });
-          }
+          const eatOut = userData.eatOut[label] || 0;
+          const shopping = userData.shopping[label] || 0;
+          const delivery = userData.delivery[label] || 0;
+          const totalExpense = eatOut + shopping + delivery;
           data12Values.push(totalExpense);
         }
         setData12({
@@ -120,8 +114,8 @@ const LineGraph = () => {
           ]
         });
 
-        const startDate = moment().startOf('isoWeek');
-        const endDate = moment().endOf('isoWeek');
+        const startDate = moment().startOf('isoWeek'); // 이번 주 시작일
+        const endDate = moment().endOf('isoWeek'); // 이번 주 종료일
         const days = [];
         let currentDate = startDate;
         while (currentDate <= endDate) {
@@ -163,9 +157,9 @@ const LineGraph = () => {
   const renderDropdown = () => {
     switch (value) {
       case '1':
-        return data1 ? <LineChart data={data1} width={350} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
+        return data1 ? <LineChart data={data1} width={380} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
       case '3':
-        return data3 ? <LineChart data={data3} width={380} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
+        return data3 ? <LineChart data={data3} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
       case '6':
         return data6 ? <LineChart data={data6} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
       case '12':
