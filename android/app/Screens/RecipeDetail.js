@@ -29,6 +29,7 @@ const RecipeDetail = ({ navigation, route }) => {
           const recipeSteps = recipeData.recipe_steps || [];
           setSteps(recipeSteps);
         }
+        
       } catch (error) {
         console.error('레시피 단계를 가져오는데 실패했습니다.', error);
       }

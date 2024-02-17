@@ -11,11 +11,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import firestore from "@react-native-firebase/firestore";
 
 const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
-  const [items, setItems] = useState([{ nameArr: [], quantityArr: [], priceArr: [] }]);
 
-  const [nameArr, setNameArr] = useState([name]);
-  const [quantityArr, setQuantityArr] = useState([quantity]);
-  const [priceArr, setPriceArr] = useState([price]);
+  const [items, setItems] = useState([{ name: '', quantity: '', price: '' }]);
 
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -24,38 +21,20 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
   //--input 바뀌었을 때--\\
   const handleInputChange = (text, index, key) => {
     const newItems = [...items];
-    newItems[index][key] = text;
-
-    // 해당하는 값들을 nameArr, quantityArr, priceArr에 저장
-    const { name, quantity, price } = newItems[index];
-    const updatedNameArr = [...nameArr];
-    const updatedQuantityArr = [...quantityArr];
-    const updatedPriceArr = [...priceArr];
-    updatedNameArr[index] = name;
-    updatedQuantityArr[index] = quantity;
-    updatedPriceArr[index] = price;
-
-    // 상태 업데이트
-    setNameArr(updatedNameArr);
-    setQuantityArr(updatedQuantityArr);
-    setPriceArr(updatedPriceArr);
-
+    newItems[index][key]  = text;
     setItems(newItems);
   };
   //--input 받기--\\
   const handleAddItem = () => {
-    const newItem = items[items.length - 1];
-    if (newItem.quantity && newItem.name && newItem.price) {
-      setNameArr(prevNameArr => [...prevNameArr, newItem.name]);
-      setQuantityArr(prevQuantityArr => [...prevQuantityArr, newItem.quantity]);
-      setPriceArr(prevPriceArr => [...prevPriceArr, newItem.price]);
-
-      saveData();
-      setItems(prevItems => [...prevItems, { nameArr: [], quantityArr: [], priceArr: [] }]);
-      setName('');
-      setQuantity('');
-      setPrice('');
+    if (quantity && name && price) {
+      const newItem = { name: name, quantity: quantity, price: price };
+      setItems([...items, newItem]);
+    } else {
+      Alert.alert('Warning', 'Please fill all fields.');
     }
+    setName('');
+    setQuantity('');
+    setPrice('');
   };
 
   //--모든 TextInput이 값이 채워졌는지 확인(안채우면 add안됨)--\\
@@ -65,99 +44,166 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
   //--AsyncStorage에 데이터 저장--\\
   const saveData = async () => {
     try {
-      await AsyncStorage.setItem(selectedDate, JSON.stringify(items));
+      const dataToSave = items.map(item => ({
+        nameArr: item.name,
+        quantity: item.quantity,
+        price: item.price
+      }));
+      await AsyncStorage.setItem(selectedDate, JSON.stringify(dataToSave));
     } catch (error) {
       console.error('Error saving data:', error);
     }
   };
   //--AsyncStorage에서 데이터 불러오기--\\
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const storeditems = await AsyncStorage.getItem(selectedDate); // 해당 날짜의 items 불러오기
-        if (storeditems) {
-          setItems(JSON.parse(storeditems));
-        }
-      } catch (error) {
-        console.error('Error loading data:', error);
+useEffect(() => {
+  const loadData = async () => {
+    try {
+      const storeditems = await AsyncStorage.getItem(selectedDate); // 해당 날짜의 items 불러오기
+      if (storeditems) {
+        const parsedItems = JSON.parse(storeditems);
+        const initialItems = parsedItems.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        }));
+        setItems(initialItems);
       }
-    };
-    loadData();
-  }, [selectedDate]);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
+  };
+  loadData();
+}, [selectedDate]);
 //--AddDailyExpense--\\  
-  const [inputTagList, setInputTaglist] = useState([{payArr: [], shopArr:[], tagsArr:[]}]);
+  const [inputTagList, setInputTaglist] = useState([{items:[{name:'', quantity:'', price:''}],pay: '', shop:'', tags:''}]);
 
   const [shop, setShop] = useState('');
   const [pay, setPay] = useState(null);
   const [tags, setTags] = useState(null);
 
-  const [shopArr, setShopArr] = useState([shop]);
-  const [payArr, setPayArr] = useState([pay]);
-  const [tagsArr, setTagsArr] = useState([tags]);
 
   //--장보기 외식 배달 string 변환 변환 후 array에 저장--\\
-  const handleTags = (buttonName) => {
+  const handleTags = (buttonName, index) => {
+    // 선택한 버튼의 값에 따라 태그 설정
     let tagsReturnVal = '';
-    if(buttonName=='shopping'){
-      setTags(buttonName);
+    if(buttonName==='shopping'){
       tagsReturnVal='장보기';
-
-    }else if (buttonName == 'eatOut'){
-      setTags(buttonName);
+    } else if (buttonName === 'eatOut'){
       tagsReturnVal='외식';
-    }
-    else{
-      setTags(buttonName);
+    } else {
       tagsReturnVal='배달';
     }
-    setTagsArr(tagsReturnVal);
+    // 해당 인덱스의 입력 상태를 업데이트
+    setInputTaglist(prevInputTagList => {
+      const newList = [...prevInputTagList];
+      newList.tags = tagsReturnVal;
+      return newList;
+    });
   };
 
 //--현금 카드 string 변환 후 array에 저장--\\
-  const handlepay = (buttonName) => {
-    let btnReturnVal='';
-    if(buttonName=='cash'){
-      setPay(buttonName);
-      btnReturnVal='현금';
-    }else{
-      setPay(buttonName);
-      btnReturnVal='카드';
-    }
-    setPayArr(btnReturnVal);
-  };
+const handlepay = (buttonName, index) => {
+  let btnReturnVal='';
+  if(buttonName=='cash'){
+    btnReturnVal='현금';
+  } else {
+    btnReturnVal='카드';
+  }
+  setInputTaglist(prevInputTagList => {
+    const newList = [...prevInputTagList];
+    newList.pay = btnReturnVal;
+    return newList;
+  });
+};
   //--shop input--\\
-  const handleShopChange = (text) => {
-    setShop(text);
-    setShopArr(text);
+  const handleShopChange = (text, index) => {
+    setInputTaglist(prevInputTagList => {
+      const newList = [...prevInputTagList];
+      newList.shopArr = text;
+      return newList;
+    });
   };
 
   // SaveBTN을 눌렀을 때 inputTagList 저장
   const handleInputTagListSave = () => {
-    setInputTaglist([{shopArr, payArr, tagsArr}]);
+    saveData(); // AsyncStorage에 데이터 저장
   };
-
+  //--플러스 버튼 누르면 아레이 값 증가--\\
+  const handleAddExpense = () => {
+     setInputTaglist(prevInputTagList => [
+      ...prevInputTagList, 
+      { 
+        items:[],
+        pay: '', 
+        shop: '', 
+        tags: '',
+      }
+    ]);
+  };
+  
   //--EditReciptModal--\\
   const [dailyExpense, setDailyExpense] = useState(0);
   const [expenseCount, setExpenseCount] = useState(0);
   const [memo,setMemo]=useState('');
-
-  const handleAddExpense = () => {
-    setExpenseCount(prevCount => prevCount + 1);
-  };
-  //--하루 총액 구하기--\\
-  useEffect(() => {
-    let totalExpense = 0;
-    priceArr.forEach(elem => {
-      totalExpense += parseFloat(elem);
+  const [shoppingExpense, setShoppingExpense] = useState(0);
+  const [eatOutExpense, setEatOutExpense] = useState(0);
+  const [deliveryExpense, setDelivertyExpense] = useState(0);
+ //--하루 총액 구하기--\\
+useEffect(() => {
+  let totalExpense = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      totalExpense += parseFloat(elem.price);
     });
-    setDailyExpense(totalExpense);
-  }, [priceArr]);
+  });
+  setDailyExpense(totalExpense);
+}, [inputTagList]);
+
+//--장보기 합산--\\
+useEffect(() => {
+  let totalShopping = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      if (elem.tags === '장보기') {
+        totalShopping += parseFloat(elem.price);
+      }
+    });
+  });
+  setShoppingExpense(totalShopping);
+}, [inputTagList]);
+
+//--외식 합산--\\
+useEffect(() => {
+  let totalEatOut = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      if (elem.tags === '외식') {
+        totalEatOut += parseFloat(elem.price);
+      }
+    });
+  });
+  setEatOutExpense(totalEatOut);
+}, [inputTagList]);
+
+//--배달 합산--\\
+useEffect(() => {
+  let totalDelivery = 0;
+  inputTagList.forEach((item) => {
+    item.items.forEach((elem) => {
+      if (elem.tags === '배달') {
+        totalDelivery += parseFloat(elem.price);
+      }
+    });
+  });
+  setDelivertyExpense(totalDelivery);
+}, [inputTagList]);
+
+  
   //----파이어베이스에 업데이트----\\
   const [loading, setLoading] = useState(false);
-
   const handleSaveData = async () => {
     try {
-
+    
       setLoading(true);
       const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
       const totalPrice=dailyExpense;
@@ -165,14 +211,58 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
       const data = {
   amount: totalPrice,
   items: [
-    { name: nameArr, quantity: quantityArr, price: priceArr },
+    { name: name, quantity: quantity, price: price },
   ],
   pay: [
-    { pay: payArr, shop: shopArr, tag: tagsArr },
+    { pay: pay, shop: shop, tag: tags },
   ],
   memo: memo
 };
+      const currentDate = new Date(date);
+      const currentMonthIndex = currentDate.getMonth();
+      const currentYearIndex = currentDate.getFullYear();
+      const defaultMonthIndex = 2;
+      const defaultYearIndex = 2024;
+      let index = 0;
+
+      const monthCalculator = currentMonthIndex - defaultMonthIndex;
+      const yearCalculator = currentYearIndex - defaultYearIndex;
+
+      if (monthCalculator > 0 && yearCalculator === 0) {
+        index += monthCalculator;
+      } else if (monthCalculator < 0 && yearCalculator > 0) {
+        index = (index - monthCalculator) * yearCalculator;
+      } else if (monthCalculator === 0 && yearCalculator > 0) {
+        index = 12 * index;
+      } else if (monthCalculator === 0 && yearCalculator === 0){
+        index = 0;
+      } else {
+        index = monthCalculator * yearCalculator;
+      }
+      const userRef = firestore().collection('users').doc(userId);
+      
+    const currentShoppingSnapshot = await userRef.get();
+    const currentShopping = currentShoppingSnapshot.data().shopping[index] || 0;
+
+    const currentEatOutSnapshot = await userRef.get();
+    const currentEatOut = currentEatOutSnapshot.data().eatOut[index] || 0;
+
+    const currentDeliverySnapshot = await userRef.get();
+    const currentDelivery = currentDeliverySnapshot.data().delivery[index] || 0;
+
+      
+    const updatedShopping = currentShopping + totalShopping;
+    const updatedEatOut = currentEatOut + totalEatOut;
+    const updatedDelivery = currentDelivery + totalDelivery;
+
+      await userRef.update({
+        [`shopping.${index}`]: updatedShopping,
+        [`eatOut.${index}`]: updatedEatOut,
+        [`delivery.${index}`]: updatedDelivery
+      });
+      
   await firestore().collection(userId).doc(date).set(data);
+  handleInputTagListSave();
   Alert.alert('Success', 'Data saved successfully.');
   } catch (error) {
     console.error('Error saving data:', error);
@@ -182,123 +272,125 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
   }
  };
 
- const checkingArr = () => {
-  console.log(nameArr, quantityArr, priceArr, payArr, shopArr, tagsArr);
-}
-return (
-  <Modal
-    animationType="slide"
-    transparent={true}
-    visible={EditVisible}
-    onRequestClose={() => {
-      toggleEditModal();
-    }}
-  >
-  <SafeAreaView>
-    <ScrollView>
-      <View>
-      <View style={styles.modalContainer}>
-        {/* 뒤로 가기 로고 플러스 버튼*/}
-      <View  style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:10}}>
-        <TouchableOpacity onPress={() => {toggleEditModal()}}>
-        <LeftArrow height={30} width={30}/>
-        </TouchableOpacity>
-        <TruffleLogo height={30} width={30}/>
-        <TouchableOpacity onPress={handleAddExpense}>
-          <AddBTNIcon height={35} width={35}/>
-        </TouchableOpacity>
-      </View>
-        <View style={{alignItems:'center', marginTop:20}}>
-          {/* 선택 날자 총액*/}
-          <Text>{selectedDate}</Text>
-          <View style={styles.expenseHeader}>
-            <View style={{width:8}}></View>
-            <Text style={styles.expenseText}>{dailyExpense}</Text>
-            <Text style={{fontSize:24, fontWeight:'400'}}>원</Text>
-          </View>
-          <Line/>
-          {/*ProductList */}
-      {items.map((input, index) => (
-      <View key={index} style={{ flexDirection: 'row', gap: 20, alignItems: 'center', marginTop:10 }}>
+  const checkingArr = () => {
+    console.log(items, pay, shop, tags);
+  }
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={EditVisible}
+      onRequestClose={() => {
+        toggleEditModal();
+      }}
+    >
+    <SafeAreaView>
+      <ScrollView>
+        <View>
+        <View style={styles.modalContainer}>
+          {/* 뒤로 가기 로고 플러스 버튼*/}
+        <View  style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:10}}>
+          <TouchableOpacity onPress={() => {toggleEditModal()}}>
+          <LeftArrow height={30} width={30}/>
+          </TouchableOpacity>
+          <TruffleLogo height={30} width={30}/>
+          <TouchableOpacity onPress={handleAddExpense}>
+            <AddBTNIcon height={35} width={35} />
+          </TouchableOpacity>
+        </View>
+          <View style={{alignItems:'center', marginTop:20}}>
+            <View style={styles.expenseHeader}>
+              <View style={{width:8}}></View>
+                <Text style={styles.expenseText}>{dailyExpense}</Text>
+                <Text style={{fontSize:24, fontWeight:'400'}}>원</Text>
+              </View>
+              <Line/>
+            {/*ProductList */}
+            {inputTagList.map((inputTag, index) => (
+  <View key={index} style={{ alignItems: 'center' }}>
+    {inputTag.items.map((item, itemIndex) => (
+      <View key={itemIndex} style={{ flexDirection: 'row', gap: 20, alignItems: 'center', marginTop: 10 }}>
         <TextInput
           placeholder="항목 입력"
           style={[styles.ProductInput, { width: 100 }]}
-          value={input.name}
-          onChangeText={(text) => handleInputChange(text, index, 'name')}
+          value={item.name}
+          onChangeText={(text) => handleInputChange(text, itemIndex, 'name')}
         />
         <TextInput
           placeholder="수량"
-          style={[styles.ProductInput, {width:40}]}
-          value={input.quantity}
+          style={[styles.ProductInput, { width: 40 }]}
+          value={item.quantity}
           keyboardType="number-pad"
-          onChangeText={(text) => handleInputChange(text, index, 'quantity')}
+          onChangeText={(text) => handleInputChange(text, itemIndex, 'quantity')}
         />
         <TextInput
           placeholder="가격"
-          style={[styles.ProductInput, {width:100}]}
-          value={input.price}
+          style={[styles.ProductInput, { width: 100 }]}
+          value={item.price}
           keyboardType="number-pad"
-          onChangeText={(text) => handleInputChange(text, index, 'price')}
+          onChangeText={(text) => handleInputChange(text, itemIndex, 'price')}
         />
         <Text style={{ fontSize: 18 }}>₩</Text>
       </View>
+    ))}
+    <TouchableOpacity onPress={handleAddItem} disabled={!areitemsFilled()} style={{ marginTop: 10, marginBottom: 10, alignItems: 'center' }}>
+      <SmallAddBTNGrey />
+    </TouchableOpacity>
+
+          <View style={{alignItems:'center'}}>
+            <Line />
+            {/* AddDailyExpense */}
+          <View style={{ alignItems: 'flex-start', marginLeft: -20 }}>
+            <View style={styles.tagStyle}>
+              <Text>PAY</Text>
+              <TouchableOpacity
+                style={[styles.TagsBTN, inputTag.pay === 'cash' && styles.selectedBTN]}
+                onPress={() => handlepay('cash', index)}
+              >
+                <Text style={[styles.TagsBTNText, inputTag.pay === 'cash' && styles.selectedBTNText]}>현금</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.TagsBTN, inputTag.pay === 'card' && styles.selectedBTN]}
+                onPress={() => handlepay('card', index)}
+              >
+                <Text style={[styles.TagsBTNText, inputTag.pay === 'card' && styles.selectedBTNText]}>카드</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tagStyle}>
+              <Text>SHOP</Text>
+              <TextInput
+                placeholder="..."
+                style={styles.shopInput}
+                value={index.shop}
+                onChangeText={(text) => handleShopChange(text, index)}
+              />
+            </View>
+            <View style={styles.tagStyle}>
+              <Text>TAG</Text>
+              <TouchableOpacity
+                style={[styles.TagsBTN, inputTag.tags === 'shopping' && styles.selectedBTN]}
+                onPress={() => handleTags('shopping', index)}
+              >
+                <Text style={[styles.TagsBTNText, inputTag.tags === 'shopping' && styles.selectedBTNText]}>장보기</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.TagsBTN, (inputTag.tags === 'eatOut' && styles.selectedBTN)]}
+                onPress={() => handleTags('eatOut', index)}
+              >
+                <Text style={[styles.TagsBTNText, inputTag.tags === 'eatOut' && styles.selectedBTNText]}>외식</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.TagsBTN, inputTag.tags === 'delivery' && styles.selectedBTN]}
+                onPress={() => handleTags('delivery', index)}
+              >
+                <Text style={[styles.TagsBTNText, inputTag.tags === 'delivery' && styles.selectedBTNText]}>배달</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        </View>
       ))}
-      <TouchableOpacity onPress={handleAddItem} disabled={!areitemsFilled()} style={{ marginTop: 10, marginBottom:10 }}>
-        <SmallAddBTNGrey />
-      </TouchableOpacity>
-      <Line/>
-        {/*AddDailyExpense*/}
-      <View style={{alignItems:'flex-start', marginLeft:-20}}>
-        <View style={styles.tagStyle}>
-          <Text>PAY</Text>
-          <TouchableOpacity
-            style={[styles.TagsBTN, pay === 'cash' && styles.selectedBTN]}
-            onPress={() => handlepay('cash')}
-          >
-          <Text style={[styles.TagsBTNText, pay === 'cash' && styles.selectedBTNText]}>현금</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.TagsBTN, pay === 'card' && styles.selectedBTN]}
-            onPress={() => handlepay('card')}
-          >
-          <Text style={[styles.TagsBTNText, pay === 'card' && styles.selectedBTNText]}>카드</Text>
-          </TouchableOpacity>    
-        </View>
-        <View style={styles.tagStyle}>
-            <Text>SHOP</Text>
-            <TextInput
-            placeholder="..."
-            style={styles.shopInput}
-            value={shop}
-            onChangeText={handleShopChange}
-            />
-          </View>
-
-          <View style={styles.tagStyle}>
-            <Text>TAG</Text>
-
-            <TouchableOpacity
-              style={[styles.TagsBTN, tags === 'shopping' && styles.selectedBTN]}
-              onPress={() => handleTags('shopping')}
-            >
-            <Text style={[styles.TagsBTNText, tags === 'shopping' && styles.selectedBTNText]}>장보기</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.TagsBTN, tags === 'eatOut' && styles.selectedBTN]}
-              onPress={() => handleTags('eatOut')}
-            >
-            <Text style={[styles.TagsBTNText, tags === 'eatOut' && styles.selectedBTNText]}>외식</Text>
-            </TouchableOpacity> 
-
-            <TouchableOpacity
-              style={[styles.TagsBTN, tags === 'deliverty' && styles.selectedBTN]}
-              onPress={() => handleTags('deliverty')}
-            >
-            <Text style={[styles.TagsBTNText, tags === 'deliverty' && styles.selectedBTNText]}>배달</Text>
-            </TouchableOpacity> 
-          </View>
-        </View>
       <Line/>
 
       <View style={styles.memoContainer}>
@@ -329,6 +421,7 @@ return (
 </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor:'#F8F9FA',
