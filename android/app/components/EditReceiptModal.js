@@ -20,9 +20,9 @@ const EditReceiptModal = ({ EditVisible, toggleEditModal, selectedDate}) => {
 
   //--input 바뀌었을 때--\\
   const handleInputChange = (text, index, key) => {
-    const newItems = [...items];
-    newItems[index][key]  = text;
-    setItems(newItems);
+    // const newItems = [...items];
+    // newItems[index][key]  = text;
+    // setItems(newItems);
   };
   //--input 받기--\\
   const handleAddItem = () => {
@@ -293,7 +293,7 @@ useEffect(() => {
     {inputTag.items.map((item, itemIndex) => (
       <View key={itemIndex} style={{ flexDirection: 'row', gap: 20, alignItems: 'center', marginTop: 10 }}>
         <TextInput
-          placeholder="항목 입력 TEST"
+          placeholder="항목 입력!!!"
           style={[styles.ProductInput, { width: 100 }]}
           value={item.name}
           onChangeText={(text) => handleInputChange(text, itemIndex, 'name')}

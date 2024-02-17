@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
 
 
 
-export default SignupAgree;
+export default Agreement3;
