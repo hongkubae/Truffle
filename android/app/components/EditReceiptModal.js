@@ -180,20 +180,20 @@ const calTotal = (btnName) => {
   priceArr.forEach(item => {
     if (btnName === 'shopping') {
       totalShopping += parseFloat(item);
+      setShoppingExpense(totalShopping);
+      console.log('쇼핑 값', shoppingExpense);
     } else if (btnName === 'eatOut') {
       totalEatOut += parseFloat(item);
+      setEatOutExpense(totalEatOut);
+      console.log('외식 값', eatOutExpense);
     } else if (btnName === 'delivery') {
       totalDelivery += parseFloat(item);
+      setDeliveryExpense(totalDelivery);
+      console.log('배달 값', deliveryExpense);
     }
     console.log(btnName == 'shopping');
   });
-  setShoppingExpense(totalShopping);
-  setEatOutExpense(totalEatOut);
-  setDeliveryExpense(totalDelivery);
-  
-console.log('쇼핑 값', shoppingExpense);
-console.log('외식 값', eatOutExpense);
-console.log('배달 값', deliveryExpense);
+
 }
 
   //----파이어베이스에 업데이트----\\
