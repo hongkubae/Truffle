@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text,StyleSheet, TouchableOpacity, Dimensionsm, Dimensions, Platform } from 'react-native';
-import TopTri from "../assets/icons/TopTri.svg";
+
 import BottomTri from "../assets/icons/BottomTri.svg";
 import EditBTN from "../assets/icons/EditBTN.svg";
 import Line from "../assets/icons/Line.svg";
@@ -38,7 +38,6 @@ const Receipt = ({selectedDate}) => {
 
   return (
   <View style={{alignItems:'center'}}>
-    <TopTri/>
     <View>
     <View style={styles.container}>
       <View style={{marginLeft:10}}>

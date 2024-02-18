@@ -78,7 +78,7 @@ function DonutChart () {
   const remainingBudget = calculateRemainingBudget();
   const totalBudget = userBudget;
   const { eatOut, shopping, delivery } = expenses;
-  const extraBudget = remainingBudget / totalBudget * 100;
+  const extraBudget = Math.max(0, remainingBudget / totalBudget * 100); // 음수이면 0으로 설정
 
   const series = [
     shopping / totalBudget * 100,
@@ -102,6 +102,9 @@ function DonutChart () {
           coverRadius={0.65}
           coverFill={'white'}
         />
+        {extraBudget === 0 && (
+          <Text style={styles.warningText}>!예산을 초과했습니다.</Text>
+        )}
       </View>
       <View style={styles.legendContainer}>
         <View style={[styles.colorSlice,{backgroundColor:'#D55A44'}]}/>
@@ -143,13 +146,18 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'center',
     alignItems:'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   colorSlice:{
     height:12,
     width:12,
     marginRight:5,
     marginLeft:5
+  },
+  warningText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 2,
   }
 });
 

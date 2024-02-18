@@ -11,52 +11,60 @@ const CreditView = () => {
 
       <View style={{justifyContent:'center', alignItems:'center', }}>
       <View style={{flexDirection:'row', gap:10}}>
-        <Text style={{fontSize:40}}>Truffle</Text>
-        <TruffleLogo/>
+        <Text style={{fontSize:40, color:'black'}}>Truffle</Text>
+        <TruffleLogo marginTop={5} width={50} height={50}/>
       </View>
       
       <View style={{marginTop:20}}>
         <Text style={styles.HeaderText}>Project Leader</Text>
           <View style={styles.context}>
-            <Text style={styles.contextText}>Sanghyun Brandon Kim</Text>
+            <Text style={styles.contextText}>Sanghyun (Brandon) Kim   | 김상현</Text>
           </View>
       </View>
 
       <View style={{marginTop:20}}>
         <Text style={styles.HeaderText}>Front-end Developer Head</Text>
           <View style={styles.context}>
-            <Text style={styles.contextText}>Dakyung Kang</Text>
+            <Text style={styles.contextText}>Dakyung Kang   | 강다경</Text>
           </View>
       </View>
 
       <View style={{marginTop:20}}>
         <Text style={styles.HeaderText}>Back-end Developer Head</Text>
           <View style={styles.context}>
-            <Text style={styles.contextText}>Hayoung Im</Text>
+            <Text style={styles.contextText}>Hayoung Im   | 임하영</Text>
           </View>
       </View>
 
       <View style={{marginTop:20}}>
         <Text style={styles.HeaderText}>Front-end Developers</Text>
           <View style={[styles.context, {height:100}]}>
-            <Text style={styles.contextText}>YoungHun Kim</Text>
-            <Text style={styles.contextText}>Kyowon Song</Text>
+            <Text style={styles.contextText}>YongHoon Kim   | 김용훈</Text>
+            <Text style={styles.contextText}>Kyowon Song   | 송교원</Text>
           </View>
       </View>
 
       <View style={{marginTop:20}}>
         <Text style={styles.HeaderText}>Back-end Developers</Text>
           <View style={[styles.context, {height:100}]}>
-            <Text style={styles.contextText}>Hongku Bae</Text>
-            <Text style={styles.contextText}>Sanghyun Brandon Kim</Text>
+            <Text style={styles.contextText}>Hongku Bae   | 배홍구</Text>
+            <Text style={styles.contextText}>Sanghyun (Brandon) Kim   | 김상현</Text>
           </View>
       </View>
 
       <View style={{marginTop:20}}>
         <Text style={styles.HeaderText}>Designers</Text>
           <View style={[styles.context, {height:100}]}>
-            <Text style={styles.contextText}>Jiwon Lee</Text>
-            <Text style={styles.contextText}>Yuri Lee</Text>
+            <Text style={styles.contextText}>Jiwon Lee   | 이지원</Text>
+            <Text style={styles.contextText}>Yuri Lee   | 이유리</Text>
+          </View>
+      </View>
+
+      <View style={{marginTop:20, marginBottom:40}}>
+        <Text style={styles.HeaderText}>Marketing</Text>
+          <View style={[styles.context, {height:100}]}>
+            <Text style={styles.contextText}>Dawon Kyoung   | 경다원</Text>
+            <Text style={styles.contextText}>Jin Heo   | 허진</Text>
           </View>
       </View>
 
@@ -79,10 +87,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   context:{
-    width: Dimensions.get('window').width-20,
+    width: Dimensions.get('window').width-60,
     height:60,
     backgroundColor: 'white',
-    borderRadius:5,
+    borderRadius:8,
   },
   HeaderText:{
     fontSize:16,
@@ -90,7 +98,8 @@ const styles = StyleSheet.create({
   },
   contextText:{
     fontSize:16,
-    padding:10
+    padding:10,
+    marginTop:5
   },
 
 })

@@ -173,31 +173,28 @@ const handlepay = (buttonName) => {
 }, [priceArr]);
 
 //--합산--\\
-useEffect(() => {
+const calTotal = (btnName) => {
   let totalShopping = 0;
   let totalEatOut = 0;
   let totalDelivery = 0;
-
-  items.forEach(item => {
-    if (item.tagsArr && item.tagsArr.includes('장보기')) {
-      totalShopping += parseFloat(priceArr[item]);
-    } else if (item.tagsArr && item.tagsArr.includes('외식')) {
-      totalEatOut += parseFloat(priceArr[item]);
-    } else if (item.tagsArr && item.tagsArr.includes('배달')) {
-      totalDelivery += parseFloat(priceArr[item]);
+  priceArr.forEach(item => {
+    if (btnName === 'shopping') {
+      totalShopping += parseFloat(item);
+    } else if (btnName === 'eatOut') {
+      totalEatOut += parseFloat(item);
+    } else if (btnName === 'delivery') {
+      totalDelivery += parseFloat(item);
     }
+    console.log(btnName == 'shopping');
   });
   setShoppingExpense(totalShopping);
   setEatOutExpense(totalEatOut);
   setDeliveryExpense(totalDelivery);
-  console.log('토탈 쇼핑: ', totalShopping);
-  console.log('토탈 외식: ', totalEatOut);
-  console.log('토탈 배달: ', totalDelivery);
-  console.log('쇼핑 값', shoppingExpense);
-  console.log('외식 값', eatOutExpense);
-  console.log('배달 값', deliveryExpense);
-}, [items]);
-
+  
+console.log('쇼핑 값', shoppingExpense);
+console.log('외식 값', eatOutExpense);
+console.log('배달 값', deliveryExpense);
+}
 
   //----파이어베이스에 업데이트----\\
   const [loading, setLoading] = useState(false);
@@ -211,17 +208,17 @@ useEffect(() => {
       const data = {
   amount: totalPrice,
   items: [
-    { name: name, quantity: quantity, price: price },
+    { name: nameArr, quantity: quantityArr, price: priceArr },
   ],
   pay: [
-    { pay: pay, shop: shop, tag: tags },
+    { pay: payArr, shop: shopArr, tag: tagsArr },
   ],
   memo: memo
 };
       const currentDate = new Date(date);
-      const currentMonth = currentDate.getMonth();
+      const currentMonth = currentDate.getMonth()+1;
       const currentYear = currentDate.getFullYear();
-      //const index = ${String(currentYear)}-${String(currentMonth).padStart(2, '0')};
+      const index = `${String(currentYear)}-${String(currentMonth).padStart(2, '0')}`;
       const userRef = firestore().collection('users').doc(userId);
       
     const currentShoppingSnapshot = await userRef.get();
@@ -234,9 +231,9 @@ useEffect(() => {
     const currentDelivery = currentDeliverySnapshot.data().delivery[index] || 0;
 
       
-    const updatedShopping = currentShopping + totalShopping;
-    const updatedEatOut = currentEatOut + totalEatOut;
-    const updatedDelivery = currentDelivery + totalDelivery;
+    const updatedShopping = currentShopping + shoppingExpense;
+    const updatedEatOut = currentEatOut + eatOutExpense;
+    const updatedDelivery = currentDelivery + deliveryExpense;
 
       await userRef.update({
         [`shopping.${index}`]: updatedShopping,
@@ -256,7 +253,7 @@ useEffect(() => {
  };
 
   const checkingArr = () => {
-    console.log(items, pay, shop, tags);
+    console.log(nameArr, pay, shop, tags);
   }
 
   return (
@@ -352,23 +349,23 @@ useEffect(() => {
 
             <TouchableOpacity
               style={[styles.TagsBTN, tags === 'shopping' && styles.selectedBTN]}
-              onPress={() => handleTags('shopping')}
+              onPress={() => {handleTags('shopping'); calTotal('shopping'); }}
             >
             <Text style={[styles.TagsBTNText, tags === 'shopping' && styles.selectedBTNText]}>장보기</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.TagsBTN, tags === 'eatOut' && styles.selectedBTN]}
-              onPress={() => handleTags('eatOut')}
+              onPress={() => {handleTags('eatOut'); calTotal('eatOut');}}
             >
             <Text style={[styles.TagsBTNText, tags === 'eatOut' && styles.selectedBTNText]}>외식</Text>
             </TouchableOpacity> 
 
             <TouchableOpacity
-              style={[styles.TagsBTN, tags === 'deliverty' && styles.selectedBTN]}
-              onPress={() => handleTags('deliverty')}
+              style={[styles.TagsBTN, tags === 'delivery' && styles.selectedBTN]}
+              onPress={() => {handleTags('delivery'); calTotal('delivery');}}
             >
-            <Text style={[styles.TagsBTNText, tags === 'deliverty' && styles.selectedBTNText]}>배달</Text>
+            <Text style={[styles.TagsBTNText, tags === 'delivery' && styles.selectedBTNText]}>배달</Text>
             </TouchableOpacity> 
           </View>
         </View>

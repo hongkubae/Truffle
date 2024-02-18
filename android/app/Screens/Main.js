@@ -15,16 +15,6 @@ const Main = ({navigation}) => {
           Truffle
         </Text>
       
-
-        <View style={Styles.mainHeader}>
-        <TouchableOpacity onPress={()=>navigation.navigate('AddModifyView')}>
-          <BellIcon/>
-        </TouchableOpacity>
-        
-        <TouchableOpacity onPress={()=>navigation.navigate('AlarmView')}>
-        <AlarmIcon/>
-        </TouchableOpacity>
-        </View>
       </View>
       <View style={{marginTop:30}}>
       <DonutChart/>
@@ -62,3 +52,15 @@ const Styles = StyleSheet.create({
     gap:20}
 })
 export default Main;
+
+/**
+ * <View style={Styles.mainHeader}>
+        <TouchableOpacity onPress={()=>navigation.navigate('AddModifyView')}>
+          <BellIcon/>
+        </TouchableOpacity>
+        
+        <TouchableOpacity onPress={()=>navigation.navigate('AlarmView')}>
+        <AlarmIcon/>
+        </TouchableOpacity>
+        </View>
+ */
