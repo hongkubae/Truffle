@@ -9,6 +9,8 @@ const RecipeMain = ({ navigation, route }) => {
   const [recipeImage, setRecipeImage] = useState(null);
   const [book, setBook] = useState([]);
   const [recipeDifficulty, setRecipeDifficulty] = useState();
+  const [ingredientChecklist, setIngredientChecklist] = useState([]);
+
   useEffect(() => {
     const fetchRecipeInfo = async () => {
       try {
@@ -17,12 +19,15 @@ const RecipeMain = ({ navigation, route }) => {
 
         if (recipeDoc.exists) {
           const recipeData = recipeDoc.data();
-          const NameData = recipeData.recipe_name;
-          setRecipeName(NameData);
+          setRecipeName(recipeData.recipe_name);
           setRecipeTime(recipeData.recipe_time);
-          setRecipeIngredients(recipeData.recipe_ingredients);
           setRecipeImage(recipeData.recipe_image_url);
           setRecipeDifficulty(recipeData.recipe_difficulty);
+          const ingredientsArray = convertIngredientsToArray(recipeData.recipe_ingredients);
+          setRecipeIngredients(ingredientsArray);
+
+          const checklist = Array(ingredientsArray.length).fill('X');
+          setIngredientChecklist(checklist);
         } else {
           console.error('Recipe not found!');
         }
@@ -33,6 +38,10 @@ const RecipeMain = ({ navigation, route }) => {
 
     fetchRecipeInfo();
   }, []);
+
+  const convertIngredientsToArray = (ingredientsObject) => {
+    return Object.keys(ingredientsObject);
+  };
 
   const handleBookmarkClick = (buttonName) => {
     setBook((prevStates) => ({
@@ -49,8 +58,7 @@ const RecipeMain = ({ navigation, route }) => {
         default:
           return require('../assets/icons/bookmark.png');
       }
-    } 
-    else{
+    } else {
       return require('../assets/icons/bookmark.png');
     }
   };
@@ -87,6 +95,14 @@ const RecipeMain = ({ navigation, route }) => {
           <Text style={styles.buttonText}>조리하기</Text>
         </TouchableOpacity>
       </View>
+
+      {/* 레시피 재료 출력 */}
+      <View style={styles.ingredientsContainer}>
+        <Text style={styles.ingredientsTitle}>레시피 재료</Text>
+        {recipeIngredients.map((ingredient, index) => (
+          <Text key={index}>{ingredient}</Text>
+        ))}
+      </View>
     </ScrollView>
   );
 }
@@ -99,7 +115,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-
   row: {
     position: 'absolute',
     top: 570,
@@ -107,7 +122,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     gap: 25,
   },
-
   button: {
     top: 85,
     width: 140,
@@ -116,13 +130,38 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 20,
   },
-
   buttonText: {
     color: '#fff',
     fontSize: 15,
     textAlign: 'center',
     fontWeight: 'bold',
     fontFamily: 'NanumGothic',
+  },
+  ingredientsContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  ingredientsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  checklistContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  checklistTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  checklistItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  checklistText: {
+    fontSize: 16,
   },
 });
 
